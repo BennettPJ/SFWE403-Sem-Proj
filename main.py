@@ -14,7 +14,7 @@ if __name__ == "__main__":
     widget.addWidget(mainwindow)
 
     # Set the window size and show it
-    widget.setFixedWidth(1050)
+    widget.setFixedWidth(1150)
     widget.setFixedHeight(600)
     widget.show()
 
