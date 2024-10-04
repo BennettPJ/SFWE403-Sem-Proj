@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1009</width>
-    <height>577</height>
+    <height>615</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -27,8 +27,8 @@
    <widget class="QPushButton" name="createAccountButton">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>350</y>
+      <x>220</x>
+      <y>410</y>
       <width>141</width>
       <height>41</height>
      </rect>
@@ -49,8 +49,8 @@
    <widget class="QLineEdit" name="createUserName">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>60</y>
+      <x>220</x>
+      <y>140</y>
       <width>221</width>
       <height>31</height>
      </rect>
@@ -62,8 +62,8 @@
    <widget class="QLineEdit" name="createPassword">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>170</y>
+      <x>220</x>
+      <y>250</y>
       <width>221</width>
       <height>31</height>
      </rect>
@@ -75,10 +75,10 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>60</y>
+      <x>80</x>
+      <y>130</y>
       <width>121</width>
-      <height>31</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -91,16 +91,19 @@
      <string notr="true">font: 12pt &quot;Perpetua&quot;;</string>
     </property>
     <property name="text">
-     <string>Create User Name</string>
+     <string>User Name</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>170</y>
-      <width>101</width>
-      <height>21</height>
+      <x>80</x>
+      <y>230</y>
+      <width>121</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -115,14 +118,17 @@
     <property name="text">
      <string>Create Password</string>
     </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>-10</y>
-      <width>191</width>
-      <height>61</height>
+      <x>110</x>
+      <y>20</y>
+      <width>371</width>
+      <height>101</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -134,48 +140,23 @@
     <property name="font">
      <font>
       <family>Perpetua</family>
-      <pointsize>35</pointsize>
+      <pointsize>25</pointsize>
       <weight>9</weight>
       <italic>false</italic>
       <bold>false</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 75 35pt &quot;Perpetua&quot;;</string>
+     <string notr="true">font: 75 25pt &quot;Perpetua&quot;;</string>
     </property>
     <property name="text">
-     <string>Pharmacy</string>
+     <string>Pharmacy Manager Create Account</string>
     </property>
-   </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>310</x>
-      <y>-10</y>
-      <width>151</width>
-      <height>71</height>
-     </rect>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="font">
-     <font>
-      <family>Perpetua</family>
-      <pointsize>30</pointsize>
-      <weight>9</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 75 30pt &quot;Perpetua&quot;;</string>
-    </property>
-    <property name="text">
-     <string>Manager</string>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
@@ -186,6 +167,12 @@
       <width>461</width>
       <height>571</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="styleSheet">
      <string notr="true">image: url(:/newPrefix/pharm.png);</string>
@@ -206,10 +193,10 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>230</y>
-      <width>141</width>
-      <height>21</height>
+      <x>80</x>
+      <y>280</y>
+      <width>131</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -222,14 +209,17 @@
      <string notr="true">font: 12pt &quot;Perpetua&quot;;</string>
     </property>
     <property name="text">
-     <string>Re Enter Password</string>
+     <string>Re-Enter Password</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLineEdit" name="reEnterPass">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>230</y>
+      <x>220</x>
+      <y>300</y>
       <width>221</width>
       <height>31</height>
      </rect>
@@ -241,11 +231,17 @@
    <widget class="QComboBox" name="rolesBox">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>280</y>
-      <width>121</width>
+      <x>220</x>
+      <y>350</y>
+      <width>211</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(240, 240, 240);
@@ -270,10 +266,10 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>300</y>
-      <width>141</width>
-      <height>21</height>
+      <x>100</x>
+      <y>350</y>
+      <width>91</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -288,19 +284,37 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
     <property name="text">
      <string>Select role</string>
     </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QTextEdit" name="textEdit">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>410</y>
+      <x>220</x>
+      <y>460</y>
       <width>291</width>
-      <height>71</height>
+      <height>111</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="styleSheet">
      <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;
 color: rgb(170, 0, 0)</string>
+    </property>
+    <property name="verticalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+    <property name="lineWrapMode">
+     <enum>QTextEdit::WidgetWidth</enum>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
     </property>
     <property name="html">
      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -309,12 +323,15 @@ p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:16pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Once account is created supervisor must approve account creation. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
+    <property name="tabStopWidth">
+     <number>87</number>
+    </property>
    </widget>
    <widget class="QLineEdit" name="email">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>110</y>
+      <x>220</x>
+      <y>200</y>
       <width>221</width>
       <height>31</height>
      </rect>
@@ -326,8 +343,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>110</y>
+      <x>80</x>
+      <y>190</y>
       <width>81</width>
       <height>31</height>
      </rect>
@@ -343,6 +360,22 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>Email</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>450</y>
+      <width>81</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">image: url(:/newPrefix/pharmacy.png);</string>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

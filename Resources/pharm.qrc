@@ -1,5 +1,17 @@
 <RCC>
   <qresource prefix="newPrefix">
+    <file>right.png</file>
+    <file>user.png</file>
+    <file>computer.png</file>
+    <file>consultation.png</file>
+    <file>report.png</file>
+    <file>treatment.png</file>
+    <file>vaccine.png</file>
+    <file>information.png</file>
+    <file>medicine.png</file>
+    <file>pharmacist.png</file>
+    <file>pharmacy.png</file>
+    <file>prescription.png</file>
     <file>Screenshot 2024-10-02 201939.png</file>
     <file>pharm.png</file>
   </qresource>
