@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1009</width>
-    <height>577</height>
+    <width>1001</width>
+    <height>557</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -55,6 +55,12 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(232, 232, 232);</string>
     </property>
@@ -67,6 +73,12 @@
       <width>221</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(232, 232, 232);</string>
@@ -150,10 +162,10 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>290</x>
+      <x>250</x>
       <y>140</y>
-      <width>151</width>
-      <height>71</height>
+      <width>191</width>
+      <height>81</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -187,6 +199,12 @@
       <height>571</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
     <property name="styleSheet">
      <string notr="true">image: url(:/newPrefix/pharm.png);</string>
     </property>
@@ -208,7 +226,7 @@
      <rect>
       <x>370</x>
       <y>410</y>
-      <width>101</width>
+      <width>121</width>
       <height>31</height>
      </rect>
     </property>
@@ -231,8 +249,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1009</width>
-     <height>22</height>
+     <width>1001</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>

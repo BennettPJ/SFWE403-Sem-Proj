@@ -8,6 +8,8 @@ import resources_rc  # Import the compiled resource file
 
 from PyQt5.QtWidgets import QMainWindow, QInputDialog, QMessageBox, QLineEdit, QStackedWidget
 from PyQt5.uic import loadUi
+from src.Dashboard import Dashboard  # Import the Dashboard UI
+
 
 class MainUI(QMainWindow):
     def __init__(self, widget):  # Accept the widget as an argument
@@ -26,7 +28,18 @@ class MainUI(QMainWindow):
     def logIn(self):
         userName = self.userName.text()
         password = self.password.text()
-        # Add logic for login validation
+        
+        # Add your login validation logic here. For now, assume login is successful.
+        if userName == "admin" and password == "password":  # Example check
+            dashboard = Dashboard(self.widget)  # Create the dashboard instance
+            self.widget.addWidget(dashboard)  # Add dashboard to the stacked widget
+            self.widget.setCurrentIndex(self.widget.currentIndex() + 1)  # Switch to Dashboard
+        else:
+            msg = QMessageBox()
+            msg.setWindowTitle("Login Failed")
+            msg.setText("Incorrect username or password!")
+            msg.exec_()
+
 
     def createAccount(self):
         # Create the account creation UI and add it to the stacked widget
