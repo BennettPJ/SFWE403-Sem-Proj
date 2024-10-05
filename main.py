@@ -1,3 +1,4 @@
+#main.py
 from PyQt5.QtWidgets import QApplication  # Import QApplication
 import sys
 from src.LogInGUI import MainUI  # Import MainUI from LogInGUI.py in the src folder
