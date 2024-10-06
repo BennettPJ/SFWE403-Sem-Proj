@@ -9,6 +9,8 @@ import resources_rc  # Import the compiled resource file
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import QTimer, QTime
+from src.Purchases import Purchases  # Import Purchases page class
+
 
 class Dashboard(QMainWindow):
     def __init__(self, widget):  # Accept the widget as an argument
@@ -21,6 +23,9 @@ class Dashboard(QMainWindow):
 
         # Ensure the logout button works
         self.logOut.clicked.connect(self.logOutUser)
+
+        # Connect the purchase widget (button) to navigate to the purchase page
+        self.purchase.clicked.connect(self.goToPurchases) 
 
         # Set QLCDNumber to handle 8 digits (HH:MM:SS)
         self.clock.setSegmentStyle(self.clock.Flat)  # Optional: for cleaner LCD look
@@ -57,3 +62,17 @@ class Dashboard(QMainWindow):
         login_screen = MainUI(self.widget)
         self.widget.addWidget(login_screen)
         self.widget.setCurrentIndex(self.widget.indexOf(login_screen))
+
+
+    def goToPurchases(self):
+            """ Navigate to the Purchases page """
+            # Check if the purchases page is already in the stack
+            for i in range(self.widget.count()):
+                if isinstance(self.widget.widget(i), Purchases):
+                    self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
+                    return
+
+            # If not in the stack, create a new instance of Purchases and add it to the stack
+            purchases_screen = Purchases(self.widget)
+            self.widget.addWidget(purchases_screen)
+            self.widget.setCurrentIndex(self.widget.indexOf(purchases_screen))
