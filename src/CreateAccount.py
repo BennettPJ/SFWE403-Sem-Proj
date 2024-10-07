@@ -1,43 +1,53 @@
-#CreateAccount.py
 import sys
 import os
-
-# Add the 'src' folder to the Python path
-sys.path.append(os.path.join(os.path.dirname(__file__)))
-
-import resources_rc  # Import the compiled resource file
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QLineEdit, QComboBox
 from PyQt5.uic import loadUi
-
+from src.Login_roles import LoginRoles
+from src.Dashboard import Dashboard
 
 class CreateAccountUI(QMainWindow):
-    def __init__(self, widget):  # Accept the widget as an argument
+    def __init__(self, widget):
         super(CreateAccountUI, self).__init__()
-        self.widget = widget  # Store the QStackedWidget reference
+        self.widget = widget
 
         # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'createAccount.ui')
         loadUi(ui_path, self)
 
-        # Connect the buttons to their actions
-        self.signUpButton.clicked.connect(self.createAccount)
-        self.logIn2.clicked.connect(self.returnToLogin)  # Log In button to go back to MainUI
+        # Find UI components by their object names
+        self.usernameInput = self.findChild(QLineEdit, 'usernameInput')
+        self.passwordInput = self.findChild(QLineEdit, 'passwordInput')
+        self.roleInput = self.findChild(QComboBox, 'roleInput')
 
-    def createAccount(self):
-        # Handle the account creation logic here
-        pass
+        # Instantiate the LoginRoles class
+        self.login_roles = LoginRoles()
+
+        # Connect buttons to their actions
+        self.signUpButton.clicked.connect(self.create_account)
+        self.logIn2.clicked.connect(self.returnToLogin)
+
+    def create_account(self):
+        """Handle account creation logic."""
+        username = self.createUserName.text().strip()
+        email = self.email.text().strip()
+        password = self.createPassword.text().strip()
+        role = self.rolesBox.currentText()  # Get selected role
+
+        if not username or not password:
+            QMessageBox.warning(self, "Input Error", "Username and password cannot be empty.")
+            return
+
+        if self.login_roles.create_account(role, username, password):
+            QMessageBox.information(self, "Success", "Account created successfully!")
+            self.returnToLogin()  # Optionally switch back to login UI
+        else:
+            QMessageBox.warning(self, "Account Creation Failed", "Username already exists or invalid role.")
 
     def returnToLogin(self):
-        """
-        Return to the login screen when 'Log In' is clicked in the CreateAccount screen.
-        Always create a new instance of MainUI to ensure fresh button connections.
-        """
-        print("Log In button clicked, returning to login screen.")  # Add this to check if button click works
-
-        from src.LogInGUI import MainUI  # Importing MainUI inside the function to avoid circular import
-
-        # Always create a new instance of MainUI
-        login_screen = MainUI(self.widget)
-        self.widget.addWidget(login_screen)
-        self.widget.setCurrentIndex(self.widget.indexOf(login_screen))
-
+        from src.LogInGUI import MainUI
+        """Return to the login screen."""
+        print("Returning to login screen.")
+        self.widget.setCurrentIndex(self.widget.indexOf(MainUI(self.widget)))
+        ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'LogInGUI.ui')
+        loadUi(ui_path, self)
+        
