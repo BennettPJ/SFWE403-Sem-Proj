@@ -210,7 +210,7 @@
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="InventoryButton_4">
+   <widget class="QPushButton" name="purchase">
     <property name="geometry">
      <rect>
       <x>90</x>
@@ -373,7 +373,7 @@
      <x>0</x>
      <y>0</y>
      <width>1001</width>
-     <height>21</height>
+     <height>36</height>
     </rect>
    </property>
   </widget>
