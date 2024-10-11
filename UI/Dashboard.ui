@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1001</width>
+    <width>1043</width>
     <height>572</height>
    </rect>
   </property>
@@ -91,7 +91,7 @@
    <widget class="QPushButton" name="InventoryButton">
     <property name="geometry">
      <rect>
-      <x>760</x>
+      <x>800</x>
       <y>320</y>
       <width>201</width>
       <height>91</height>
@@ -149,7 +149,7 @@
    <widget class="QPushButton" name="InventoryButton_2">
     <property name="geometry">
      <rect>
-      <x>540</x>
+      <x>570</x>
       <y>440</y>
       <width>191</width>
       <height>81</height>
@@ -245,7 +245,7 @@
    <widget class="QPushButton" name="InventoryButton_5">
     <property name="geometry">
      <rect>
-      <x>540</x>
+      <x>570</x>
       <y>320</y>
       <width>191</width>
       <height>91</height>
@@ -277,7 +277,7 @@
    <widget class="QPushButton" name="logOut">
     <property name="geometry">
      <rect>
-      <x>760</x>
+      <x>800</x>
       <y>440</y>
       <width>201</width>
       <height>81</height>
@@ -328,11 +328,17 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>830</x>
+      <x>870</x>
       <y>120</y>
       <width>131</width>
       <height>181</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="text">
      <string/>
@@ -347,11 +353,17 @@
    <widget class="QLCDNumber" name="clock">
     <property name="geometry">
      <rect>
-      <x>730</x>
+      <x>750</x>
       <y>10</y>
       <width>241</width>
       <height>81</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="font">
      <font>
@@ -372,8 +384,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1001</width>
-     <height>36</height>
+     <width>1043</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>
