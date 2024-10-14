@@ -11,6 +11,8 @@ from PyQt5.uic import loadUi
 from PyQt5.QtCore import QTimer, QTime
 from src.Purchases import Purchases  # Import Purchases page class
 from src.CustomerInfo import CustomerInfo  # Import CustomerInfo page class
+from src.Reports import Reports
+
 
 class Dashboard(QMainWindow):
     def __init__(self, widget):  # Accept the widget as an argument
@@ -26,6 +28,9 @@ class Dashboard(QMainWindow):
 
         # Connect the purchase widget (button) to navigate to the purchase page
         self.purchase.clicked.connect(self.goToPurchases) 
+
+        # Connect the reports widget (button) to navigate to the purchase page
+        self.ReportsButton.clicked.connect(self.goToReports) 
         
         self.updateCustomerInfoButton.clicked.connect(self.updateCustomerInfo)
 
@@ -91,3 +96,15 @@ class Dashboard(QMainWindow):
             self.widget.addWidget(customerInfo)
             self.widget.setCurrentIndex(self.widget.indexOf(customerInfo))
         
+    def goToReports(self):
+            """ Navigate to the Reports page """
+            # Check if the purchases page is already in the stack
+            for i in range(self.widget.count()):
+                if isinstance(self.widget.widget(i), Reports):
+                    self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
+                    return
+
+            # If not in the stack, create a new instance of Purchases and add it to the stack
+            reports_screen = Reports(self.widget)
+            self.widget.addWidget(reports_screen)
+            self.widget.setCurrentIndex(self.widget.indexOf(reports_screen))
