@@ -62,13 +62,11 @@ class MainUI(QMainWindow):
         # Check if CreateAccountUI is already in the stacked widget
         for i in range(self.widget.count()):
             if isinstance(self.widget.widget(i), CreateAccountUI):
-                print("CreateAccountUI already exists, switching to it.")
                 self.widget.setCurrentIndex(i)  # Switch to existing CreateAccountUI
                 return
 
         # If not found, create the account creation UI and add it to the stacked widget
         createacc = CreateAccountUI(self.widget)
         self.widget.addWidget(createacc)  # Add CreateAccountUI to the stacked widget
-        print("Switching to Create Account screen")  # Debugging
         self.widget.setCurrentIndex(self.widget.indexOf(createacc))
 
