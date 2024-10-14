@@ -1,9 +1,8 @@
-from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QTableWidgetItem, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QTableWidgetItem, QMessageBox, QDialog, QVBoxLayout, QLabel, QPushButton, QTextEdit
 from PyQt5.uic import loadUi
 import os
 import sys
 from PyQt5.QtCore import pyqtSlot
-
 
 class Purchases(QMainWindow):
     def __init__(self, widget):  # Accept the widget as an argument
@@ -20,9 +19,34 @@ class Purchases(QMainWindow):
         self.removeItemButton.clicked.connect(self.remove_item)
         self.cancelButton.clicked.connect(self.cancelPurchase)
         self.Complete.clicked.connect(self.complete_purchase)
+        self.PrintReciept.clicked.connect(self.print_receipt)  # Connect the Print Receipt button
 
         # Connect changes in the ItemsTable to the function that recalculates the total.
         self.ItemsTable.itemChanged.connect(self.update_grand_total)
+
+    def print_receipt(self):
+        """Display a receipt of the current items in a new dialog window."""
+        receipt_text = "Receipt\n"
+        receipt_text += "-" * 40 + "\n"
+        receipt_text += "{:<15} {:<10} {:<10} {:<10}\n".format("Item", "Qty", "Price", "Total")
+
+        # Gather all items from the table.
+        for row in range(self.ItemsTable.rowCount()):
+            item = self.ItemsTable.item(row, 0).text() if self.ItemsTable.item(row, 0) else ""
+            quantity = self.ItemsTable.item(row, 1).text() if self.ItemsTable.item(row, 1) else "0"
+            price = self.ItemsTable.item(row, 2).text() if self.ItemsTable.item(row, 2) else "0.00"
+            total = self.ItemsTable.item(row, 3).text() if self.ItemsTable.item(row, 3) else "0.00"
+
+            # Format each row for the receipt.
+            receipt_text += "{:<15} {:<10} {:<10} {:<10}\n".format(item, quantity, price, total)
+
+        receipt_text += "-" * 40 + "\n"
+        receipt_text += f"{self.grandTotalLabel.text()}\n"
+        receipt_text += "-" * 40 + "\n"
+
+        # Create and show the receipt dialog.
+        receipt_dialog = ReceiptDialog(receipt_text)
+        receipt_dialog.exec_()  # Show as a modal dialog
 
     def cancelPurchase(self):
         from src.Dashboard import Dashboard  # Importing MainUI inside the function to avoid circular import
@@ -55,7 +79,6 @@ class Purchases(QMainWindow):
 
         self.grandTotalLabel.setText("Grand Total: $0.00")  # Reset the grand total label
 
-
     def returnToDashboard(self):
         from src.Dashboard import Dashboard
 
@@ -64,7 +87,7 @@ class Purchases(QMainWindow):
             if isinstance(self.widget.widget(i), Dashboard):
                 self.widget.setCurrentIndex(i)  # Switch to existing Dashboard
                 return
-        
+
         # If not found, create the dashboard and add it to the stacked widget
         dashboard = Dashboard(self.widget)
         self.widget.addWidget(dashboard)
@@ -116,3 +139,22 @@ class Purchases(QMainWindow):
             self.update_grand_total()
         else:
             QMessageBox.warning(self, "Warning", "Please select a row to remove.")
+
+class ReceiptDialog(QDialog):
+    def __init__(self, receipt_text, parent=None):
+        super(ReceiptDialog, self).__init__(parent)
+        self.setWindowTitle("Receipt")
+        self.setFixedSize(300, 400)
+
+        layout = QVBoxLayout(self)
+
+        # Use a QTextEdit to display the receipt text.
+        receipt_display = QTextEdit()
+        receipt_display.setReadOnly(True)
+        receipt_display.setText(receipt_text)
+        layout.addWidget(receipt_display)
+
+        # Add a Close button.
+        close_button = QPushButton("Close")
+        close_button.clicked.connect(self.close)
+        layout.addWidget(close_button)

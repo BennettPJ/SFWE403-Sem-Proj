@@ -271,9 +271,9 @@
    <widget class="QTableWidget" name="ItemsTable">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>20</x>
       <y>310</y>
-      <width>471</width>
+      <width>511</width>
       <height>221</height>
      </rect>
     </property>
@@ -640,7 +640,7 @@
      <x>0</x>
      <y>0</y>
      <width>1169</width>
-     <height>24</height>
+     <height>36</height>
     </rect>
    </property>
   </widget>
