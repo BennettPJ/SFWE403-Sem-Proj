@@ -32,7 +32,6 @@ class CreateAccountUI(QMainWindow):
         Return to the login screen when 'Log In' is clicked in the CreateAccount screen.
         Always create a new instance of MainUI to ensure fresh button connections.
         """
-        print("Log In button clicked, returning to login screen.")  # Add this to check if button click works
 
         from src.LogInGUI import MainUI  # Importing MainUI inside the function to avoid circular import
 

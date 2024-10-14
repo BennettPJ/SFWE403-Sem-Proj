@@ -11,6 +11,7 @@ from PyQt5.uic import loadUi
 from PyQt5.QtCore import QTimer, QTime
 from src.Purchases import Purchases  # Import Purchases page class
 from src.CustomerInfo import CustomerInfo  # Import CustomerInfo page class
+from src.FillPrescription import FillPrescriptionUI  # Import FillPrescription page class
 
 class Dashboard(QMainWindow):
     def __init__(self, widget):  # Accept the widget as an argument
@@ -28,6 +29,8 @@ class Dashboard(QMainWindow):
         self.purchase.clicked.connect(self.goToPurchases) 
         
         self.updateCustomerInfoButton.clicked.connect(self.updateCustomerInfo)
+        #Fill prescription button
+        self.fillPrescripButton.clicked.connect(self.fillPrescription)
 
         # Set QLCDNumber to handle 8 digits (HH:MM:SS)
         self.clock.setSegmentStyle(self.clock.Flat)  # Optional: for cleaner LCD look
@@ -90,4 +93,15 @@ class Dashboard(QMainWindow):
             customerInfo = CustomerInfo(self.widget)
             self.widget.addWidget(customerInfo)
             self.widget.setCurrentIndex(self.widget.indexOf(customerInfo))
-        
+    def fillPrescription(self):
+                            # Check if the purchases page is already in the stack
+            for i in range(self.widget.count()):
+                if isinstance(self.widget.widget(i), FillPrescriptionUI):
+                    self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
+                    return
+                
+            # If not in the stack, create a new instance of Purchases and add it to the stack
+            prescripInfo = FillPrescriptionUI(self.widget)
+            self.widget.addWidget(prescripInfo)
+            self.widget.setCurrentIndex(self.widget.indexOf(prescripInfo))
+            
