@@ -22,7 +22,8 @@ class Dashboard(QMainWindow):
         # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'Dashboard.ui')
         loadUi(ui_path, self)
-
+        # Set a minimum size for the dashboard
+        self.setMinimumSize(1050, 600)  # Example size, you can adjust these values
         # Ensure the logout button works
         self.logOut.clicked.connect(self.logOutUser)
 
