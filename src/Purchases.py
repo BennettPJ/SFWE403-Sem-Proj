@@ -12,7 +12,8 @@ class Purchases(QMainWindow):
         # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'Purchase.ui')
         loadUi(ui_path, self)
-
+            # Set a minimum size for the dashboard
+        self.setMinimumSize(1100, 600)  # Example size, you can adjust these values
         self.grandTotalLabel.setText("Grand Total: $0.00")
 
         self.addItemButton.clicked.connect(self.add_item)

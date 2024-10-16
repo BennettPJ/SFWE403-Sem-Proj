@@ -12,7 +12,8 @@ class InventoryUI(QMainWindow):
         # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'Inventory.ui')
         loadUi(ui_path, self)
-
+                # Set a minimum size for the dashboard
+        self.setMinimumSize(1000, 600)  # Example size, you can adjust these values
         self.cancelButton.clicked.connect(self.cancelInventory)
 
 
