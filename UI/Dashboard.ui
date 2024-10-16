@@ -146,7 +146,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="InventoryButton_2">
+   <widget class="QPushButton" name="MedButton">
     <property name="geometry">
      <rect>
       <x>570</x>
@@ -242,7 +242,7 @@
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="InventoryButton_5">
+   <widget class="QPushButton" name="AdminButton">
     <property name="geometry">
      <rect>
       <x>570</x>

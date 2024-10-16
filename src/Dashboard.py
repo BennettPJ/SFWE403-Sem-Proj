@@ -14,7 +14,8 @@ from src.CustomerInfo import CustomerInfo  # Import CustomerInfo page class
 from src.Reports import Reports
 from src.FillPrescription import FillPrescriptionUI
 from src.InventoryUI import InventoryUI
-
+from src.OrderMedication import OrderMedication
+from src.AdminUI import AdminUI
 
 class Dashboard(QMainWindow):
     def __init__(self, widget):  # Accept the widget as an argument
@@ -39,6 +40,10 @@ class Dashboard(QMainWindow):
         self.fillPrescripButton.clicked.connect(self.fillPrescription)
         
         self.updateCustomerInfoButton.clicked.connect(self.updateCustomerInfo)
+
+        self.MedButton.clicked.connect(self.goToMedication)
+
+        self.AdminButton.clicked.connect(self.goToAdmin)
 
         # Set QLCDNumber to handle 8 digits (HH:MM:SS)
         self.clock.setSegmentStyle(self.clock.Flat)  # Optional: for cleaner LCD look
@@ -135,5 +140,30 @@ class Dashboard(QMainWindow):
             
         # If not in the stack, create a new instance of Purchases and add it to the stack
         prescripInfo = InventoryUI(self.widget)
+        self.widget.addWidget(prescripInfo)
+        self.widget.setCurrentIndex(self.widget.indexOf(prescripInfo))
+
+
+    def goToMedication(self):
+                        # Check if the purchases page is already in the stack
+        for i in range(self.widget.count()):
+            if isinstance(self.widget.widget(i), OrderMedication):
+                self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
+                return
+            
+        # If not in the stack, create a new instance of Purchases and add it to the stack
+        prescripInfo = OrderMedication(self.widget)
+        self.widget.addWidget(prescripInfo)
+        self.widget.setCurrentIndex(self.widget.indexOf(prescripInfo))
+
+    def goToAdmin(self):
+                        # Check if the purchases page is already in the stack
+        for i in range(self.widget.count()):
+            if isinstance(self.widget.widget(i), AdminUI):
+                self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
+                return
+            
+        # If not in the stack, create a new instance of Purchases and add it to the stack
+        prescripInfo = AdminUI(self.widget)
         self.widget.addWidget(prescripInfo)
         self.widget.setCurrentIndex(self.widget.indexOf(prescripInfo))
