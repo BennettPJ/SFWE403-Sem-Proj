@@ -1,4 +1,3 @@
-#LogInGUI.py
 import sys
 import os
 
@@ -40,12 +39,14 @@ class MainUI(QMainWindow):
             for i in range(self.widget.count()):
                 if isinstance(self.widget.widget(i), Dashboard):
                     self.widget.setCurrentIndex(i)  # Switch to existing Dashboard
+                    self.resizeToCurrentWidget()  # Ensure proper resizing
                     return
             
             # If not found, create the dashboard and add it to the stacked widget
             dashboard = Dashboard(self.widget)
             self.widget.addWidget(dashboard)
             self.widget.setCurrentIndex(self.widget.indexOf(dashboard))
+            self.resizeToCurrentWidget()  # Ensure proper resizing
         else:
             # Display a message if login fails
             msg = QMessageBox()
@@ -63,10 +64,19 @@ class MainUI(QMainWindow):
         for i in range(self.widget.count()):
             if isinstance(self.widget.widget(i), CreateAccountUI):
                 self.widget.setCurrentIndex(i)  # Switch to existing CreateAccountUI
+                self.resizeToCurrentWidget()  # Ensure proper resizing
                 return
 
         # If not found, create the account creation UI and add it to the stacked widget
         createacc = CreateAccountUI(self.widget)
         self.widget.addWidget(createacc)  # Add CreateAccountUI to the stacked widget
         self.widget.setCurrentIndex(self.widget.indexOf(createacc))
+        self.resizeToCurrentWidget()  # Ensure proper resizing
+
+    def resizeToCurrentWidget(self):
+        """
+        Resize the QStackedWidget to fit the current widget (MainUI, Dashboard, CreateAccountUI).
+        """
+        current_widget = self.widget.currentWidget()  # Get the current widget
+        self.widget.resize(current_widget.width(), current_widget.height())  # Resize to match the current widget
 

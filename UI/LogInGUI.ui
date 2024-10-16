@@ -193,7 +193,7 @@
      <enum>Qt::PlainText</enum>
     </property>
     <property name="pixmap">
-     <pixmap resource="../resources/pharm.qrc">:/newPrefix/Pharmacies-in-Portsmouth-and-Southsea.jpg</pixmap>
+     <pixmap resource="../resources/pharm.qrc">:/newPrefix/pharm.png</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
