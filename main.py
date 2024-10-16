@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QStackedWidget
+from PyQt5.QtWidgets import QApplication, QStackedWidget, QDesktopWidget
 import sys
 from src.LogInGUI import MainUI  # Import MainUI from LogInGUI.py in the src folder
 
@@ -12,9 +12,19 @@ if __name__ == "__main__":
     mainwindow = MainUI(widget)
     widget.addWidget(mainwindow)
 
-    # Set the window size and show it
-    widget.setFixedWidth(1100)  # You can adjust these values based on your layout
-    widget.setFixedHeight(600)
+    # Get screen size using QDesktopWidget
+    screen = QDesktopWidget().screenGeometry()
+    screen_width = screen.width()
+    screen_height = screen.height()
+
+    # Get the size of the window from the designer (set by you in PyQt5 Designer)
+    window_width = mainwindow.width()
+    window_height = mainwindow.height()
+
+    # Move the window to the center of the screen
+    widget.resize(window_width, window_height)  # Keep the size from Designer
+    widget.move((screen_width - window_width) // 2, (screen_height - window_height) // 2)  # Center the window
+
     widget.show()
 
     # Execute the app

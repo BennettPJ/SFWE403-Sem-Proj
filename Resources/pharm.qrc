@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="newPrefix">
+    <file>Pharmacies-in-Portsmouth-and-Southsea.jpg</file>
+    <file>Pharmacies-in-Portsmouth-and-Southsea.jpg</file>
+    <file>Pharmacology.jpg</file>
     <file>right.png</file>
     <file>user.png</file>
     <file>computer.png</file>

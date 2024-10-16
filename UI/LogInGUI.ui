@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1001</width>
-    <height>557</height>
+    <width>800</width>
+    <height>525</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -168,10 +168,10 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>-20</y>
-      <width>461</width>
-      <height>571</height>
+      <x>500</x>
+      <y>-40</y>
+      <width>391</width>
+      <height>701</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -181,7 +181,10 @@
      </sizepolicy>
     </property>
     <property name="styleSheet">
-     <string notr="true">image: url(:/newPrefix/pharm.png);</string>
+     <string notr="true">
+    filter: brightness(0.8) blur(5px) grayscale(50%);
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -190,7 +193,7 @@
      <enum>Qt::PlainText</enum>
     </property>
     <property name="pixmap">
-     <pixmap resource="../resources/pharm.qrc">:/newPrefix/pharm.png</pixmap>
+     <pixmap resource="../resources/pharm.qrc">:/newPrefix/Pharmacies-in-Portsmouth-and-Southsea.jpg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -218,13 +221,21 @@
      <string>Create Account</string>
     </property>
    </widget>
+   <zorder>logInButton</zorder>
+   <zorder>userName</zorder>
+   <zorder>password</zorder>
+   <zorder>label</zorder>
+   <zorder>label_2</zorder>
+   <zorder>label_3</zorder>
+   <zorder>createAccountButton</zorder>
+   <zorder>label_5</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1001</width>
+     <width>800</width>
      <height>22</height>
     </rect>
    </property>
