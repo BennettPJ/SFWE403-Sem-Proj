@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QTableWidgetItem, QMess
 from PyQt5.uic import loadUi
 import os
 import sys
+from Inventory import Inventory
 from PyQt5.QtCore import pyqtSlot
 
 class InventoryUI(QMainWindow):
@@ -9,6 +10,8 @@ class InventoryUI(QMainWindow):
         super(InventoryUI, self).__init__()
         self.widget = widget  # Store the QStackedWidget reference
 
+        self.InventoryUI = Inventory()  # Create an instance of the Inventory class
+        
         # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'Inventory.ui')
         loadUi(ui_path, self)
