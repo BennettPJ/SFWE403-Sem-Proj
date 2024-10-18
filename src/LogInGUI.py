@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QMainWindow, QMessageBox, QLineEdit
 from PyQt5.uic import loadUi
 from src.Dashboard import Dashboard  # Import the Dashboard UI
 from src.CreateAccount import CreateAccountUI  # Import CreateAccountUI
-from Login_roles import LoginRoles
+from LoginRoles import LoginRoles
 
 class MainUI(QMainWindow):
     def __init__(self, widget):  # Accept the widget as an argument

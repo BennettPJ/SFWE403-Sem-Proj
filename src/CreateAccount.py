@@ -31,7 +31,7 @@ class CreateAccountUI(QMainWindow):
         role = self.rolesBox.currentText()   # Assuming a QComboBox for selecting the role
         
         # Import the LoginRoles class
-        from src.Login_roles import LoginRoles
+        from LoginRoles import LoginRoles
         
         roles = LoginRoles()  # Create an instance of LoginRoles
 

@@ -2,7 +2,7 @@ import sys
 import os
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QLineEdit, QComboBox
 from PyQt5.uic import loadUi
-from src.Login_roles import LoginRoles
+from LoginRoles import LoginRoles
 from src.Dashboard import Dashboard
 
 class Patient():

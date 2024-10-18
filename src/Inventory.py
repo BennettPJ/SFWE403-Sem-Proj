@@ -1,3 +1,4 @@
+from LoginRoles import LoginRoles  # Import the LoginRoles class
 class Inventory:
     def __init__(self, low_stock_threshold=10):
         #Initializes the inventory with an empty stock dictionary and a low stock threshold.
@@ -7,6 +8,7 @@ class Inventory:
         self.low_stock_threshold = low_stock_threshold
         self.filled_prescriptions = [] #list to track filled prescriptions
         self.picked_up_prescriptions = [] #list to track picked up prescriptions
+        self.login_roles = LoginRoles()  # Create an instance of the LoginRoles class
 
 
     def view_stock(self):
@@ -52,6 +54,28 @@ class Inventory:
         else:
             print("No low stock medications at the moment.")
             
+            
+    def auto_order(self, medication):
+        if self.stock[medication] < self.auto_reorder_threshold:
+            order_quantity = self.low_stock_threshold #order when stock is at the low threshold
+            self.update_stock(medication, order_quantity)
+            print(f"Automatic reorder placed for {medication}. {order_quantity} units added to stock.")
+
+
+    def order_medication(self, medication, quantity, username, password):
+        # Restricts ordering medications to managers only
+        login_success, message = self.login_roles.login(username, password)
+        
+        if login_success:
+            role = self.login_roles.find_user_role(username)
+            if role == "manager":
+                print(f"{username} (Manager) is ordering {quantity} units of {medication}.")
+                self.update_stock(medication, quantity)
+            else:
+                print(f"Permission denied. Only managers can order medications.")
+        else:
+            print(f"Login failed: {message}")
+
             
     def fill_prescription(self, medication, quantity):
         #Fills a prescription by dispensing the requested quantity of a medication.
@@ -103,3 +127,4 @@ class Inventory:
             print("Picked up prescriptions:")
             for prescription in self.picked_up_prescriptions:
                 print(f"{prescription[1]} units of {prescription[0]}")
+                
