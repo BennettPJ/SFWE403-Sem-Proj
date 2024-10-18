@@ -56,10 +56,11 @@ class Inventory:
             
             
     def auto_order(self, medication):
-        if self.stock[medication] < self.auto_reorder_threshold:
-            order_quantity = self.low_stock_threshold #order when stock is at the low threshold
-            self.update_stock(medication, order_quantity)
-            print(f"Automatic reorder placed for {medication}. {order_quantity} units added to stock.")
+        for medication, quantity in self.stock.items():
+            if quantity < self.auto_reorder_threshold:
+                order_quantity = self.low_stock_threshold * 2 #order when stock is at the low threshold -- order double the threshold (FIXME: Maybe we modify? discuss as team)
+                self.update_stock(medication, order_quantity)
+                print(f"Automatic reorder placed for {medication}. {order_quantity} units added to stock.")
 
 
     def order_medication(self, medication, quantity, username, password):
