@@ -5,6 +5,8 @@ class Inventory:
         
         self.stock = {}  # Holds {Medication: Quantity} pairs
         self.low_stock_threshold = low_stock_threshold
+        self.filled_prescriptions = [] #list to track filled prescriptions
+        self.picked_up_prescriptions = [] #list to track picked up prescriptions
 
 
     def view_stock(self):
@@ -49,3 +51,55 @@ class Inventory:
                 print(f"{item}: Only {self.stock[item]} units left!")
         else:
             print("No low stock medications at the moment.")
+            
+            
+    def fill_prescription(self, medication, quantity):
+        #Fills a prescription by dispensing the requested quantity of a medication.
+        if medication not in self.stock:
+            print(f"{medication} is not in the inventory.")
+            return
+        
+        if self.stock[medication] >= quantity:
+            self.stock[medication] -= quantity
+            self.fill_prescription.append((medication, quantity))
+            print(f"{quantity} units of {medication} dispensed.")
+        else:
+            print(f"Insufficient stock for {medication}.")
+        
+        self.check_low_stock() #check if there is any low stock items now
+        
+        
+    def add_new_prescription(self, medication, quantity):
+        #Adds a new prescription to the inventory.
+        self.update_stock(medication, quantity)
+        print(f"New prescription added: {medication} - {quantity} units.")
+        
+        
+    def pick_up_prescription(self, medication, quantity):
+        #Tracks the pickup of a prescription by removing it from the filled prescriptions list.
+        if (medication, quantity) in self.filled_prescriptions:
+            self.filled_prescriptions.remove((medication, quantity))
+            self.picked_up_prescriptions.append((medication, quantity))
+            print(f"{quantity} units of {medication} picked up.")
+        else:
+            print("Prescription not found in filled prescriptions.")
+            
+            
+    def view_filled_prescriptions(self):
+        #Displays all filled prescriptions.
+        if not self.filled_prescriptions:
+            print("No filled prescriptions at the moment.")
+        else:
+            print("Filled prescriptions:")
+            for medication, quantity in self.filled_prescriptions:
+                print(f"{quantity} units of {medication}")
+            
+                
+    def view_picked_up_prescriptions(self):
+        #Displays all picked up prescriptions.
+        if not self.picked_up_prescriptions:
+            print("No picked up prescriptions at the moment.")
+        else:
+            print("Picked up prescriptions:")
+            for prescription in self.picked_up_prescriptions:
+                print(f"{prescription[1]} units of {prescription[0]}")
