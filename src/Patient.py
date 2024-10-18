@@ -11,7 +11,9 @@ class Patient():
         #age
         pass
 
-
+    def createPatient(self):
+        pass
+    
     def SetData(self):
         if "patient" in self.roles:
             name = input("Enter Patient Name: ")
