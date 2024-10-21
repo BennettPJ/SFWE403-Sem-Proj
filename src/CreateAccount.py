@@ -26,22 +26,20 @@ class CreateAccountUI(QMainWindow):
         self.logIn2.clicked.connect(self.returnToLogin)  # Log In button to go back to MainUI
 
     def createAccount(self):
-        username = self.createUserName.text()  # Assuming there's a QLineEdit for username input
-        password = self.createPassword.text()  # Assuming there's a QLineEdit for password input
-        role = self.rolesBox.currentText()   # Assuming a QComboBox for selecting the role
+        username = self.createUserName.text()  
+        password = self.createPassword.text()  
+        role = self.rolesBox.currentText() 
         
-        # Import the LoginRoles class
-        from LoginRoles import LoginRoles
+        from src.LoginRoles import LoginRoles
         
-        roles = LoginRoles()  # Create an instance of LoginRoles
+        roles = LoginRoles() 
 
-        # Attempt to create an account
         if roles.create_account(role, username, password):
             msg = QMessageBox()
             msg.setWindowTitle("Account Created")
             msg.setText("Your account has been created successfully!")
             msg.exec_()
-            self.returnToLogin()  # Automatically return to login after success
+            self.returnToLogin()
         else:
             msg = QMessageBox()
             msg.setWindowTitle("Account Creation Failed")
