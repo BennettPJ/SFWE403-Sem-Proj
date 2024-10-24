@@ -1,0 +1,4 @@
+Username,Email,Password,Role,Locked_counter,Locked_status
+john_doe,john_new@example.com,newpassword123,technician,5,locked
+admin_user,admin@example.com,adminpass,manager,0,unlocked
+cashier_user,cashier@example.com,cashierpass,cashier,0,unlocked

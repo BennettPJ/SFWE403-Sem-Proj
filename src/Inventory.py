@@ -1,6 +1,6 @@
 import csv
 import os
-from src.LoginRoles import LoginRoles  # Import the LoginRoles class
+from LoginRoles import LoginRoles  # Import the LoginRoles class
 
 class Inventory:
     def __init__(self, low_stock_threshold=10, auto_reorder_threshold=5, inventory_file='DBFiles/db_inventory.csv', filled_file='DBFiles/db_filled_prescription.csv', picked_up_file='DBFiles/db_picked_up_prescription.csv'):
@@ -11,6 +11,20 @@ class Inventory:
         self.low_stock_threshold = low_stock_threshold
         self.auto_reorder_threshold = auto_reorder_threshold
         self.login_roles = LoginRoles()  # Create an instance of the LoginRoles class
+        
+        # Ensure the inventory CSV file exists and has the correct header
+        self.initialize_csv(self.inventory_file, ['Medication', 'Quantity'])
+        # Ensure the filled prescriptions CSV file exists and has the correct header
+        self.initialize_csv(self.filled_file, ['Medication', 'Quantity'])
+        # Ensure the picked-up prescriptions CSV file exists and has the correct header
+        self.initialize_csv(self.picked_up_file, ['Medication', 'Quantity'])
+
+    def initialize_csv(self, file_path, headers):
+        """Helper method to initialize a CSV file with headers if it does not exist."""
+        if not os.path.exists(file_path):
+            with open(file_path, mode='w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(headers)
 
     def view_stock(self):
         try:

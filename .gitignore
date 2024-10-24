@@ -1,12 +1,2 @@
 src/__pycache__
 .DS_Store
-Tests/Inventory_test/__pycache__
-
-DBFiles/db_filled_Prescriptions.csv
-DBFiles/db_inventory.csv
-DBFiles/db_picked_up_Prescriptions.csv
-
-
-Tests/Test_databases/test_db_filled_Prescriptions.csv
-Tests/Test_databases/test_db_inventory.csv
-Tests/Test_databases/test_db_picked_up_Prescriptions.csv

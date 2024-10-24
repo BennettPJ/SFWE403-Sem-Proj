@@ -1,0 +1,6 @@
+Username,Email,Password,Role,Locked_counter,Locked_status
+bennett,bennett@test123,pass123,manager,0,unlocked
+rubenG,RbenG@test123.com,Pass1234,technician,0,unlocked
+mle,mle@test123.com,Pass12345,cashier,0,unlocked
+chrissyK,chris@test123,Pass123456,pharmacist,0,unlocked
+,,,patient,0,unlocked
