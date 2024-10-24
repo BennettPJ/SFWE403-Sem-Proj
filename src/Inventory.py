@@ -174,23 +174,19 @@ class Inventory:
             writer.writerow([medication, quantity])
 
     def pick_up_prescription(self, medication, quantity):
-        rows = []
+        # Check if the prescription exists in the filled prescriptions file
         found = False
         try:
             with open(self.filled_file, mode='r') as file:
                 reader = csv.reader(file)
-                header = next(reader)
+                next(reader)  # Skip header
                 for row in reader:
-                    if row == [medication, str(quantity)]:
+                    if row[0] == medication and int(row[1]) == quantity:
                         found = True
-                    else:
-                        rows.append(row)
+                        break
 
             if found:
-                with open(self.filled_file, mode='w', newline='') as file:
-                    writer = csv.writer(file)
-                    writer.writerow(header)
-                    writer.writerows(rows)
+                # Log the picked-up prescription without modifying the filled file
                 self.add_picked_up_prescription(medication, quantity)
                 print(f"{quantity} units of {medication} picked up.")
             else:
