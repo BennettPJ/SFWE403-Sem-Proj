@@ -285,11 +285,6 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
       <string>cashier</string>
      </property>
     </item>
-    <item>
-     <property name="text">
-      <string>patient</string>
-     </property>
-    </item>
    </widget>
    <widget class="QLabel" name="label_7">
     <property name="geometry">
