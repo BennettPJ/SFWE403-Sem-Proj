@@ -155,6 +155,31 @@ class LoginRoles:
         except FileNotFoundError:
             print("Roles file not found.")
             
+    def lock_account(self, username: str):
+        """Sets the locked counter to 5 and locks the account."""
+        rows = []
+        user_found = False
+        try:
+            with open(self.roles_file, mode='r') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    if row['Username'] == username:
+                        user_found = True
+                        row['Locked_counter'] = '5'
+                        row['Locked_status'] = 'locked'
+                    rows.append([row['Username'], row['Email'], row['Password'], row['Role'], row['Locked_counter'], row['Locked_status']])
+
+            if user_found:
+                with open(self.roles_file, mode='w', newline='') as file:
+                    writer = csv.writer(file)
+                    writer.writerow(['Username', 'Email', 'Password', 'Role', 'Locked_counter', 'Locked_status'])
+                    writer.writerows(rows)
+            else:
+                print(f"User '{username}' not found.")
+
+        except FileNotFoundError:
+            print("Roles file not found.")
+            
     def update_account(self, username: str, new_email=None, new_password=None, new_role=None):
         """Updates an existing user account's email, password, or role."""
         rows = []
