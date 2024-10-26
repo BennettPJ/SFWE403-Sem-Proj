@@ -43,14 +43,14 @@ class MainUI(QMainWindow):
             
             if success:
                 # Check if the dashboard is already in the stacked widget
+                # Remove any previous instances of Dashboard
                 for i in range(self.widget.count()):
-                    if isinstance(self.widget.widget(i), Dashboard):  # Check if the dashboard already exists
-                        self.widget.setCurrentIndex(i)  # Switch to existing Dashboard
-                        self.resizeToCurrentWidget()  # Ensure proper resizing
-                        return
+                    if isinstance(self.widget.widget(i), Dashboard):
+                        self.widget.removeWidget(self.widget.widget(i))
+
                 
                 # If not found, create the dashboard and add it to the stacked widget
-                dashboard = Dashboard(self.widget)  # Assuming you have a Dashboard class
+                dashboard = Dashboard(self.widget, userName)  # Assuming you have a Dashboard class
                 self.widget.addWidget(dashboard)
                 self.widget.setCurrentIndex(self.widget.indexOf(dashboard))  # Switch to the new Dashboard
                 self.resizeToCurrentWidget()  # Ensure proper resizing
