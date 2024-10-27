@@ -39,8 +39,8 @@
    <widget class="QPushButton" name="logInButton">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>410</y>
+      <x>160</x>
+      <y>420</y>
       <width>101</width>
       <height>31</height>
      </rect>
@@ -61,10 +61,10 @@
    <widget class="QLineEdit" name="userName">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>280</y>
-      <width>221</width>
-      <height>31</height>
+      <x>230</x>
+      <y>250</y>
+      <width>161</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -80,10 +80,10 @@
    <widget class="QLineEdit" name="password">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>350</y>
-      <width>221</width>
-      <height>31</height>
+      <x>230</x>
+      <y>300</y>
+      <width>161</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -99,8 +99,39 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>280</y>
+      <x>100</x>
+      <y>243</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <family>Perpetua</family>
+      <pointsize>16</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>User Name</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>300</y>
       <width>101</width>
       <height>31</height>
      </rect>
@@ -111,30 +142,17 @@
       <verstretch>0</verstretch>
      </sizepolicy>
     </property>
-    <property name="styleSheet">
-     <string notr="true">font: 12pt &quot;Perpetua&quot;;</string>
-    </property>
-    <property name="text">
-     <string>User Name</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>360</y>
-      <width>81</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
+    <property name="font">
+     <font>
+      <family>Perpetua</family>
+      <pointsize>16</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 12pt &quot;Perpetua&quot;;</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>Password</string>
@@ -143,8 +161,8 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>30</y>
+      <x>80</x>
+      <y>40</y>
       <width>331</width>
       <height>161</height>
      </rect>
@@ -181,9 +199,9 @@
     <property name="geometry">
      <rect>
       <x>520</x>
-      <y>-10</y>
+      <y>40</y>
       <width>261</width>
-      <height>471</height>
+      <height>371</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -214,8 +232,8 @@
    <widget class="QPushButton" name="createAccountButton">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>410</y>
+      <x>280</x>
+      <y>420</y>
       <width>121</width>
       <height>31</height>
      </rect>

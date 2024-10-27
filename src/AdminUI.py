@@ -16,6 +16,8 @@ class AdminUI(QMainWindow):
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'AdminUI.ui')
         loadUi(ui_path, self)
 
+        self.widget.setFixedSize(1000, 500)
+        
         self.cancelButton.clicked.connect(self.cancel)
         self.applyButton.clicked.connect(self.userInput)  # Connect apply button to userInput method
         

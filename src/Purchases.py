@@ -1,3 +1,4 @@
+#purchase.py
 from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QTableWidgetItem, QMessageBox, QDialog, QVBoxLayout, QLabel, QPushButton, QTextEdit
 from PyQt5.uic import loadUi
 import os

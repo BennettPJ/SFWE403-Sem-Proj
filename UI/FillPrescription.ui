@@ -33,8 +33,8 @@
    <widget class="QPushButton" name="cancelButton">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>410</y>
+      <x>580</x>
+      <y>520</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -97,8 +97,8 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>280</y>
+      <x>220</x>
+      <y>270</y>
       <width>101</width>
       <height>31</height>
      </rect>
@@ -141,8 +141,8 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>0</y>
+      <x>300</x>
+      <y>-10</y>
       <width>531</width>
       <height>81</height>
      </rect>
@@ -178,8 +178,8 @@
    <widget class="QPushButton" name="createAccountButton">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>450</y>
+      <x>580</x>
+      <y>570</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -237,7 +237,7 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>160</y>
+      <y>170</y>
       <width>101</width>
       <height>31</height>
      </rect>
@@ -259,7 +259,7 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>160</y>
+      <y>170</y>
       <width>531</width>
       <height>31</height>
      </rect>
@@ -319,7 +319,7 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>210</y>
+      <y>220</y>
       <width>101</width>
       <height>31</height>
      </rect>
@@ -341,7 +341,7 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
     <property name="geometry">
      <rect>
       <x>140</x>
-      <y>200</y>
+      <y>220</y>
       <width>221</width>
       <height>31</height>
      </rect>
@@ -359,8 +359,8 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
    <widget class="QLineEdit" name="userName_4">
     <property name="geometry">
      <rect>
-      <x>520</x>
-      <y>200</y>
+      <x>490</x>
+      <y>220</y>
       <width>151</width>
       <height>31</height>
      </rect>
@@ -379,7 +379,7 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
     <property name="geometry">
      <rect>
       <x>420</x>
-      <y>200</y>
+      <y>220</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -401,7 +401,7 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
     <property name="geometry">
      <rect>
       <x>800</x>
-      <y>200</y>
+      <y>220</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -419,8 +419,8 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
    <widget class="QLabel" name="label_9">
     <property name="geometry">
      <rect>
-      <x>710</x>
-      <y>190</y>
+      <x>700</x>
+      <y>210</y>
       <width>91</width>
       <height>41</height>
      </rect>
@@ -446,7 +446,7 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
      <rect>
       <x>30</x>
       <y>250</y>
-      <width>331</width>
+      <width>181</width>
       <height>61</height>
      </rect>
     </property>
@@ -498,9 +498,9 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
    <widget class="QComboBox" name="comboBox">
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>280</y>
-      <width>60</width>
+      <x>320</x>
+      <y>270</y>
+      <width>71</width>
       <height>22</height>
      </rect>
     </property>
@@ -609,9 +609,9 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
    <widget class="QTableWidget" name="tableWidget">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>380</y>
-      <width>441</width>
+      <x>40</x>
+      <y>400</y>
+      <width>531</width>
       <height>201</height>
      </rect>
     </property>
@@ -674,7 +674,7 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
     <property name="geometry">
      <rect>
       <x>730</x>
-      <y>280</y>
+      <y>350</y>
       <width>351</width>
       <height>261</height>
      </rect>
@@ -818,10 +818,10 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
    <widget class="QLabel" name="label_17">
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>-10</y>
-      <width>111</width>
-      <height>81</height>
+      <x>970</x>
+      <y>100</y>
+      <width>101</width>
+      <height>91</height>
      </rect>
     </property>
     <property name="text">

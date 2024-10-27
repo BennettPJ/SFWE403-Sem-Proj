@@ -14,7 +14,7 @@ class OrderMedication(QMainWindow):
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'OrderMedication.ui')
         loadUi(ui_path, self)
                 # Set a minimum size for the dashboard
-        self.setMinimumSize(900, 600)  # Example size, you can adjust these values
+        self.setMinimumSize(900, 500)  # Example size, you can adjust these values
         self.cancelButton.clicked.connect(self.cancelMedicationButton)
         self.addItemButton.clicked.connect(self.add_item)
         self.removeItemButton.clicked.connect(self.remove_item)

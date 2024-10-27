@@ -33,10 +33,10 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>10</y>
-      <width>311</width>
-      <height>51</height>
+      <x>460</x>
+      <y>-10</y>
+      <width>391</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -48,14 +48,14 @@
     <property name="font">
      <font>
       <family>Comic Sans MS</family>
-      <pointsize>18</pointsize>
+      <pointsize>22</pointsize>
       <weight>9</weight>
       <italic>false</italic>
       <bold>false</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 75 18pt &quot;Comic Sans MS&quot;;
+     <string notr="true">font: 75 22pt &quot;Comic Sans MS&quot;;
 </string>
     </property>
     <property name="text">
@@ -68,8 +68,8 @@
    <widget class="QPushButton" name="PrintReciept">
     <property name="geometry">
      <rect>
-      <x>910</x>
-      <y>470</y>
+      <x>970</x>
+      <y>480</y>
       <width>171</width>
       <height>41</height>
      </rect>
@@ -100,8 +100,8 @@
    <widget class="QPushButton" name="cancelButton">
     <property name="geometry">
      <rect>
-      <x>910</x>
-      <y>410</y>
+      <x>970</x>
+      <y>420</y>
       <width>171</width>
       <height>41</height>
      </rect>
@@ -132,10 +132,10 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>90</y>
-      <width>131</width>
-      <height>181</height>
+      <x>60</x>
+      <y>50</y>
+      <width>141</width>
+      <height>151</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -157,10 +157,10 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>500</x>
-      <y>-10</y>
-      <width>291</width>
-      <height>71</height>
+      <x>230</x>
+      <y>130</y>
+      <width>171</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -171,18 +171,21 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <pointsize>8</pointsize>
      </font>
     </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt; font-weight:600; text-decoration: underline; vertical-align:super;&quot;&gt;Customer Information&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600; text-decoration: underline; vertical-align:super;&quot;&gt;Customer Information&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>80</y>
+      <x>330</x>
+      <y>190</y>
       <width>121</width>
       <height>21</height>
      </rect>
@@ -200,9 +203,9 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>70</y>
-      <width>101</width>
+      <x>220</x>
+      <y>180</y>
+      <width>91</width>
       <height>41</height>
      </rect>
     </property>
@@ -219,9 +222,9 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>70</y>
-      <width>91</width>
+      <x>470</x>
+      <y>180</y>
+      <width>71</width>
       <height>31</height>
      </rect>
     </property>
@@ -238,8 +241,8 @@
    <widget class="QLineEdit" name="lineEdit_2">
     <property name="geometry">
      <rect>
-      <x>700</x>
-      <y>80</y>
+      <x>540</x>
+      <y>190</y>
       <width>121</width>
       <height>21</height>
      </rect>
@@ -257,9 +260,9 @@
    <widget class="QLineEdit" name="lineEdit_3">
     <property name="geometry">
      <rect>
-      <x>920</x>
-      <y>80</y>
-      <width>121</width>
+      <x>720</x>
+      <y>190</y>
+      <width>81</width>
       <height>21</height>
      </rect>
     </property>
@@ -276,9 +279,9 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>850</x>
-      <y>70</y>
-      <width>51</width>
+      <x>670</x>
+      <y>180</y>
+      <width>41</width>
       <height>31</height>
      </rect>
     </property>
@@ -296,9 +299,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>310</y>
+      <y>350</y>
       <width>511</width>
-      <height>221</height>
+      <height>181</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -364,8 +367,8 @@
    <widget class="QPushButton" name="removeItemButton">
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>470</y>
+      <x>580</x>
+      <y>480</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -380,8 +383,8 @@
    <widget class="QPushButton" name="addItemButton">
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>410</y>
+      <x>580</x>
+      <y>420</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -396,9 +399,9 @@
    <widget class="QComboBox" name="comboBox">
     <property name="geometry">
      <rect>
-      <x>740</x>
-      <y>410</y>
-      <width>131</width>
+      <x>790</x>
+      <y>420</y>
+      <width>141</width>
       <height>41</height>
      </rect>
     </property>
@@ -424,8 +427,8 @@
    <widget class="QPushButton" name="Complete">
     <property name="geometry">
      <rect>
-      <x>730</x>
-      <y>470</y>
+      <x>790</x>
+      <y>480</y>
       <width>141</width>
       <height>41</height>
      </rect>
@@ -440,9 +443,9 @@
    <widget class="QLineEdit" name="lineEdit_4">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>120</y>
-      <width>341</width>
+      <x>330</x>
+      <y>240</y>
+      <width>331</width>
       <height>21</height>
      </rect>
     </property>
@@ -459,8 +462,8 @@
    <widget class="QLabel" name="label_10">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>120</y>
+      <x>220</x>
+      <y>230</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -478,8 +481,8 @@
    <widget class="QLabel" name="label_11">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>160</y>
+      <x>220</x>
+      <y>280</y>
       <width>61</width>
       <height>21</height>
      </rect>
@@ -497,8 +500,8 @@
    <widget class="QLineEdit" name="lineEdit_5">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>160</y>
+      <x>330</x>
+      <y>280</y>
       <width>121</width>
       <height>21</height>
      </rect>
@@ -516,8 +519,8 @@
    <widget class="QLabel" name="label_12">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>170</y>
+      <x>470</x>
+      <y>280</y>
       <width>51</width>
       <height>21</height>
      </rect>
@@ -535,8 +538,8 @@
    <widget class="QComboBox" name="comboBox_2">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>170</y>
+      <x>540</x>
+      <y>280</y>
       <width>81</width>
       <height>21</height>
      </rect>
@@ -569,9 +572,9 @@
    <widget class="QLabel" name="label_13">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>200</y>
-      <width>51</width>
+      <x>670</x>
+      <y>290</y>
+      <width>41</width>
       <height>21</height>
      </rect>
     </property>
@@ -588,9 +591,9 @@
    <widget class="QLineEdit" name="lineEdit_6">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>200</y>
-      <width>121</width>
+      <x>720</x>
+      <y>290</y>
+      <width>81</width>
       <height>21</height>
      </rect>
     </property>
@@ -607,8 +610,8 @@
    <widget class="QLabel" name="grandTotalLabel">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>320</y>
+      <x>580</x>
+      <y>350</y>
       <width>161</width>
       <height>51</height>
      </rect>
@@ -620,10 +623,10 @@
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>800</x>
-      <y>130</y>
-      <width>281</width>
-      <height>261</height>
+      <x>840</x>
+      <y>120</y>
+      <width>301</width>
+      <height>271</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -633,14 +636,14 @@
      </sizepolicy>
     </property>
     <property name="title">
-     <string>Sign Off</string>
+     <string>Approval</string>
     </property>
     <widget class="QLabel" name="label_7">
      <property name="geometry">
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>131</width>
+       <width>71</width>
        <height>71</height>
       </rect>
      </property>
@@ -653,13 +656,16 @@
      <property name="text">
       <string>Prescription Sign Off:</string>
      </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
     </widget>
     <widget class="QLineEdit" name="lineEdit_16">
      <property name="geometry">
       <rect>
-       <x>160</x>
+       <x>110</x>
        <y>60</y>
-       <width>113</width>
+       <width>151</width>
        <height>21</height>
       </rect>
      </property>
@@ -670,9 +676,9 @@
     <widget class="QTextEdit" name="textEdit">
      <property name="geometry">
       <rect>
-       <x>160</x>
+       <x>110</x>
        <y>110</y>
-       <width>111</width>
+       <width>171</width>
        <height>131</height>
       </rect>
      </property>
@@ -683,7 +689,7 @@
     <widget class="QLabel" name="label_8">
      <property name="geometry">
       <rect>
-       <x>70</x>
+       <x>20</x>
        <y>100</y>
        <width>60</width>
        <height>16</height>

@@ -1,3 +1,4 @@
+#InventoryUI.py
 from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox
 from PyQt5.uic import loadUi
 import os
