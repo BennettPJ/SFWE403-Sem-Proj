@@ -31,3 +31,4 @@ class FillPrescriptionUI(QMainWindow):
         dashboard = Dashboard(self.widget)
         self.widget.addWidget(dashboard)
         self.widget.setCurrentIndex(self.widget.indexOf(dashboard))
+        self.widget.setFixedSize(1050, 600)

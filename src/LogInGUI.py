@@ -15,76 +15,59 @@ class MainUI(QMainWindow):
     def __init__(self, widget):  # Accept the widget as an argument
         super(MainUI, self).__init__()
         self.widget = widget  # Store the QStackedWidget reference
-        self.login_roles = LoginRoles()  # Ensure login_roles is initialized here
-        # Load the UI file relative to the project's root
+        self.login_roles = LoginRoles()  # Initialize login roles
+        # Load the UI file
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'LogInGUI.ui')
         loadUi(ui_path, self)
 
-        print("MainUI created and buttons connected.")
-
-        # Connect buttons to their actions
+        # Set fixed dimensions for the login screen
+        self.setFixedSize(800, 525) 
+        
+        # Connect buttons to actions
         self.logInButton.clicked.connect(self.logIn)
         self.password.setEchoMode(QLineEdit.Password)
         self.createAccountButton.clicked.connect(self.createAccount)
 
     def logIn(self):
         try:
-            """
-            Handle the login logic.
-            """
             userName = self.userName.text()
             password = self.password.text()
             
-        # Call the back-end login method
             success, message = self.login_roles.login(userName, password)
 
             if success:
-                
-                # Check if the dashboard is already in the stacked widget
+                # Check if Dashboard already exists in the stack to avoid duplicate instances
                 for i in range(self.widget.count()):
-                    if isinstance(self.widget.widget(i), Dashboard):  # Check if the dashboard already exists
-                        self.widget.setCurrentIndex(i)  # Switch to existing Dashboard
-                        self.resizeToCurrentWidget()  # Ensure proper resizing
+                    if isinstance(self.widget.widget(i), Dashboard):
+                        self.widget.setCurrentIndex(i)
+                        self.widget.setFixedSize(1050, 600)  # Resize for dashboard
                         return
                 
-                # If not found, create the dashboard and add it to the stacked widget
-                dashboard = Dashboard(self.widget)  # Assuming you have a Dashboard class
+                # Create new Dashboard instance if it doesn't exist
+                dashboard = Dashboard(self.widget)
                 self.widget.addWidget(dashboard)
-                self.widget.setCurrentIndex(self.widget.indexOf(dashboard))  # Switch to the new Dashboard
-                self.resizeToCurrentWidget()  # Ensure proper resizing
+                self.widget.setCurrentIndex(self.widget.indexOf(dashboard))
+                self.widget.setFixedSize(1050, 600)  # Resize for dashboard
             else:
-                # Show an error message if login fails
+                # Show message if login fails
                 msg = QMessageBox()
                 msg.setWindowTitle("Login Failed")
                 msg.setText(message)
                 msg.exec_()
         except Exception as e:
-                QMessageBox.critical(self, "Error", str(e))  # Show the error if any
-                print(f"Error during login: {e}")
+            QMessageBox.critical(self, "Error", str(e))
+            print(f"Error during login: {e}")
 
     def createAccount(self):
-        """
-        Switch to the create account screen. Check if it already exists.
-        """
-        print("Create Account button clicked")  # Debugging
-
-        # Check if CreateAccountUI is already in the stacked widget
+        # Check if CreateAccountUI is already in the stack to avoid duplicates
         for i in range(self.widget.count()):
             if isinstance(self.widget.widget(i), CreateAccountUI):
-                self.widget.setCurrentIndex(i)  # Switch to existing CreateAccountUI
-                self.resizeToCurrentWidget()  # Ensure proper resizing
+                self.widget.setCurrentIndex(i)
+                self.widget.setFixedSize(1000, 600)  # Resize for Create Account screen
                 return
 
-        # If not found, create the account creation UI and add it to the stacked widget
+        # Create new instance if not found
         createacc = CreateAccountUI(self.widget)
-        self.widget.addWidget(createacc)  # Add CreateAccountUI to the stacked widget
+        self.widget.addWidget(createacc)
         self.widget.setCurrentIndex(self.widget.indexOf(createacc))
-        self.resizeToCurrentWidget()  # Ensure proper resizing
-
-    def resizeToCurrentWidget(self):
-        """
-        Resize the QStackedWidget to fit the current widget (MainUI, Dashboard, CreateAccountUI).
-        """
-        current_widget = self.widget.currentWidget()  # Get the current widget
-        self.widget.resize(current_widget.width(), current_widget.height())  # Resize to match the current widget
-
+        self.widget.setFixedSize(1000, 600)  # Resize for Create Account screen
