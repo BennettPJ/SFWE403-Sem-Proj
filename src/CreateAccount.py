@@ -6,7 +6,9 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 import resources_rc  # Import the compiled resource file
-from PyQt5.QtWidgets import QMainWindow, QMessageBox
+
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QLineEdit
+n
 from PyQt5.uic import loadUi
 
 
@@ -28,24 +30,27 @@ class CreateAccountUI(QMainWindow):
 
     def createAccount(self):
         username = self.createUserName.text()  
-        password = self.createPassword.text()  
+        email = self.email.text()
+        password = self.createPassword.text() 
+        repassword = self.reEnterPass.text() 
         role = self.rolesBox.currentText() 
         
         from src.LoginRoles import LoginRoles
         
         roles = LoginRoles() 
-
-        if roles.create_account(role, username, password):
+        
+        if password != repassword:
+            msg = QMessageBox()
+            msg.setWindowTitle("Password Mismatch")
+            msg.setText("Passwords do not match. Please re-enter your password.")
+            msg.exec_()
+        else:
+            roles.create_account(role, username, password, email)
             msg = QMessageBox()
             msg.setWindowTitle("Account Created")
             msg.setText("Your account has been created successfully!")
             msg.exec_()
             self.returnToLogin()
-        else:
-            msg = QMessageBox()
-            msg.setWindowTitle("Account Creation Failed")
-            msg.setText("Failed to create account. Username may already exist.")
-            msg.exec_()
 
     def returnToLogin(self):
         """

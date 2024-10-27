@@ -5,11 +5,14 @@ import csv
 from Inventory import Inventory
 
 class InventoryUI(QMainWindow):
-    def __init__(self, widget):  # Accept the widget as an argument
+    def __init__(self, widget, username):  # Accept the widget as an argument
         super(InventoryUI, self).__init__()
         self.widget = widget  # Store the QStackedWidget reference
 
+
         self.inventory = Inventory()  # Create an instance of the Inventory class
+
+        self.username = username  # Store the username
 
         # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'Inventory.ui')
@@ -127,7 +130,10 @@ class InventoryUI(QMainWindow):
     def cancel(self):
         from src.Dashboard import Dashboard  # Move the import here to avoid circular import
 
-        dashboard = Dashboard(self.widget)
+
+        # Always create a new instance of MainUI
+        dashboard = Dashboard(self.widget, self.username)
+
         self.widget.addWidget(dashboard)
         self.widget.setCurrentIndex(self.widget.indexOf(dashboard))
         self.widget.setFixedSize(1050, 600)

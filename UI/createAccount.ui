@@ -277,17 +277,12 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
     </item>
     <item>
      <property name="text">
-      <string>technician</string>
+      <string>pharmacist technician</string>
      </property>
     </item>
     <item>
      <property name="text">
       <string>cashier</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>patient</string>
      </property>
     </item>
    </widget>
@@ -441,7 +436,9 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1033</width>
+
      <height>21</height>
+
     </rect>
    </property>
   </widget>

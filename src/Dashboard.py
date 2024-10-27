@@ -5,7 +5,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 import resources_rc  # Import the compiled resource file
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import QTimer, QTime
 from src.Purchases import Purchases
@@ -16,12 +16,16 @@ from src.InventoryUI import InventoryUI
 from src.OrderMedication import OrderMedication
 from src.AdminUI import AdminUI
 
+from LoginRoles import LoginRoles
+
 class Dashboard(QMainWindow):
-    def __init__(self, widget):  # Accept the widget as an argument
+    def __init__(self, widget, username):  # Accept the widget as an argument
         super(Dashboard, self).__init__()
         self.widget = widget  # Store the QStackedWidget reference
-        
-    
+
+        self.username = username  # Store the username
+
+
         # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'Dashboard.ui')
         loadUi(ui_path, self)
@@ -52,6 +56,18 @@ class Dashboard(QMainWindow):
 
         # Initial clock display
         self.update_clock()
+        
+        #If not admin disable admin button
+        self.setup_ui()
+        
+    def setup_ui(self):
+        self.AdminButton.setEnabled(True) #Enable by default
+        roles = LoginRoles()
+        userRole = roles.find_user_role(self.username)
+        if userRole != 'manager':
+            self.AdminButton.setEnabled(False)
+            
+        self.AdminButton.clicked.connect(self.goToAdmin)
 
     def update_clock(self):
         current_time = QTime.currentTime()
@@ -75,35 +91,43 @@ class Dashboard(QMainWindow):
         self.widget.setFixedSize(800, 525)  # Resize to match login screen size
 
     def goToPurchases(self):
-        for i in range(self.widget.count()):
-            if isinstance(self.widget.widget(i), Purchases):
-                self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
-                return
 
-        purchases_screen = Purchases(self.widget)
-        self.widget.addWidget(purchases_screen)
-        self.widget.setCurrentIndex(self.widget.indexOf(purchases_screen))
-        self.widget.setFixedSize(1169, 558)
+            """ Navigate to the Purchases page """
+            # Check if the purchases page is already in the stack
+            for i in range(self.widget.count()):
+                if isinstance(self.widget.widget(i), Purchases):
+                    self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
+                    return
 
+            # If not in the stack, create a new instance of Purchases and add it to the stack
+            purchases_screen = Purchases(self.widget, self.username)
+            self.widget.addWidget(purchases_screen)
+            self.widget.setCurrentIndex(self.widget.indexOf(purchases_screen))
+            self.widget.setFixedSize(1169, 558)
     def updateCustomerInfo(self):
-        for i in range(self.widget.count()):
-            if isinstance(self.widget.widget(i), CustomerInfo):
-                self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
-                return
-
-        customer_info = CustomerInfo(self.widget)
-        self.widget.addWidget(customer_info)
-        self.widget.setCurrentIndex(self.widget.indexOf(customer_info))
-
+                    # Check if the purchases page is already in the stack
+            for i in range(self.widget.count()):
+                if isinstance(self.widget.widget(i), CustomerInfo):
+                    self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
+                    return
+                
+            # If not in the stack, create a new instance of Purchases and add it to the stack
+            customerInfo = CustomerInfo(self.widget, self.username)
+            self.widget.addWidget(customerInfo)
+            self.widget.setCurrentIndex(self.widget.indexOf(customerInfo))
+        
     def goToReports(self):
-        for i in range(self.widget.count()):
-            if isinstance(self.widget.widget(i), Reports):
-                self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
-                return
+            """ Navigate to the Reports page """
+            # Check if the purchases page is already in the stack
+            for i in range(self.widget.count()):
+                if isinstance(self.widget.widget(i), Reports):
+                    self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
+                    return
 
-        reports_screen = Reports(self.widget)
-        self.widget.addWidget(reports_screen)
-        self.widget.setCurrentIndex(self.widget.indexOf(reports_screen))
+            # If not in the stack, create a new instance of Purchases and add it to the stack
+            reports_screen = Reports(self.widget, self.username)
+            self.widget.addWidget(reports_screen)
+            self.widget.setCurrentIndex(self.widget.indexOf(reports_screen))
 
     def fillPrescription(self):
         for i in range(self.widget.count()):
@@ -111,10 +135,13 @@ class Dashboard(QMainWindow):
                 self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
                 return
 
-        prescription_screen = FillPrescriptionUI(self.widget)
-        self.widget.addWidget(prescription_screen)
-        self.widget.setCurrentIndex(self.widget.indexOf(prescription_screen))
+
+        # If not in the stack, create a new instance of Purchases and add it to the stack
+        prescripInfo = FillPrescriptionUI(self.widget, self.username)
+        self.widget.addWidget(prescripInfo)
+        self.widget.setCurrentIndex(self.widget.indexOf(prescripInfo))
         self.widget.setFixedSize(1132, 661)
+
 
     def goToInventoryUI(self):
         for i in range(self.widget.count()):
@@ -127,7 +154,11 @@ class Dashboard(QMainWindow):
         self.widget.setCurrentIndex(self.widget.indexOf(inventory_screen))
         self.widget.setFixedSize(1010, 500)
 
+
+
     def goToMedication(self):
+        # Check if the purchases page is already in the stack
+
         for i in range(self.widget.count()):
             if isinstance(self.widget.widget(i), OrderMedication):
                 self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
@@ -138,11 +169,23 @@ class Dashboard(QMainWindow):
         self.widget.setCurrentIndex(self.widget.indexOf(medication_screen))
 
     def goToAdmin(self):
+
+        # If not in the stack, create a new instance of Purchases and add it to the stack
+        prescripInfo = OrderMedication(self.widget, self.username)
+        self.widget.addWidget(prescripInfo)
+        self.widget.setCurrentIndex(self.widget.indexOf(prescripInfo))
+
+    def goToAdmin(self):       
+        # Check if the purchases page is already in the stack
+
         for i in range(self.widget.count()):
             if isinstance(self.widget.widget(i), AdminUI):
                 self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
                 return
 
-        admin_screen = AdminUI(self.widget)
-        self.widget.addWidget(admin_screen)
-        self.widget.setCurrentIndex(self.widget.indexOf(admin_screen))
+
+        # If not in the stack, create a new instance of Purchases and add it to the stack
+        admin_ui = AdminUI(self.widget, self.username)
+        self.widget.addWidget(admin_ui)
+        self.widget.setCurrentIndex(self.widget.indexOf(admin_ui))
+

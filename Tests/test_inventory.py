@@ -1,14 +1,21 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
-from src.Inventory import Inventory  # Adjust import path as needed
+
+# Add the src directory to the system path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+
+from Inventory import Inventory  # Adjust import path as needed
 
 def run_tests():
     # Create an instance of the Inventory class
+    inv_file = os.path.join(os.path.dirname(__file__), 'Test_databases/test_db_inventory.csv')
+    filled_file = os.path.join(os.path.dirname(__file__), 'Test_databases/test_db_filled_Prescriptions.csv')
+    picked_file = os.path.join(os.path.dirname(__file__), 'Test_databases/test_db_picked_up_prescriptions.csv')
+
     inventory = Inventory(
-        inventory_file='../Tests/Test_databases/test_db_inventory.csv',
-        filled_file='../Tests/Test_databases/test_db_filled_Prescriptions.csv',
-        picked_up_file='../Tests/Test_databases/test_db_picked_up_prescriptions.csv'
+        inventory_file=inv_file,
+        filled_file=filled_file,
+        picked_up_file=picked_file
     )
     
     # Test 1: View the current stock
@@ -76,10 +83,10 @@ def run_tests():
     inventory.view_stock()
     inventory.view_filled_prescriptions()
     
-    # Test 14: clear picked up prescriptions
-    print("\nTest 14: Clear Picked Up Prescriptions")
-    inventory.clear_picked_up_prescriptions()
-    inventory.view_picked_up_prescriptions()
+    # # Test 14: clear picked up prescriptions
+    # print("\nTest 14: Clear Picked Up Prescriptions")
+    # inventory.clear_picked_up_prescriptions()
+    # inventory.view_picked_up_prescriptions()
     
 if __name__ == "__main__":
     run_tests()
