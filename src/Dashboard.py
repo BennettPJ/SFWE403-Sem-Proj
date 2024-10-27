@@ -143,7 +143,8 @@ class Dashboard(QMainWindow):
                 self.widget.setFixedSize(1010, 500)
                 return
 
-        inventory_screen = InventoryUI(self.widget, self.username)
+        
+        inventory_screen = InventoryUI(self.widget, self.username)  # Pass both widget and username
         self.widget.addWidget(inventory_screen)
         self.widget.setCurrentIndex(self.widget.indexOf(inventory_screen))
         self.widget.setFixedSize(1010, 500)
