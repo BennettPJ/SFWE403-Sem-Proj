@@ -1,4 +1,4 @@
-#CreateAccount.py
+# CreateAccount.py
 import sys
 import os
 
@@ -6,9 +6,10 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 import resources_rc  # Import the compiled resource file
-from PyQt5.QtWidgets import QMainWindow, QInputDialog, QLineEdit
+
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QLineEdit
+n
 from PyQt5.uic import loadUi
-from PyQt5.QtWidgets import QMessageBox
 
 
 class CreateAccountUI(QMainWindow):
@@ -19,8 +20,10 @@ class CreateAccountUI(QMainWindow):
         # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'createAccount.ui')
         loadUi(ui_path, self)
-        # Set a minimum size for the dashboard
-        self.setMinimumSize(1000, 600)  # Example size, you can adjust these values
+        
+        # Set fixed size for the create account screen
+        self.setFixedSize(1000, 600)  # Use setFixedSize instead of setMinimumSize
+
         # Connect the buttons to their actions
         self.signUpButton.clicked.connect(self.createAccount)
         self.logIn2.clicked.connect(self.returnToLogin)  # Log In button to go back to MainUI
@@ -49,17 +52,22 @@ class CreateAccountUI(QMainWindow):
             msg.exec_()
             self.returnToLogin()
 
-
     def returnToLogin(self):
         """
         Return to the login screen when 'Log In' is clicked in the CreateAccount screen.
-        Always create a new instance of MainUI to ensure fresh button connections.
+        Avoid duplicate MainUI instances by checking if it already exists in the widget stack.
         """
+        from src.LogInGUI import MainUI  # Import MainUI inside the function to avoid circular import
 
-        from src.LogInGUI import MainUI  # Importing MainUI inside the function to avoid circular import
+        # Check if MainUI (login screen) is already in the stack to avoid duplicates
+        for i in range(self.widget.count()):
+            if isinstance(self.widget.widget(i), MainUI):
+                self.widget.setCurrentIndex(i)
+                self.widget.setFixedSize(800, 525)  # Resize to match login screen
+                return
 
-        # Always create a new instance of MainUI
+        # If not found, create a new MainUI instance
         login_screen = MainUI(self.widget)
         self.widget.addWidget(login_screen)
         self.widget.setCurrentIndex(self.widget.indexOf(login_screen))
-
+        self.widget.setFixedSize(800, 525)  # Resize to match login screen
