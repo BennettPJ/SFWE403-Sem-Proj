@@ -8,7 +8,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__)))
 import resources_rc  # Import the compiled resource file
 
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QLineEdit
-n
+
 from PyQt5.uic import loadUi
 
 
