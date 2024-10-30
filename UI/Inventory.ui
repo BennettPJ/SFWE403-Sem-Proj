@@ -190,6 +190,11 @@
       <string>Quantity</string>
      </property>
     </column>
+    <column>
+  <property name="text">
+   <string>Expiration Date</string> 
+  </property>
+ </column>
    </widget>
    <widget class="QPushButton" name="updateStockButton">
     <property name="geometry">
