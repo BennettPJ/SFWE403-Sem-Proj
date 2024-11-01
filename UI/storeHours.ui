@@ -61,7 +61,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="loginButton">
+   <widget class="QPushButton" name="backBtn">
     <property name="geometry">
      <rect>
       <x>840</x>
@@ -103,7 +103,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLabel" name="Pname">
+   <widget class="QLabel" name="label_pharmacy_name">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -116,7 +116,7 @@
      <string>Pharmacy Name:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="Pweb">
+   <widget class="QLabel" name="label_pharmacy_website">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -129,7 +129,7 @@
      <string>Pharmacy Website:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="PAddress">
+   <widget class="QLabel" name="label_pharmacy_address">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -142,7 +142,7 @@
      <string>Pharmacy Address:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="Powner">
+   <widget class="QLabel" name="label_pharmacy_owner">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -155,7 +155,7 @@
      <string>Pharmacy Owner:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="PPhone">
+   <widget class="QLabel" name="label_pharmacy_phone">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -181,7 +181,7 @@
      <string>Pharmacy Working Hours:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="monday">
+   <widget class="QLabel" name="label_monday_hours">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -194,7 +194,7 @@
      <string>Monday: </string>
     </property>
    </widget>
-   <widget class="QLabel" name="tuesday">
+   <widget class="QLabel" name="label_tuesday_hours">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -207,7 +207,7 @@
      <string>Tuesday: </string>
     </property>
    </widget>
-   <widget class="QLabel" name="wednesday">
+   <widget class="QLabel" name="label_wednesday_hours">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -220,7 +220,7 @@
      <string>Wednesday: </string>
     </property>
    </widget>
-   <widget class="QLabel" name="Thursday">
+   <widget class="QLabel" name="label_thursday_hours">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -233,7 +233,7 @@
      <string>Thursday: </string>
     </property>
    </widget>
-   <widget class="QLabel" name="Friday">
+   <widget class="QLabel" name="label_friday_hours">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -246,7 +246,7 @@
      <string>Friday: </string>
     </property>
    </widget>
-   <widget class="QLabel" name="Saturday">
+   <widget class="QLabel" name="label_saturday_hours">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -259,7 +259,7 @@
      <string>Saturday: </string>
     </property>
    </widget>
-   <widget class="QLabel" name="sunday">
+   <widget class="QLabel" name="label_sunday_hours">
     <property name="geometry">
      <rect>
       <x>370</x>
@@ -272,7 +272,7 @@
      <string>Sunday: </string>
     </property>
    </widget>
-   <widget class="QPushButton" name="createAccountButton_2">
+   <widget class="QPushButton" name="hoursUpdateBtn">
     <property name="geometry">
      <rect>
       <x>90</x>

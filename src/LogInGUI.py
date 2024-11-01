@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QMainWindow, QMessageBox, QInputDialog, QLineEdit
 from PyQt5.uic import loadUi
 from src.Dashboard import Dashboard  # Import the Dashboard UI
 from src.CreateAccount import CreateAccountUI  # Import CreateAccountUI
+from src.StoreHoursUI import StoreHoursUI  # Import StoreHoursUI
 from LoginRoles import LoginRoles
 
 class MainUI(QMainWindow):
@@ -27,6 +28,7 @@ class MainUI(QMainWindow):
         self.logInButton.clicked.connect(self.logIn)
         self.password.setEchoMode(QLineEdit.Password)
         self.createAccountButton.clicked.connect(self.createAccount)
+        self.storeHoursButton.clicked.connect(self.store_hours)
 
     def logIn(self):
         try:
@@ -107,4 +109,19 @@ class MainUI(QMainWindow):
         createacc = CreateAccountUI(self.widget)
         self.widget.addWidget(createacc)
         self.widget.setCurrentIndex(self.widget.indexOf(createacc))
+        self.widget.setFixedSize(1000, 600)  # Resize for Create Account screen
+
+
+    def store_hours(self):
+        # Store hours of operation
+        for i in range(self.widget.count()):
+            if isinstance(self.widget.widget(i), StoreHoursUI):
+                self.widget.setCurrentIndex(i)
+                self.widget.setFixedSize(1000, 600)  # Resize for Create Account screen
+                return
+
+        # Create new instance if not found
+        storehours = StoreHoursUI(self.widget)
+        self.widget.addWidget(storehours)
+        self.widget.setCurrentIndex(self.widget.indexOf(storehours))
         self.widget.setFixedSize(1000, 600)  # Resize for Create Account screen
