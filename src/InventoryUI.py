@@ -4,6 +4,7 @@ from PyQt5.uic import loadUi
 import os
 import csv
 from Inventory import Inventory
+from LoginRoles import LoginRoles
 
 class InventoryUI(QMainWindow):
     def __init__(self, widget, username):  # Accept the widget as an argument
@@ -36,6 +37,19 @@ class InventoryUI(QMainWindow):
 
         # Connect cellChanged signal to check for last row usage
         self.ItemsTable.cellChanged.connect(self.add_row_if_last_row_used)
+        
+        self.setup_ui() #Used to grey out auto order button if not manager
+        
+        
+    def setup_ui(self):
+        self.autoOrderButton.setEnabled(True)  # Enable by default
+        roles = LoginRoles()
+        user_role = roles.find_user_role(self.username)
+        if user_role != 'manager':
+            self.autoOrderButton.setEnabled(False)
+        
+        self.autoOrderButton.clicked.connect(self.auto_order_stock)  # Auto reorder button
+
 
     def initialize_table(self):
         """
@@ -110,13 +124,16 @@ class InventoryUI(QMainWindow):
             QMessageBox.warning(self, "Error", "Please select a row to update!")
 
     def auto_order_stock(self):
-        """Trigger auto reorder in inventory and reload table."""
+        # Run auto_order to check if reorder is needed and refresh inventory table
         reorder_made = self.inventory.auto_order()
-        self.load_inventory_into_table()  # Refresh table after attempting reorder
+
+        # Use only one QMessageBox based on reorder_made status
         if reorder_made:
             QMessageBox.information(self, "Auto Order", "Auto reorder placed for low-stock items.")
         else:
             QMessageBox.information(self, "Auto Order", "No items required reordering.")
+            
+        self.load_inventory_into_table()  # Refresh table after attempting reorder
 
 
     def check_low_stock(self):

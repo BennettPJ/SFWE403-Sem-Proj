@@ -1,6 +1,6 @@
 Medication,ID,Quantity,Expiration Date
-Aspirin,01,100,10/29/2025
-Ibuprofen,02,50,10/20/2025
-test,03,6,10/20/2025
-test2,04,3,11/20/2025
-penicillin,1232342,1000000,11/23/2045
+Aspirin,01,220,
+Ibuprofen,02,170,
+test,03,126,
+test2,04,123,
+penicillin,1232342,121,

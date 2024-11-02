@@ -136,18 +136,19 @@ class Dashboard(QMainWindow):
         self.widget.setCurrentIndex(self.widget.indexOf(prescription_info))
         self.widget.setFixedSize(1132, 661)
 
+
     def goToInventoryUI(self):
         for i in range(self.widget.count()):
             if isinstance(self.widget.widget(i), InventoryUI):
-                self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
-                self.widget.setFixedSize(1010, 500)
-                return
-
+                self.widget.removeWidget(self.widget.widget(i))
+                break  # Exit the loop as we found and removed the existing page
         
+        # Create a new InventoryUI instance and add it to the widget
         inventory_screen = InventoryUI(self.widget, self.username)  # Pass both widget and username
         self.widget.addWidget(inventory_screen)
         self.widget.setCurrentIndex(self.widget.indexOf(inventory_screen))
         self.widget.setFixedSize(1010, 500)
+        
 
     def goToMedication(self):
         for i in range(self.widget.count()):

@@ -4,7 +4,7 @@ import os
 from LoginRoles import LoginRoles  # Import the LoginRoles class
 
 class Inventory:
-    def __init__(self, low_stock_threshold=120, auto_reorder_threshold=5, inventory_file='../DBFiles/db_inventory.csv', filled_file='../DBFiles/db_filled_prescription.csv', picked_up_file='../DBFiles/db_picked_up_prescription.csv'):
+    def __init__(self, low_stock_threshold=120, auto_reorder_threshold=120, inventory_file='../DBFiles/db_inventory.csv', filled_file='../DBFiles/db_filled_prescription.csv', picked_up_file='../DBFiles/db_picked_up_prescription.csv'):
         # Set up the base directory path
         base_path = os.path.dirname(os.path.abspath(__file__))
         print(f"Base path: {base_path}")
@@ -148,17 +148,17 @@ class Inventory:
                 reader = csv.reader(file)
                 header = next(reader)
                 for row in reader:
-                    if len(row) == 3:
-                        medication, item_id, quantity = row
+                    if len(row) == 4:
+                        medication, item_id, quantity, exp_date = row
                         quantity = int(quantity)
                         
                         # Check if below threshold and if reorder needed
                         if quantity < self.auto_reorder_threshold:
                             reorder_amount = self.low_stock_threshold  # Add this fixed amount
                             quantity += reorder_amount
-                            print(f"Automatic reorder placed for {medication}. {reorder_amount} units added.")
-                            reorder_made = True
-                        rows.append([medication, item_id, str(quantity)])
+                            reorder_made = True  # Set reorder_made to True only if a reorder is placed
+                            print(f"Reorder placed for {medication} with new quantity {quantity}")
+                        rows.append([medication, item_id, str(quantity), exp_date])
 
             # Write back the updated quantities if any reorder happened
             if reorder_made:
@@ -166,14 +166,14 @@ class Inventory:
                     writer = csv.writer(file)
                     writer.writerow(header)
                     writer.writerows(rows)
-                print("Inventory file updated after auto reorder.")
-            else:
-                print("No items needed reordering.")
-            return reorder_made  # Return if reorder occurred
+                print("Reorder made and inventory file updated.")
 
         except FileNotFoundError:
             print("Inventory file not found. No auto-order can be placed.")
             return False
+
+        print(f"Reorder made status: {reorder_made}")
+        return reorder_made  # Return if reorder occurred
 
 
     def check_low_stock(self):
@@ -201,7 +201,7 @@ class Inventory:
                 header = next(reader)
                 medication_found = False
                 for row in reader:
-                    if len(row) == 3 and row[0] == medication:
+                    if len(row) == 4 and row[0] == medication:
                         if int(row[2]) >= quantity:
                             row[2] = str(int(row[2]) - quantity)
                             medication_found = True
