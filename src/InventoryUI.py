@@ -28,6 +28,7 @@ class InventoryUI(QMainWindow):
         self.updateStockButton.clicked.connect(self.update_inventory)  # Update inventory button
         self.autoOrderButton.clicked.connect(self.auto_order_stock)  # Auto reorder button
         self.lowStockButton.clicked.connect(self.check_low_stock)  # Check low stock button
+        self.exp_date.clicked.connect(self.check_exp_date)  # expiration date button
 
         # Set a minimum size for the dashboard
         self.setMinimumSize(1100, 600) # Example size, you can adjust these values
@@ -43,6 +44,7 @@ class InventoryUI(QMainWindow):
         
     def setup_ui(self):
         self.autoOrderButton.setEnabled(True)  # Enable by default
+        #FIXME: Might need to do this for the exp_date button as well
         roles = LoginRoles()
         user_role = roles.find_user_role(self.username)
         if user_role != 'manager':
@@ -159,3 +161,28 @@ class InventoryUI(QMainWindow):
         self.widget.addWidget(dashboard)
         self.widget.setCurrentIndex(self.widget.indexOf(dashboard))
         self.widget.setFixedSize(1050, 600)
+
+
+    def check_exp_date(self):
+        exp_date_items = self.inventory.check_exp_date()
+    
+        if exp_date_items:
+            # Construct the message with each item on a new line
+            message = "Expiration date alert for the following medications:\n"
+            for item in exp_date_items:
+                medication, item_id, quantity, exp_date = item
+                message += f"- {medication} (ID: {item_id}): {quantity} units left, Expiration Date: {exp_date}\n"
+            
+            # Show the message in a warning popup with multiline support
+            msg_box = QMessageBox(self)
+            msg_box.setIcon(QMessageBox.Warning)
+            msg_box.setWindowTitle("Expiration Date Alert")
+            msg_box.setText(message)
+            msg_box.setStandardButtons(QMessageBox.Ok)
+            
+            # Set a larger text area for better readability
+            msg_box.setStyleSheet("QLabel{min-width: 400px;}")
+            msg_box.exec_()
+            
+        else:
+            QMessageBox.information(self, "Expiration Date Alert", "No medications are close to expiration date.")

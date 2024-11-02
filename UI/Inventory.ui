@@ -39,7 +39,7 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>-30</x>
+      <x>190</x>
       <y>0</y>
       <width>651</width>
       <height>61</height>
@@ -76,10 +76,10 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>730</x>
+      <x>760</x>
       <y>80</y>
-      <width>241</width>
-      <height>241</height>
+      <width>211</width>
+      <height>201</height>
      </rect>
     </property>
     <property name="text">
@@ -131,9 +131,9 @@
     <property name="geometry">
      <rect>
       <x>280</x>
-      <y>180</y>
-      <width>391</width>
-      <height>261</height>
+      <y>70</y>
+      <width>471</width>
+      <height>371</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -191,16 +191,16 @@
      </property>
     </column>
     <column>
-  <property name="text">
-   <string>Expiration Date</string> 
-  </property>
- </column>
+     <property name="text">
+      <string>Expiration Date</string>
+     </property>
+    </column>
    </widget>
    <widget class="QPushButton" name="updateStockButton">
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>200</y>
+      <y>140</y>
       <width>171</width>
       <height>41</height>
      </rect>
@@ -232,7 +232,7 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>270</y>
+      <y>90</y>
       <width>171</width>
       <height>41</height>
      </rect>
@@ -264,7 +264,7 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>330</y>
+      <y>240</y>
       <width>171</width>
       <height>41</height>
      </rect>
@@ -296,7 +296,7 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>400</y>
+      <y>190</y>
       <width>171</width>
       <height>41</height>
      </rect>
@@ -328,7 +328,7 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>130</y>
+      <y>30</y>
       <width>171</width>
       <height>51</height>
      </rect>
@@ -356,6 +356,34 @@
      </size>
     </property>
    </widget>
+   <widget class="QPushButton" name="exp_date">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>290</y>
+      <width>171</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(180, 212, 255);</string>
+    </property>
+    <property name="text">
+     <string>Expired stock</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>25</width>
+      <height>25</height>
+     </size>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -363,7 +391,7 @@
      <x>0</x>
      <y>0</y>
      <width>1001</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>

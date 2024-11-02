@@ -2,6 +2,7 @@
 import csv
 import os
 from LoginRoles import LoginRoles  # Import the LoginRoles class
+from datetime import datetime, timedelta
 
 class Inventory:
     def __init__(self, low_stock_threshold=120, auto_reorder_threshold=120, inventory_file='../DBFiles/db_inventory.csv', filled_file='../DBFiles/db_filled_prescription.csv', picked_up_file='../DBFiles/db_picked_up_prescription.csv'):
@@ -34,6 +35,7 @@ class Inventory:
         # Ensure the picked-up prescriptions CSV file exists and has the correct header
         self.initialize_csv(self.picked_up_file, ['Medication', 'Quantity'])
 
+
     def initialize_csv(self, file_path, headers):
         """Helper method to initialize a CSV file with headers if it does not exist."""
         if not os.path.exists(file_path):
@@ -41,12 +43,14 @@ class Inventory:
                 writer = csv.writer(file)
                 writer.writerow(headers)
 
+
     def ensure_inventory_file_exists(self):
         """Ensure that the inventory file exists. If not, create the file with a header row."""
         if not os.path.isfile(self.inventory_file):
             with open(self.inventory_file, mode='w', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerow(['Medication', 'ID', 'Quantity', 'Expiration Date'])  # Write the header
+    
     
     def read_inventory_data(self):
         """Read inventory data from CSV file and return as a list of dictionaries."""
@@ -66,6 +70,7 @@ class Inventory:
             print(f"Inventory file not found: {self.inventory_file}")
         return inventory_data
 
+
     def view_stock(self):
         """Display the current stock in the inventory."""
         try:
@@ -81,6 +86,7 @@ class Inventory:
                     print("The inventory is currently empty.")
         except FileNotFoundError:
             print("Inventory file not found. The inventory is currently empty.")
+
 
     def update_stock(self, medication, new_id, new_quantity, expiration_date):
         """
@@ -138,6 +144,7 @@ class Inventory:
                 })
             print("New inventory file created and updated successfully.")
 
+
     def auto_order(self):
         """Automatically reorder items if their quantity is below the auto reorder threshold."""
         rows = []
@@ -192,6 +199,7 @@ class Inventory:
             print("Inventory file not found. No low stock medications to report.")
             return []
 
+
     def fill_prescription(self, medication, quantity):
         """Fill a prescription by reducing stock and recording in the filled prescriptions file."""
         rows = []
@@ -224,6 +232,7 @@ class Inventory:
         except FileNotFoundError:
             print("Inventory file not found.")
 
+
     def add_filled_prescription(self, medication, quantity):
         """Log a filled prescription in the filled prescriptions file."""
         with open(self.filled_file, mode='a', newline='') as file:
@@ -231,9 +240,30 @@ class Inventory:
             writer.writerow([medication, quantity])
 
             
+    def check_exp_date(self):
+        """Check for items with expiration date within 30 days or already expired."""
+        expiring_items = []
+        today = datetime.today()
+        threshold_date = today + timedelta(days=30)  # Date 30 days from today
 
-    # Additional methods (order_medication, remove_medication, view_filled_prescriptions, etc.)
-    # should also be updated to match this format if they handle the CSV in similar ways.
+        try:
+            with open(self.inventory_file, mode='r') as file:
+                reader = csv.reader(file)
+                next(reader)  # Skip header
+                for medication, item_id, quantity, exp_date in reader:
+                    exp_date = exp_date.strip()  # Remove leading/trailing whitespace
+                    if exp_date != 'No Expiration Date':
+                        # Convert exp_date from string to datetime
+                        exp_date_obj = datetime.strptime(exp_date, "%m/%d/%Y")
+                        
+                        # Check if the expiration date is past or within 30 days from today
+                        if exp_date_obj <= threshold_date:
+                            expiring_items.append((medication, item_id, quantity, exp_date))
+
+            return expiring_items
+        except FileNotFoundError:
+            print("Inventory file not found. No expiring medications to report.")
+            return []
 
 
 
