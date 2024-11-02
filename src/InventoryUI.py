@@ -29,15 +29,13 @@ class InventoryUI(QMainWindow):
         self.autoOrderButton.clicked.connect(self.auto_order_stock)  # Auto reorder button
         self.lowStockButton.clicked.connect(self.check_low_stock)  # Check low stock button
         self.exp_date.clicked.connect(self.check_exp_date)  # expiration date button
+        self.inv_row.clicked.connect(self.add_empty_row) # Add row button
 
         # Set a minimum size for the dashboard
         self.setMinimumSize(1100, 600) # Example size, you can adjust these values
 
         # Initialize the inventory table
         self.initialize_table()
-
-        # Connect cellChanged signal to check for last row usage
-        self.ItemsTable.cellChanged.connect(self.add_row_if_last_row_used)
         
         self.setup_ui() #Used to grey out auto order button if not manager
         
@@ -76,31 +74,15 @@ class InventoryUI(QMainWindow):
 
         # Add an empty row at the end
         self.add_empty_row()
-
       
 
     def add_empty_row(self):
-        """
-        Adds an empty row to the end of the ItemsTable.
-        """
         row_count = self.ItemsTable.rowCount()
         self.ItemsTable.insertRow(row_count)
         self.ItemsTable.setItem(row_count, 0, QTableWidgetItem(""))  # Medication
         self.ItemsTable.setItem(row_count, 1, QTableWidgetItem(""))  # ID
         self.ItemsTable.setItem(row_count, 2, QTableWidgetItem(""))  # Quantity
         self.ItemsTable.setItem(row_count, 3, QTableWidgetItem(""))  # Expiration Date
-
-    def add_row_if_last_row_used(self, row, column):
-        """
-        Adds a new empty row if the last row in the table is used.
-        """
-        row_count = self.ItemsTable.rowCount()
-        # Check if the current cell being edited is in the last row and contains data
-        if row == row_count - 1 and any(self.ItemsTable.item(row, col) for col in range(self.ItemsTable.columnCount())):
-            # Temporarily block the cellChanged signal to avoid recursion
-            self.ItemsTable.blockSignals(True)
-            self.add_empty_row()
-            self.ItemsTable.blockSignals(False)
 
 
     def update_inventory(self):
