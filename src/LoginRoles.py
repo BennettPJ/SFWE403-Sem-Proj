@@ -1,9 +1,9 @@
 import csv
 import os
+import logging
 
 class LoginRoles:
     def __init__(self, roles_file='../DBFiles/db_user_account.csv'):
-        """Initialize roles, hardcoded admin, and failed login counter."""
         base_path = os.path.dirname(os.path.abspath(__file__))
         self.roles_file = os.path.join(base_path, roles_file)
         self.default_admin = {
@@ -13,9 +13,9 @@ class LoginRoles:
             "role": "manager",
             "locked_counter": "0",
             "locked_status": "unlocked"
-        } #Hardcoded admin account for initial login
-        
-        # Ensure the CSV file exists and has the correct header
+        }
+
+        # Ensure the CSV file exists
         if not os.path.exists(self.roles_file):
             with open(self.roles_file, mode='w', newline='') as file:
                 writer = csv.writer(file)
@@ -28,23 +28,33 @@ class LoginRoles:
                     self.default_admin['locked_counter'],
                     self.default_admin['locked_status']
                 ])
+        
+        # Setup logging
+        log_file = os.path.join(os.path.dirname(__file__), '..', 'logs', 'transaction.log')
+        os.makedirs(os.path.dirname(log_file), exist_ok=True)
+        logging.basicConfig(filename=log_file, level=logging.INFO, format='%(asctime)s - %(message)s')
 
+    def log_transaction(self, event):
+        logging.info(event)
+
+    # Example of an updated login function with logging
     def login(self, username: str, password: str):
-        """Handles user login with role-based access."""
         user_data = self.get_user_data(username)
         
         if user_data:
             if user_data['Locked_status'] == 'locked':
+                self.log_transaction(f"Attempted login to locked account: {username}")
                 return False, "Account locked due to too many failed attempts"
-
-            # Verify credentials
             if user_data['Password'] == password:
                 self.reset_locked_counter(username)
+                self.log_transaction(f"Login successful for user: {username}")
                 return True, f"Login successful as {user_data['Role']}."
             else:
                 self.increment_locked_counter(username)
+                self.log_transaction(f"Failed login for user: {username}")
                 return False, "Invalid password"
         else:
+            self.log_transaction(f"Failed login with non-existent username: {username}")
             return False, "Invalid username"
 
     def find_user_role(self, username: str):
