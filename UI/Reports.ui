@@ -105,7 +105,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="InventoryButton">
+   <widget class="QPushButton" name="inventoryReport">
     <property name="geometry">
      <rect>
       <x>70</x>
@@ -201,6 +201,28 @@
       <width>25</width>
       <height>25</height>
      </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="userTransactionsReport">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>290</y>
+      <width>171</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(180, 212, 255);</string>
+    </property>
+    <property name="text">
+     <string>Transactions</string>
     </property>
    </widget>
   </widget>
