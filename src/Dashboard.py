@@ -116,7 +116,7 @@ class Dashboard(QMainWindow):
         for i in range(self.widget.count()):
             if isinstance(self.widget.widget(i), Reports):
                 self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
-                self.widget.setFixedSize(1000, 400)
+                self.widget.setFixedSize(1000, 600)
                 return
 
         reports_screen = Reports(self.widget, self.username)
