@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>2000</width>
+    <width>1083</width>
     <height>600</height>
    </rect>
   </property>
@@ -56,7 +56,7 @@
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="updateCustomerInfoButton">
+   <widget class="QPushButton" name="updatePatientInfoButton">
     <property name="geometry">
      <rect>
       <x>320</x>
@@ -75,7 +75,7 @@
      <string notr="true">background-color: rgb(180, 212, 255);</string>
     </property>
     <property name="text">
-     <string>Update Customer info</string>
+     <string>Update Patient info</string>
     </property>
     <property name="icon">
      <iconset resource="../resources/pharm.qrc">
@@ -384,8 +384,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>2000</width>
-     <height>22</height>
+     <width>1083</width>
+     <height>24</height>
     </rect>
    </property>
   </widget>

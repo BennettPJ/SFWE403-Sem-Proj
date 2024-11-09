@@ -27,8 +27,8 @@
    <widget class="QPushButton" name="cancelButton">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>440</y>
+      <x>800</x>
+      <y>470</y>
       <width>101</width>
       <height>31</height>
      </rect>
@@ -43,19 +43,19 @@
      <string notr="true">background-color: rgb(180, 212, 255);</string>
     </property>
     <property name="text">
-     <string>Cancel</string>
+     <string>Back</string>
     </property>
     <property name="icon">
      <iconset resource="../resources/pharm.qrc">
       <normaloff>:/newPrefix/right.png</normaloff>:/newPrefix/right.png</iconset>
     </property>
    </widget>
-   <widget class="QLineEdit" name="userName">
+   <widget class="QLineEdit" name="firstName">
     <property name="geometry">
      <rect>
       <x>150</x>
-      <y>150</y>
-      <width>221</width>
+      <y>90</y>
+      <width>211</width>
       <height>31</height>
      </rect>
     </property>
@@ -69,11 +69,11 @@
      <string notr="true">background-color: rgb(232, 232, 232);</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="password">
+   <widget class="QLineEdit" name="lastName">
     <property name="geometry">
      <rect>
       <x>470</x>
-      <y>150</y>
+      <y>90</y>
       <width>221</width>
       <height>31</height>
      </rect>
@@ -91,8 +91,8 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>150</y>
+      <x>70</x>
+      <y>90</y>
       <width>81</width>
       <height>31</height>
      </rect>
@@ -114,7 +114,7 @@
     <property name="geometry">
      <rect>
       <x>390</x>
-      <y>150</y>
+      <y>90</y>
       <width>81</width>
       <height>31</height>
      </rect>
@@ -136,7 +136,7 @@
     <property name="geometry">
      <rect>
       <x>170</x>
-      <y>20</y>
+      <y>0</y>
       <width>651</width>
       <height>61</height>
      </rect>
@@ -160,7 +160,7 @@
      <string notr="true">font: 75 35pt &quot;Perpetua&quot;;</string>
     </property>
     <property name="text">
-     <string>Update Customer information </string>
+     <string>Update Patient information </string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -169,12 +169,12 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="createAccountButton">
+   <widget class="QPushButton" name="savePatient">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>440</y>
-      <width>121</width>
+      <x>800</x>
+      <y>350</y>
+      <width>131</width>
       <height>31</height>
      </rect>
     </property>
@@ -188,14 +188,14 @@
      <string notr="true">background-color: rgb(180, 212, 255);</string>
     </property>
     <property name="text">
-     <string>Save</string>
+     <string>Save/Update Patient</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
       <x>740</x>
-      <y>190</y>
+      <y>30</y>
       <width>241</width>
       <height>241</height>
      </rect>
@@ -216,8 +216,8 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>200</y>
+      <x>100</x>
+      <y>130</y>
       <width>81</width>
       <height>31</height>
      </rect>
@@ -238,8 +238,8 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>250</y>
+      <x>80</x>
+      <y>170</y>
       <width>71</width>
       <height>41</height>
      </rect>
@@ -257,12 +257,12 @@
      <string>Address:</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="userName_2">
+   <widget class="QLineEdit" name="DOB">
     <property name="geometry">
      <rect>
       <x>150</x>
-      <y>200</y>
-      <width>221</width>
+      <y>130</y>
+      <width>211</width>
       <height>31</height>
      </rect>
     </property>
@@ -276,12 +276,12 @@
      <string notr="true">background-color: rgb(232, 232, 232);</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="password_2">
+   <widget class="QLineEdit" name="address">
     <property name="geometry">
      <rect>
       <x>150</x>
-      <y>260</y>
-      <width>351</width>
+      <y>180</y>
+      <width>211</width>
       <height>31</height>
      </rect>
     </property>
@@ -293,63 +293,13 @@
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(232, 232, 232);</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="comboBox">
-    <property name="geometry">
-     <rect>
-      <x>470</x>
-      <y>200</y>
-      <width>101</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);</string>
-    </property>
-    <item>
-     <property name="text">
-      <string>Female</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Male</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Other</string>
-     </property>
-    </item>
-   </widget>
-   <widget class="QLabel" name="label_7">
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>190</y>
-      <width>81</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 12pt &quot;Perpetua&quot;;</string>
-    </property>
-    <property name="text">
-     <string>Sex:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>310</y>
+      <x>390</x>
+      <y>180</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -367,11 +317,11 @@
      <string>City:</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="userName_3">
+   <widget class="QLineEdit" name="city">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>310</y>
+      <x>470</x>
+      <y>180</y>
       <width>221</width>
       <height>31</height>
      </rect>
@@ -389,8 +339,8 @@
    <widget class="QLabel" name="label_9">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>310</y>
+      <x>390</x>
+      <y>240</y>
       <width>71</width>
       <height>21</height>
      </rect>
@@ -408,11 +358,11 @@
      <string>State:</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="userName_4">
+   <widget class="QLineEdit" name="state">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>300</y>
+      <x>470</x>
+      <y>230</y>
       <width>111</width>
       <height>31</height>
      </rect>
@@ -430,8 +380,8 @@
    <widget class="QLabel" name="label_10">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>380</y>
+      <x>110</x>
+      <y>240</y>
       <width>71</width>
       <height>21</height>
      </rect>
@@ -449,11 +399,11 @@
      <string>Zip:</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="userName_5">
+   <widget class="QLineEdit" name="zip">
     <property name="geometry">
      <rect>
       <x>150</x>
-      <y>380</y>
+      <y>230</y>
       <width>111</width>
       <height>31</height>
      </rect>
@@ -468,6 +418,330 @@
      <string notr="true">background-color: rgb(232, 232, 232);</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_11">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>280</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 12pt &quot;Perpetua&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Phone Number:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="phoneNumber">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>280</y>
+      <width>221</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(232, 232, 232);</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_12">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>280</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 12pt &quot;Perpetua&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Email:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="email">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>280</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(232, 232, 232);</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_13">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>330</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 12pt &quot;Perpetua&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Provider:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="provider">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>330</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(232, 232, 232);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_14">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>330</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 12pt &quot;Perpetua&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Name Insured:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="nameInsured">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>330</y>
+      <width>221</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(232, 232, 232);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_15">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>380</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 12pt &quot;Perpetua&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Group Number:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_16">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>380</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 12pt &quot;Perpetua&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Policy Number:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="policyNum">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>380</y>
+      <width>221</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(232, 232, 232);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="groupNum">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>380</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(232, 232, 232);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="updatePatient">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>310</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(180, 212, 255);</string>
+    </property>
+    <property name="text">
+     <string>Find Patient</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="removePatientButton">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>390</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(180, 212, 255);</string>
+    </property>
+    <property name="text">
+     <string>Remove Patient</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="clear">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>430</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(180, 212, 255);</string>
+    </property>
+    <property name="text">
+     <string>Clear Screen</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -475,7 +749,7 @@
      <x>0</x>
      <y>0</y>
      <width>1001</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>

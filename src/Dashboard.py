@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QMainWindow
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import QTimer, QTime
 from src.Purchases import Purchases
-from src.CustomerInfo import CustomerInfo
+from src.PatientUI import PatientUI
 from src.Reports import Reports
 from src.FillPrescription import FillPrescriptionUI
 from src.InventoryUI import InventoryUI
@@ -39,7 +39,7 @@ class Dashboard(QMainWindow):
         self.ReportsButton.clicked.connect(self.goToReports)
         self.InventoryButton.clicked.connect(self.goToInventoryUI)
         self.fillPrescripButton.clicked.connect(self.fillPrescription)
-        self.updateCustomerInfoButton.clicked.connect(self.updateCustomerInfo)
+        self.updatePatientInfoButton.clicked.connect(self.patientInfo)
         self.MedButton.clicked.connect(self.goToMedication)
         self.AdminButton.clicked.connect(self.goToAdmin)
 
@@ -75,18 +75,17 @@ class Dashboard(QMainWindow):
     def logOutUser(self):
         from src.LogInGUI import MainUI
 
-        # Check if the login screen already exists in the stack
+        # Remove any existing instance of MainUI to force re-rendering
         for i in range(self.widget.count()):
             if isinstance(self.widget.widget(i), MainUI):
-                self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
-                self.widget.setFixedSize(800, 525)  # Resize to match the login screen size
-                return
+                self.widget.removeWidget(self.widget.widget(i))
+                break  # Exit loop once the widget is removed
 
-        # If not in the stack, create a new instance of MainUI and add it to the stack
+        # Create a new instance of MainUI
         login_screen = MainUI(self.widget)
         self.widget.addWidget(login_screen)
         self.widget.setCurrentIndex(self.widget.indexOf(login_screen))
-        self.widget.setFixedSize(800, 525)
+        self.widget.setFixedSize(800, 525)  # Set size to match the login screen
 
     def goToPurchases(self):
         for i in range(self.widget.count()):
@@ -100,17 +99,17 @@ class Dashboard(QMainWindow):
         self.widget.setCurrentIndex(self.widget.indexOf(purchases_screen))
         self.widget.setFixedSize(1169, 558)
 
-    def updateCustomerInfo(self):
+    def patientInfo(self):
         for i in range(self.widget.count()):
-            if isinstance(self.widget.widget(i), CustomerInfo):
-                self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
-                self.widget.setFixedSize(1050, 600)
-                return
+            if isinstance(self.widget.widget(i), PatientUI):
+                self.widget.removeWidget(self.widget.widget(i))
+                break  # Exit loop once the widget is removed
 
-        customer_info = CustomerInfo(self.widget, self.username)
-        self.widget.addWidget(customer_info)
-        self.widget.setCurrentIndex(self.widget.indexOf(customer_info))
-        self.widget.setFixedSize(1000, 500)
+        # Create a new instance of PatientUI
+        patient_info = PatientUI(self.widget, self.username)
+        self.widget.addWidget(patient_info)
+        self.widget.setCurrentIndex(self.widget.indexOf(patient_info))
+        self.widget.setFixedSize(1050, 600)  
 
     def goToReports(self):
         for i in range(self.widget.count()):
