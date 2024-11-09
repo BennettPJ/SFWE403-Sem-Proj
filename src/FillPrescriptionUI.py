@@ -6,8 +6,10 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 import resources_rc  # Import the compiled resource file
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton
 from PyQt5.uic import loadUi
+from Patient import Patient
+from Inventory import Inventory
 
 
 class FillPrescriptionUI(QMainWindow):
@@ -23,9 +25,17 @@ class FillPrescriptionUI(QMainWindow):
             # Set a minimum size for the dashboard
         self.setMinimumSize(1000, 600)  # Example size, you can adjust these values
         
-        self.cancelButton.clicked.connect(self.cancelOrder)
+        self.cancelButton.clicked.connect(self.backToDashboard)
+        self.FindPatient.clicked.connect(self.findPatient)
+        self.fillPerscription.clicked.connect(self.fillPrescription)
+        self.CheckStock.clicked.connect(self.checkStock)
+        self.clear.clicked.connect(self.clearFields)
         
-    def cancelOrder(self):
+        self.patient_db = Patient()
+        self.inventory_db = Inventory()
+        
+        
+    def backToDashboard(self):
         from src.Dashboard import Dashboard  # Importing MainUI inside the function to avoid circular import
 
         # Always create a new instance of MainUI
@@ -33,3 +43,78 @@ class FillPrescriptionUI(QMainWindow):
         self.widget.addWidget(dashboard)
         self.widget.setCurrentIndex(self.widget.indexOf(dashboard))
         self.widget.setFixedSize(1050, 600)
+        
+    def findPatient(self):
+        # Create a dialog to search for a patient
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Enter Patient Information")
+        dialog.setFixedSize(300, 200)
+        layout = QVBoxLayout(dialog)
+
+        firstNameInput = QLineEdit(dialog)
+        firstNameInput.setPlaceholderText("First Name")
+        layout.addWidget(QLabel("First Name"))
+        layout.addWidget(firstNameInput)
+
+        lastNameInput = QLineEdit(dialog)
+        lastNameInput.setPlaceholderText("Last Name")
+        layout.addWidget(QLabel("Last Name"))
+        layout.addWidget(lastNameInput)
+
+        dobInput = QLineEdit(dialog)
+        dobInput.setPlaceholderText("Date of Birth (MM/DD/YYYY)")
+        layout.addWidget(QLabel("Date of Birth"))
+        layout.addWidget(dobInput)
+
+        confirmButton = QPushButton("Confirm", dialog)
+        layout.addWidget(confirmButton)
+        confirmButton.clicked.connect(dialog.accept)
+
+        if dialog.exec_() == QDialog.Accepted:
+            first_name = firstNameInput.text().strip()
+            last_name = lastNameInput.text().strip()
+            dob = dobInput.text().strip()
+
+            patient_data = self.patient_db.find_patient(first_name, last_name, dob)
+
+            if patient_data:
+                self.firstName.setText(patient_data['FirstName'])
+                self.lastName.setText(patient_data['LastName'])
+                self.DOB.setText(patient_data['DateOfBirth'])
+                self.address.setText(patient_data['StreetAddress'])
+                self.city.setText(patient_data['City'])
+                self.state.setText(patient_data['State'])
+                self.zip.setText(patient_data['ZipCode'])
+                self.phoneNumber.setText(patient_data['PhoneNumber'])
+                self.email.setText(patient_data['Email'])
+                self.nameInsured.setText(patient_data['NameInsured'])
+                self.provider.setText(patient_data['Provider'])
+                self.policyNum.setText(patient_data['PolicyNumber'])
+                self.groupNum.setText(patient_data['GroupNumber'])
+                QMessageBox.information(self, "Success", "Patient information loaded successfully!")
+            else:
+                QMessageBox.warning(self, "Error", "Patient not found.")
+
+    def clearFields(self):
+        self.firstName.clear()
+        self.lastName.clear()
+        self.DOB.clear()
+        self.address.clear()
+        self.city.clear()
+        self.state.clear()
+        self.zip.clear()
+        self.phoneNumber.clear()
+        self.email.clear()
+        self.nameInsured.clear()
+        self.provider.clear()
+        self.policyNum.clear()
+        self.groupNum.clear()
+    
+    def fillPrescription(self):
+        pass
+    
+    def checkStock(self):
+        pass
+    
+    
+    

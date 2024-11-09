@@ -1,1 +1,1 @@
-Medication,Quantity
+PatientFirstName,PatientLastName,DateOfBirth,PrescriptionName,PrescriptionQuantity,PrescriptionFillDate
