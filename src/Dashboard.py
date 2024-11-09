@@ -12,7 +12,7 @@ from PyQt5.QtCore import QTimer, QTime
 from src.Purchases import Purchases
 from src.PatientUI import PatientUI
 from src.Reports import Reports
-from src.FillPrescription import FillPrescriptionUI
+from FillPrescriptionUI import FillPrescriptionUI
 from src.InventoryUI import InventoryUI
 from src.OrderMedication import OrderMedication
 from src.AdminUI import AdminUI
@@ -66,6 +66,11 @@ class Dashboard(QMainWindow):
             self.AdminButton.setEnabled(False)
             
         self.AdminButton.clicked.connect(self.goToAdmin)
+        
+        if user_role != 'pharmacist':
+            self.fillPrescripButton.setEnabled(False)
+            
+        self.fillPrescripButton.clicked.connect(self.fillPrescription)
 
     def update_clock(self):
         current_time = QTime.currentTime()
