@@ -33,6 +33,19 @@ class Reports(QMainWindow):
         with open(log_file, 'r') as file:
             return file.readlines()
 
+    def export_to_csv(self, data, report_name):
+        """Export the report data to a CSV file."""
+        current_date = datetime.now().strftime("%Y-%m-%d")
+        file_name = f"{report_name}_{current_date}.csv"
+        file_path = os.path.join(os.path.dirname(__file__), '..', 'Reports', file_name)
+
+        # Ensure the Reports directory exists
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+        # Export data to CSV
+        data.to_csv(file_path, index=False)
+        QMessageBox.information(self, "Export Successful", f"{report_name} has been exported to {file_path}.")
+
     def show_inventory_report(self):
         """Display inventory data without removed items."""
         inventory_file = os.path.join(os.path.dirname(__file__), '..', 'DBFiles', 'db_inventory.csv')
@@ -56,7 +69,6 @@ class Reports(QMainWindow):
 
             # Rename columns with added spaces for better spacing
             filtered_data = filtered_data.rename(columns={
-                
                 'ID': ' ID    ',
                 'Expiration Date': 'Expiration Date    ',
                 'Date Added': 'Date Added    ',
@@ -64,6 +76,9 @@ class Reports(QMainWindow):
                 'Quantity': 'Quantity    ',
                 'Price': 'Price    '
             })
+
+            # Export to CSV
+            self.export_to_csv(filtered_data, "Inventory_Report")
 
             # Generate report text with adjusted column spacing
             report_text = filtered_data.to_string(
@@ -89,18 +104,20 @@ class Reports(QMainWindow):
                     # Format the date as MM-DD-YYYY
                     formatted_date = log_datetime.strftime("%m-%d-%Y %I:%M:%S %p")
                     # Append the formatted log
-                    formatted_logs.append(f"{formatted_date} - {log_message.strip()}")
+                    formatted_logs.append({"Date": formatted_date, "Log Message": log_message.strip()})
                 except ValueError:
                     # If log does not match expected format, append as is
-                    formatted_logs.append(log.strip())
+                    formatted_logs.append({"Date": "", "Log Message": log.strip()})
+
+            df_logs = pd.DataFrame(formatted_logs)
+            self.export_to_csv(df_logs, "User_Transactions_Report")
 
             # Combine formatted logs into a single string
-            report_text = "\n".join(formatted_logs) if formatted_logs else "No login/logout activity found."
+            report_text = "\n".join([f"{log['Date']} - {log['Log Message']}" for log in formatted_logs])
         else:
             report_text = "No log file found or it is empty."
 
         self.show_report_popup("User Transactions Report", report_text)
-
 
     def show_financial_report(self):
         """Show financial transactions from the logs."""
@@ -108,6 +125,9 @@ class Reports(QMainWindow):
         if logs:
             financial_logs = [log for log in logs if "purchase" in log.lower()]
             report_text = "\n".join(financial_logs) if financial_logs else "No financial transactions found."
+
+            df_financial_logs = pd.DataFrame({"Log": financial_logs})
+            self.export_to_csv(df_financial_logs, "Financial_Report")
         else:
             report_text = "No log file found or it is empty."
 
@@ -153,16 +173,8 @@ class Reports(QMainWindow):
                         filtered_data[date_col], errors='coerce'
                     ).dt.strftime('%m-%d-%Y').fillna('')
 
-            # Rename columns with added spaces for better spacing
-            filtered_data = filtered_data.rename(columns={
-                
-                'ID': ' ID    ',
-                'Expiration Date': 'Expiration Date    ',
-                'Date Added': 'Date Added    ',
-                'Date Updated': 'Date Updated    ',
-                'Quantity': 'Quantity    ',
-                'Price': 'Price    '
-            })
+            # Export to CSV
+            self.export_to_csv(filtered_data, "Inventory_Report_Period")
 
             # Prepare the report text
             report_text = filtered_data.to_string(index=False) if not filtered_data.empty else "No inventory updates found for the selected period."
