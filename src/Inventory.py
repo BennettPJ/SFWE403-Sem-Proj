@@ -58,17 +58,41 @@ class Inventory:
         try:
             with open(self.inventory_file, mode='r') as file:
                 reader = csv.DictReader(file)
+                expected_headers = ['Medication', 'ID', 'Quantity', 'Price', 'Expiration Date']
+                
+                # Validate headers
+                if reader.fieldnames != expected_headers:
+                    raise ValueError(f"CSV headers mismatch. Expected: {expected_headers}, Found: {reader.fieldnames}")
+
+                # Read each row and ensure data integrity
                 for row in reader:
+                    medication = row.get('Medication', '').strip()
+                    item_id = row.get('ID', '').strip()
+                    quantity = row.get('Quantity', '').strip()
+                    price = row.get('Price', '').strip()
+                    exp_date = row.get('Expiration Date', '').strip()
+
+                    # Validate row data
+                    if not medication or not item_id or not quantity or not price or not exp_date:
+                        print(f"Skipping invalid row: {row}")
+                        continue
+
                     inventory_data.append({
-                        'Medication': row.get('Medication', 'Unknown'),
-                        'ID': row.get('ID', 'Unknown'),
-                        'Quantity': row.get('Quantity', '0'),
-                        'Expiration Date': row.get('Expiration Date', 'No Expiration Date')
+                        'Medication': medication,
+                        'ID': item_id,
+                        'Quantity': quantity,
+                        'Price': price,
+                        'Expiration Date': exp_date
                     })
-            print(f"Successfully read inventory data: {inventory_data}")
+
+                print(f"Successfully read inventory data: {inventory_data}")
         except FileNotFoundError:
-            print(f"Inventory file not found: {self.inventory_file}")
+            print(f"Inventory file not found at: {self.inventory_file}")
+        except ValueError as ve:
+            print(f"Error in CSV format: {ve}")
         return inventory_data
+
+
 
 
     def view_stock(self):

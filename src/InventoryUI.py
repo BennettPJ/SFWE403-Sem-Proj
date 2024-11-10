@@ -55,8 +55,8 @@ class InventoryUI(QMainWindow):
         """
         Set up the inventory table to display data.
         """
-        self.ItemsTable.setColumnCount(4)  # Columns for Medication, ID, Quantity
-        self.ItemsTable.setHorizontalHeaderLabels(['Medication', 'ID', 'Quantity', 'Expiration Date'])
+        self.ItemsTable.setColumnCount(5)  # Add a column for Price
+        self.ItemsTable.setHorizontalHeaderLabels(['Medication', 'ID', 'Quantity', 'Price', 'Expiration Date'])
         self.load_inventory_into_table()
 
     def load_inventory_into_table(self):
@@ -70,10 +70,24 @@ class InventoryUI(QMainWindow):
             self.ItemsTable.setItem(i, 0, QTableWidgetItem(item['Medication']))
             self.ItemsTable.setItem(i, 1, QTableWidgetItem(item['ID']))
             self.ItemsTable.setItem(i, 2, QTableWidgetItem(item['Quantity']))
-            self.ItemsTable.setItem(i, 3, QTableWidgetItem(item['Expiration Date']))
+            self.ItemsTable.setItem(i, 3, QTableWidgetItem(item['Price']))  # Include Price
+            self.ItemsTable.setItem(i, 4, QTableWidgetItem(item['Expiration Date']))
 
         # Add an empty row at the end
         self.add_empty_row()
+
+    def add_empty_row(self):
+        """
+        Add an empty row to the inventory table.
+        """
+        row_count = self.ItemsTable.rowCount()
+        self.ItemsTable.insertRow(row_count)
+        self.ItemsTable.setItem(row_count, 0, QTableWidgetItem(""))  # Medication
+        self.ItemsTable.setItem(row_count, 1, QTableWidgetItem(""))  # ID
+        self.ItemsTable.setItem(row_count, 2, QTableWidgetItem(""))  # Quantity
+        self.ItemsTable.setItem(row_count, 3, QTableWidgetItem(""))  # Price
+        self.ItemsTable.setItem(row_count, 4, QTableWidgetItem(""))  # Expiration Date
+
       
 
     def add_empty_row(self):
