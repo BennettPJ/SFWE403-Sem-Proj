@@ -61,12 +61,12 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="ReceiptsButtton">
+   <widget class="QPushButton" name="financialReportButton">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>100</y>
-      <width>551</width>
+      <x>70</x>
+      <y>180</y>
+      <width>171</width>
       <height>81</height>
      </rect>
     </property>
@@ -80,7 +80,7 @@
      <string notr="true">background-color: rgb(180, 212, 255);</string>
     </property>
     <property name="text">
-     <string>Sales</string>
+     <string>Financial </string>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
@@ -108,9 +108,9 @@
    <widget class="QPushButton" name="inventoryReport">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>340</y>
-      <width>551</width>
+      <x>70</x>
+      <y>410</y>
+      <width>171</width>
       <height>81</height>
      </rect>
     </property>
@@ -125,6 +125,50 @@
     </property>
     <property name="text">
      <string>Inventory</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="inventoryTimeReportButton">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>180</y>
+      <width>171</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(180, 212, 255);</string>
+    </property>
+    <property name="text">
+     <string>Inventory Period</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PrescriptionsButton_2">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>410</y>
+      <width>171</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(180, 212, 255);</string>
+    </property>
+    <property name="text">
+     <string>Employees</string>
     </property>
    </widget>
    <widget class="QPushButton" name="cancelButton">
@@ -162,9 +206,9 @@
    <widget class="QPushButton" name="userTransactionsReport">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>220</y>
-      <width>551</width>
+      <x>70</x>
+      <y>290</y>
+      <width>171</width>
       <height>81</height>
      </rect>
     </property>
@@ -178,7 +222,7 @@
      <string notr="true">background-color: rgb(180, 212, 255);</string>
     </property>
     <property name="text">
-     <string>Transactions</string>
+     <string>LogIn/LogOut</string>
     </property>
    </widget>
   </widget>
@@ -188,7 +232,7 @@
      <x>0</x>
      <y>0</y>
      <width>1001</width>
-     <height>36</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
