@@ -47,44 +47,33 @@ class Reports(QMainWindow):
         QMessageBox.information(self, "Export Successful", f"{report_name} has been exported to {file_path}.")
 
     def show_inventory_report(self):
-        """Display inventory data without removed items."""
+        """
+        Display inventory data excluding removed items and excluding the 'Date Removed' column.
+        """
         inventory_file = os.path.join(os.path.dirname(__file__), '..', 'DBFiles', 'db_inventory.csv')
         if os.path.exists(inventory_file):
             inventory_data = pd.read_csv(inventory_file)
-            inventory_data['Quantity'] = pd.to_numeric(inventory_data['Quantity'], errors='coerce')
 
-            # Replace NaN with blank
-            inventory_data = inventory_data.fillna('')
+            # Exclude rows where 'Date Removed' is not empty
+            filtered_data = inventory_data[inventory_data['Date Removed'].isnull() | (inventory_data['Date Removed'] == '')]
 
-            # Format dates to MM-DD-YYYY
+            # Drop the 'Date Removed' column
+            if 'Date Removed' in filtered_data.columns:
+                filtered_data = filtered_data.drop(columns=['Date Removed'])
+
+            # Format dates for readability and fill NaN values
             for date_col in ['Expiration Date', 'Date Added', 'Date Updated']:
-                if date_col in inventory_data.columns:
-                    inventory_data[date_col] = pd.to_datetime(
-                        inventory_data[date_col], errors='coerce'
+                if date_col in filtered_data.columns:
+                    filtered_data[date_col] = pd.to_datetime(
+                        filtered_data[date_col], errors='coerce'
                     ).dt.strftime('%m-%d-%Y').fillna('')
 
-            # Filter rows without 'Date Removed' and drop the column
-            filtered_data = inventory_data[inventory_data['Date Removed'] == '']
-            filtered_data = filtered_data.drop(columns=['Date Removed'], errors='ignore')
-
-            # Rename columns with added spaces for better spacing
-            filtered_data = filtered_data.rename(columns={
-                'ID': ' ID    ',
-                'Expiration Date': 'Expiration Date    ',
-                'Date Added': 'Date Added    ',
-                'Date Updated': 'Date Updated    ',
-                'Quantity': 'Quantity    ',
-                'Price': 'Price    '
-            })
-
-            # Export to CSV
+            # Export and display the report
             self.export_to_csv(filtered_data, "Inventory_Report")
-
-            # Generate report text with adjusted column spacing
-            report_text = filtered_data.to_string(
-                index=False,
-                col_space=2  # Adjust column spacing for better readability
-            ) if not filtered_data.empty else "No current inventory available."
+            report_text = (
+                filtered_data.to_string(index=False, col_space=2) 
+                if not filtered_data.empty else "No current inventory available."
+            )
             self.show_report_popup("Current Inventory Report", report_text)
         else:
             QMessageBox.warning(self, "File Not Found", "The inventory file could not be located.")
@@ -134,7 +123,9 @@ class Reports(QMainWindow):
         self.show_report_popup("Financial Report", report_text)
 
     def show_inventory_report_for_period(self):
-        """Generate inventory report for a specified period, including removed items."""
+        """
+        Generate inventory report for a specified period, including removed items.
+        """
         start_date, end_date = self.get_date_range_from_user()
         if not (start_date and end_date):
             QMessageBox.warning(self, "Invalid Dates", "Please select a valid date range.")
@@ -148,40 +139,29 @@ class Reports(QMainWindow):
         try:
             # Load inventory data
             inventory_data = pd.read_csv(inventory_file)
+            inventory_data['Date Updated'] = pd.to_datetime(inventory_data['Date Updated'], errors='coerce')
 
-            # Convert 'Date Updated' to datetime and filter valid rows
-            inventory_data['Date Updated'] = pd.to_datetime(
-                inventory_data['Date Updated'], errors='coerce'
-            )
-
-            # Drop rows with invalid dates in 'Date Updated'
-            inventory_data = inventory_data.dropna(subset=['Date Updated'])
-
-            # Filter inventory by the selected date range
+            # Filter by date range
             filtered_data = inventory_data[
                 (inventory_data['Date Updated'] >= pd.Timestamp(start_date)) &
                 (inventory_data['Date Updated'] <= pd.Timestamp(end_date))
             ]
 
-            # Replace NaN with blank in all columns
-            filtered_data = filtered_data.fillna('')
-
-            # Format dates in specific columns to MM-DD-YYYY
+            # Format dates
             for date_col in ['Expiration Date', 'Date Added', 'Date Updated', 'Date Removed']:
                 if date_col in filtered_data.columns:
                     filtered_data[date_col] = pd.to_datetime(
                         filtered_data[date_col], errors='coerce'
                     ).dt.strftime('%m-%d-%Y').fillna('')
 
-            # Export to CSV
+            # Export and display the report
             self.export_to_csv(filtered_data, "Inventory_Report_Period")
-
-            # Prepare the report text
             report_text = filtered_data.to_string(index=False) if not filtered_data.empty else "No inventory updates found for the selected period."
             self.show_report_popup("Inventory Report for Period", report_text)
 
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred while processing the inventory report:\n{e}")
+
 
     def get_date_range_from_user(self):
         """Prompt the user to select a date range."""
