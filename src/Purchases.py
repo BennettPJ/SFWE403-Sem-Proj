@@ -4,6 +4,10 @@ from PyQt5.uic import loadUi
 import os
 import sys
 from PyQt5.QtCore import pyqtSlot
+import csv
+from PyQt5.QtWidgets import QComboBox
+import csv
+
 
 class Purchases(QMainWindow):
     def __init__(self, widget, username):  # Accept the widget as an argument
@@ -62,18 +66,58 @@ class Purchases(QMainWindow):
 
     @pyqtSlot()
     def complete_purchase(self):
-        grand_total = self.grandTotalLabel.text()
-
+        # Collect customer details
+        first_name = self.FName.text()  # Assuming a line edit for first name
+        last_name = self.LName.text()   # Assuming a line edit for last name
+        payment_method = self.PaymentMethod.currentText()  # Assuming a combo box for payment method
+        
+        # Check if first name or last name is empty
+        if not first_name or not last_name:
+            QMessageBox.warning(self, "Input Error", "Please enter both first and last names.")
+            return  # Stop further execution if fields are empty
+        
         # Show a confirmation message box
+        grand_total = self.grandTotalLabel.text()
         msg = QMessageBox()
         msg.setWindowTitle("Purchase Complete")
         msg.setText(f"Purchase completed successfully.\n{grand_total}")
         msg.setStandardButtons(QMessageBox.Ok)
 
-        # Connect the button click to return to the dashboard
+        # If user clicks OK, save to CSV, reset table, and clear name fields
         if msg.exec_() == QMessageBox.Ok:
+            self.save_to_csv(first_name, last_name, payment_method, grand_total)
             self.reset_table()  # Reset the table before returning
             self.returnToDashboard()
+            
+            # Clear the first name and last name fields
+            self.FName.clear()  # Clear the first name field
+            self.LName.clear()  # Clear the last name field
+
+    def save_to_csv(self, first_name, last_name, payment_method, grand_total):
+        # Construct the path to the CSV file, changing the name to db_purchase_data.csv
+        base_path = os.path.dirname(os.path.abspath(__file__))  # Get the base directory path
+        file_path = os.path.join(base_path, '..', 'DBFiles', 'db_purchase_data.csv')  # Path to the CSV file
+
+        # Ensure the CSV file exists
+        if not os.path.exists(file_path):
+            with open(file_path, mode='w', newline='') as file:
+                writer = csv.writer(file)
+                # Write headers if the file doesn't exist yet
+                writer.writerow(['First Name', 'Last Name', 'Item Name', 'Quantity', 'Price', 'Total Cost', 'Grand Total', 'Payment Method'])
+
+        # Open the CSV file in append mode to add new data
+        with open(file_path, mode='a', newline='') as file:
+            writer = csv.writer(file)
+
+            # Collect all rows (item name, quantity, price, total cost)
+            for row in range(self.ItemsTable.rowCount()):
+                item_name = self.ItemsTable.item(row, 0).text() if self.ItemsTable.item(row, 0) else ""
+                quantity = self.ItemsTable.item(row, 1).text() if self.ItemsTable.item(row, 1) else "0"
+                price = self.ItemsTable.item(row, 2).text() if self.ItemsTable.item(row, 2) else "0.00"
+                total_cost = self.ItemsTable.item(row, 3).text() if self.ItemsTable.item(row, 3) else "0.00"
+                
+                # Write data for each item
+                writer.writerow([first_name, last_name, item_name, quantity, price, total_cost, grand_total, payment_method])
 
     def reset_table(self):
         """Clear all items from the ItemsTable while keeping the rows."""
@@ -126,7 +170,7 @@ class Purchases(QMainWindow):
                 grand_total += total_cost
 
             # Update the grand total label.
-            self.grandTotalLabel.setText(f"Grand Total: ${grand_total:.2f}")
+            self.grandTotalLabel.setText(f"{grand_total:.2f}")
         finally:
             # Reconnect the signal after updating.
             self.ItemsTable.blockSignals(False)
