@@ -150,7 +150,7 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
    <widget class="QTableWidget" name="tableWidget">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>120</x>
       <y>320</y>
       <width>531</width>
       <height>201</height>
@@ -161,6 +161,12 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
       <horstretch>0</horstretch>
       <verstretch>0</verstretch>
      </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>531</width>
+      <height>0</height>
+     </size>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgb(180, 212, 255);</string>
@@ -198,11 +204,6 @@ font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
     <column>
      <property name="text">
       <string>Dose</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Strength</string>
      </property>
     </column>
     <column>
