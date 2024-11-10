@@ -1,8 +1,10 @@
+#Reports.py
 from PyQt5.QtWidgets import QMainWindow, QDialog, QVBoxLayout, QLabel, QPushButton, QTextEdit, QDateEdit, QMessageBox, QHBoxLayout
 from PyQt5.uic import loadUi
 import os
 from datetime import datetime
 import pandas as pd
+
 
 class Reports(QMainWindow):
     def __init__(self, widget, username):
@@ -32,43 +34,142 @@ class Reports(QMainWindow):
             return file.readlines()
 
     def show_inventory_report(self):
-        """Display inventory data with low stock items highlighted."""
-        inventory_file = os.path.join(os.path.dirname(__file__), 'DBFiles', 'db_inventory.csv')
+        """Display inventory data without removed items."""
+        inventory_file = os.path.join(os.path.dirname(__file__), '..', 'DBFiles', 'db_inventory.csv')
         if os.path.exists(inventory_file):
             inventory_data = pd.read_csv(inventory_file)
             inventory_data['Quantity'] = pd.to_numeric(inventory_data['Quantity'], errors='coerce')
-            low_stock_items = inventory_data[inventory_data['Quantity'] < 5]
 
-            report_text = "Low Stock Items:\n" + (low_stock_items.to_string(index=False) if not low_stock_items.empty else "No low stock items found.")
-            self.show_report_popup("Inventory Report", report_text)
+            # Replace NaN with blank
+            inventory_data = inventory_data.fillna('')
+
+            # Format dates to MM-DD-YYYY
+            for date_col in ['Expiration Date', 'Date Added', 'Date Updated']:
+                if date_col in inventory_data.columns:
+                    inventory_data[date_col] = pd.to_datetime(
+                        inventory_data[date_col], errors='coerce'
+                    ).dt.strftime('%m-%d-%Y').fillna('')
+
+            # Filter rows without 'Date Removed' and drop the column
+            filtered_data = inventory_data[inventory_data['Date Removed'] == '']
+            filtered_data = filtered_data.drop(columns=['Date Removed'], errors='ignore')
+
+            # Rename columns with added spaces for better spacing
+            filtered_data = filtered_data.rename(columns={
+                
+                'ID': ' ID    ',
+                'Expiration Date': 'Expiration Date    ',
+                'Date Added': 'Date Added    ',
+                'Date Updated': 'Date Updated    ',
+                'Quantity': 'Quantity    ',
+                'Price': 'Price    '
+            })
+
+            # Generate report text with adjusted column spacing
+            report_text = filtered_data.to_string(
+                index=False,
+                col_space=2  # Adjust column spacing for better readability
+            ) if not filtered_data.empty else "No current inventory available."
+            self.show_report_popup("Current Inventory Report", report_text)
         else:
             QMessageBox.warning(self, "File Not Found", "The inventory file could not be located.")
 
     def show_user_transactions(self):
         """Show user transaction logs for login/logout activity."""
         logs = self.read_log_file()
-        user_logs = [log for log in logs if "login" in log.lower() or "logout" in log.lower()]
-        report_text = "\n".join(user_logs) if user_logs else "No user transactions found."
+        formatted_logs = []
+
+        if logs:
+            for log in logs:
+                try:
+                    # Extract the date and rest of the log message
+                    date_part, log_message = log.split(" - ", 1)
+                    # Convert date to datetime object
+                    log_datetime = datetime.strptime(date_part.split(",")[0], "%Y-%m-%d %H:%M:%S")
+                    # Format the date as MM-DD-YYYY
+                    formatted_date = log_datetime.strftime("%m-%d-%Y %I:%M:%S %p")
+                    # Append the formatted log
+                    formatted_logs.append(f"{formatted_date} - {log_message.strip()}")
+                except ValueError:
+                    # If log does not match expected format, append as is
+                    formatted_logs.append(log.strip())
+
+            # Combine formatted logs into a single string
+            report_text = "\n".join(formatted_logs) if formatted_logs else "No login/logout activity found."
+        else:
+            report_text = "No log file found or it is empty."
+
         self.show_report_popup("User Transactions Report", report_text)
+
 
     def show_financial_report(self):
         """Show financial transactions from the logs."""
         logs = self.read_log_file()
-        financial_logs = [log for log in logs if "purchase" in log.lower()]
-        report_text = "\n".join(financial_logs) if financial_logs else "No financial transactions found."
+        if logs:
+            financial_logs = [log for log in logs if "purchase" in log.lower()]
+            report_text = "\n".join(financial_logs) if financial_logs else "No financial transactions found."
+        else:
+            report_text = "No log file found or it is empty."
+
         self.show_report_popup("Financial Report", report_text)
 
     def show_inventory_report_for_period(self):
-        """Generate inventory report for a specified period."""
+        """Generate inventory report for a specified period, including removed items."""
         start_date, end_date = self.get_date_range_from_user()
         if not (start_date and end_date):
             QMessageBox.warning(self, "Invalid Dates", "Please select a valid date range.")
             return
 
-        logs = self.read_log_file()
-        inventory_logs = [log for log in logs if "inventory" in log.lower() and self.is_within_date_range(log, start_date, end_date)]
-        report_text = "\n".join(inventory_logs) if inventory_logs else "No inventory records found for the selected period."
-        self.show_report_popup("Inventory Report for Period", report_text)
+        inventory_file = os.path.join(os.path.dirname(__file__), '..', 'DBFiles', 'db_inventory.csv')
+        if not os.path.exists(inventory_file):
+            QMessageBox.warning(self, "File Not Found", "The inventory file could not be located.")
+            return
+
+        try:
+            # Load inventory data
+            inventory_data = pd.read_csv(inventory_file)
+
+            # Convert 'Date Updated' to datetime and filter valid rows
+            inventory_data['Date Updated'] = pd.to_datetime(
+                inventory_data['Date Updated'], errors='coerce'
+            )
+
+            # Drop rows with invalid dates in 'Date Updated'
+            inventory_data = inventory_data.dropna(subset=['Date Updated'])
+
+            # Filter inventory by the selected date range
+            filtered_data = inventory_data[
+                (inventory_data['Date Updated'] >= pd.Timestamp(start_date)) &
+                (inventory_data['Date Updated'] <= pd.Timestamp(end_date))
+            ]
+
+            # Replace NaN with blank in all columns
+            filtered_data = filtered_data.fillna('')
+
+            # Format dates in specific columns to MM-DD-YYYY
+            for date_col in ['Expiration Date', 'Date Added', 'Date Updated', 'Date Removed']:
+                if date_col in filtered_data.columns:
+                    filtered_data[date_col] = pd.to_datetime(
+                        filtered_data[date_col], errors='coerce'
+                    ).dt.strftime('%m-%d-%Y').fillna('')
+
+            # Rename columns with added spaces for better spacing
+            filtered_data = filtered_data.rename(columns={
+                
+                'ID': ' ID    ',
+                'Expiration Date': 'Expiration Date    ',
+                'Date Added': 'Date Added    ',
+                'Date Updated': 'Date Updated    ',
+                'Quantity': 'Quantity    ',
+                'Price': 'Price    '
+            })
+
+            # Prepare the report text
+            report_text = filtered_data.to_string(index=False) if not filtered_data.empty else "No inventory updates found for the selected period."
+            self.show_report_popup("Inventory Report for Period", report_text)
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"An error occurred while processing the inventory report:\n{e}")
 
     def get_date_range_from_user(self):
         """Prompt the user to select a date range."""
@@ -102,20 +203,11 @@ class Reports(QMainWindow):
             return start_date, end_date
         return None, None
 
-    def is_within_date_range(self, log, start_date, end_date):
-        """Check if a log entry falls within a date range."""
-        log_date_str = log.split(" - ")[0]
-        try:
-            log_date = datetime.strptime(log_date_str, "%Y-%m-%d")
-            return start_date <= log_date <= end_date
-        except ValueError:
-            return False
-
     def show_report_popup(self, title, report_text):
         """Display a report in a popup dialog."""
         dialog = QDialog(self)
         dialog.setWindowTitle(title)
-        dialog.setMinimumSize(600, 400)
+        dialog.setMinimumSize(900, 600)  # Increased popup window size
 
         layout = QVBoxLayout(dialog)
         log_display = QTextEdit()
