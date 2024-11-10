@@ -55,8 +55,8 @@ class InventoryUI(QMainWindow):
         """
         Set up the inventory table to display data.
         """
-        self.ItemsTable.setColumnCount(4)  # Columns for Medication, ID, Quantity
-        self.ItemsTable.setHorizontalHeaderLabels(['Medication', 'ID', 'Quantity', 'Expiration Date'])
+        self.ItemsTable.setColumnCount(5)  # Add a column for Price
+        self.ItemsTable.setHorizontalHeaderLabels(['Medication', 'ID', 'Quantity', 'Price', 'Expiration Date'])
         self.load_inventory_into_table()
 
     def load_inventory_into_table(self):
@@ -70,10 +70,24 @@ class InventoryUI(QMainWindow):
             self.ItemsTable.setItem(i, 0, QTableWidgetItem(item['Medication']))
             self.ItemsTable.setItem(i, 1, QTableWidgetItem(item['ID']))
             self.ItemsTable.setItem(i, 2, QTableWidgetItem(item['Quantity']))
-            self.ItemsTable.setItem(i, 3, QTableWidgetItem(item['Expiration Date']))
+            self.ItemsTable.setItem(i, 3, QTableWidgetItem(item['Price']))
+            self.ItemsTable.setItem(i, 4, QTableWidgetItem(item['Expiration Date']))
+            self.ItemsTable.setItem(i, 5, QTableWidgetItem(item.get('Date Added', '')))
+            self.ItemsTable.setItem(i, 6, QTableWidgetItem(item.get('Date Removed', '')))
 
-        # Add an empty row at the end
-        self.add_empty_row()
+
+    def add_empty_row(self):
+        """
+        Add an empty row to the inventory table.
+        """
+        row_count = self.ItemsTable.rowCount()
+        self.ItemsTable.insertRow(row_count)
+        self.ItemsTable.setItem(row_count, 0, QTableWidgetItem(""))  # Medication
+        self.ItemsTable.setItem(row_count, 1, QTableWidgetItem(""))  # ID
+        self.ItemsTable.setItem(row_count, 2, QTableWidgetItem(""))  # Quantity
+        self.ItemsTable.setItem(row_count, 3, QTableWidgetItem(""))  # Price
+        self.ItemsTable.setItem(row_count, 4, QTableWidgetItem(""))  # Expiration Date
+
       
 
     def add_empty_row(self):
@@ -94,7 +108,8 @@ class InventoryUI(QMainWindow):
             medication = self.ItemsTable.item(selected_row, 0).text()
             id = self.ItemsTable.item(selected_row, 1).text()  # ID from the second column
             new_quantity_str = self.ItemsTable.item(selected_row, 2).text()
-            expiration_date = self.ItemsTable.item(selected_row, 3).text()
+            price = self.ItemsTable.item(selected_row, 3).text()  # Price column
+            expiration_date = self.ItemsTable.item(selected_row, 4).text()
 
             try:
                 new_quantity = int(new_quantity_str)
@@ -102,10 +117,11 @@ class InventoryUI(QMainWindow):
                 QMessageBox.warning(self, "Error", "Invalid quantity entered.")
                 return
 
-            self.inventory.update_stock(medication, id, new_quantity, expiration_date)
-            QMessageBox.information(self, "Success", f"Updated {medication} (ID: {id}) stock to {new_quantity}, Expiration Date: {expiration_date}")
+            self.inventory.update_stock(medication, id, new_quantity, expiration_date, price)
+            QMessageBox.information(self, "Success", f"Updated {medication} (ID: {id}) stock to {new_quantity}, Price: {price}, Expiration Date: {expiration_date}")
         else:
             QMessageBox.warning(self, "Error", "Please select a row to update!")
+
 
     def auto_order_stock(self):
         # Run auto_order to check if reorder is needed and refresh inventory table

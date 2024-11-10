@@ -1,269 +1,135 @@
 # Inventory.py
 import csv
 import os
-from LoginRoles import LoginRoles  # Import the LoginRoles class
 from datetime import datetime, timedelta
+from LoginRoles import LoginRoles
+
 
 class Inventory:
-    def __init__(self, low_stock_threshold=120, auto_reorder_threshold=120, inventory_file='../DBFiles/db_inventory.csv', filled_file='../DBFiles/db_filled_prescription.csv', picked_up_file='../DBFiles/db_picked_up_prescription.csv'):
-        # Set up the base directory path
+    def __init__(self, inventory_file='../DBFiles/db_inventory.csv'):
         base_path = os.path.dirname(os.path.abspath(__file__))
-        print(f"Base path: {base_path}")
-
-        # Ensure the 'DBFiles' directory exists, if not, create it
-        db_dir = os.path.join(base_path, 'DBFiles')
-        if not os.path.exists(db_dir):
-            os.makedirs(db_dir)
-
-        # Set the file paths relative to the base directory
         self.inventory_file = os.path.join(base_path, inventory_file)
-        self.filled_file = os.path.join(base_path, filled_file)
-        self.picked_up_file = os.path.join(base_path, picked_up_file)
-        print(f"Inventory file path: {self.inventory_file}") #debug purpose 
-
-        # Ensure the inventory file exists, and create it if necessary
+        self.low_stock_threshold = 120
+        self.auto_reorder_threshold = 120
         self.ensure_inventory_file_exists()
 
-        self.low_stock_threshold = low_stock_threshold
-        self.auto_reorder_threshold = auto_reorder_threshold
-        self.login_roles = LoginRoles()  # Create an instance of the LoginRoles class
-        
-        # Ensure the inventory CSV file exists and has the correct header
-        self.initialize_csv(self.inventory_file, ['Medication', 'ID', 'Quantity', 'Expiration Date'])
-        # Ensure the filled prescriptions CSV file exists and has the correct header
-        self.initialize_csv(self.filled_file, ['Medication', 'Quantity'])
-        # Ensure the picked-up prescriptions CSV file exists and has the correct header
-        self.initialize_csv(self.picked_up_file, ['Medication', 'Quantity'])
-
-
-    def initialize_csv(self, file_path, headers):
-        """Helper method to initialize a CSV file with headers if it does not exist."""
-        if not os.path.exists(file_path):
-            with open(file_path, mode='w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow(headers)
-
-
     def ensure_inventory_file_exists(self):
-        """Ensure that the inventory file exists. If not, create the file with a header row."""
         if not os.path.isfile(self.inventory_file):
             with open(self.inventory_file, mode='w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow(['Medication', 'ID', 'Quantity', 'Expiration Date'])  # Write the header
-    
-    
+                writer = csv.DictWriter(
+                    file, fieldnames=['Medication', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed']
+                )
+                writer.writeheader()
+
     def read_inventory_data(self):
-        """Read inventory data from CSV file and return as a list of dictionaries."""
         inventory_data = []
         try:
             with open(self.inventory_file, mode='r') as file:
                 reader = csv.DictReader(file)
                 for row in reader:
                     inventory_data.append({
-                        'Medication': row.get('Medication', 'Unknown'),
-                        'ID': row.get('ID', 'Unknown'),
-                        'Quantity': row.get('Quantity', '0'),
-                        'Expiration Date': row.get('Expiration Date', 'No Expiration Date')
+                        'Medication': row.get('Medication', ''),
+                        'ID': row.get('ID', ''),
+                        'Quantity': row.get('Quantity', ''),
+                        'Price': row.get('Price', ''),
+                        'Expiration Date': row.get('Expiration Date', ''),
+                        'Date Added': row.get('Date Added', ''),
+                        'Date Updated': row.get('Date Updated', ''),
+                        'Date Removed': row.get('Date Removed', '')
                     })
-            print(f"Successfully read inventory data: {inventory_data}")
         except FileNotFoundError:
-            print(f"Inventory file not found: {self.inventory_file}")
+            print("Inventory file not found.")
         return inventory_data
 
-
-    def view_stock(self):
-        """Display the current stock in the inventory."""
-        try:
-            with open(self.inventory_file, mode='r') as file:
-                reader = csv.reader(file)
-                next(reader)  # Skip header
-                stock_empty = True
-                print("Current inventory stock:")
-                for medication, item_id, quantity, exp_date in reader:
-                    stock_empty = False
-                    print(f"{medication} (ID: {item_id}): {quantity} units, Expiration Date: {exp_date}")
-                if stock_empty:
-                    print("The inventory is currently empty.")
-        except FileNotFoundError:
-            print("Inventory file not found. The inventory is currently empty.")
-
-
-    def update_stock(self, medication, new_id, new_quantity, expiration_date):
-        """
-        Updates the stock for a specific medication. If a row with the same
-        medication name and ID exists, it is replaced with the new quantity and expiration date.
-        Otherwise, it adds a new entry.
-        """
+    def update_stock(self, medication, item_id, quantity, exp_date, price=None):
         rows = []
+        current_date = datetime.now().strftime('%Y-%m-%d')
         updated = False
 
         try:
-            # Read the current inventory file
             with open(self.inventory_file, mode='r') as file:
                 reader = csv.DictReader(file)
                 for row in reader:
-                    # If the medication and ID match, update this row's quantity and expiration date
-                    if row['Medication'].strip().lower() == medication.strip().lower() and row['ID'].strip() == new_id.strip():
-                        row['Quantity'] = str(new_quantity)
-                        row['Expiration Date'] = expiration_date
+                    if row['Medication'] == medication and row['ID'] == item_id:
+                        row['Quantity'] = str(quantity)
+                        row['Price'] = price or row['Price']
+                        row['Expiration Date'] = exp_date
+                        row['Date Updated'] = current_date  # Update date
                         updated = True
-                    # Retain each row in the list
                     rows.append(row)
 
-            # If the medication wasn't found, add it as a new entry
             if not updated:
                 rows.append({
                     'Medication': medication,
-                    'ID': new_id,
-                    'Quantity': str(new_quantity),
-                    'Expiration Date': expiration_date
+                    'ID': item_id,
+                    'Quantity': str(quantity),
+                    'Price': price or "0.00",
+                    'Expiration Date': exp_date,
+                    'Date Added': current_date,
+                    'Date Updated': current_date,
+                    'Date Removed': ''
                 })
-                print(f"Added new entry: {medication} with ID {new_id}: {new_quantity} units, Expiration Date: {expiration_date}")
 
-            # Write the updated inventory back to the file
             with open(self.inventory_file, mode='w', newline='') as file:
-                fieldnames = ['Medication', 'ID', 'Quantity', 'Expiration Date']
-                writer = csv.DictWriter(file, fieldnames=fieldnames)
+                writer = csv.DictWriter(file, fieldnames=[
+                    'Medication', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed'
+                ])
                 writer.writeheader()
                 writer.writerows(rows)
-
-            print("Inventory file updated successfully.")
-
-        except FileNotFoundError:
-            print("Inventory file not found. Creating a new inventory.")
-            # If file is not found, create it with the updated row
-            with open(self.inventory_file, mode='w', newline='') as file:
-                fieldnames = ['Medication', 'ID', 'Quantity', 'Expiration Date']
-                writer = csv.DictWriter(file, fieldnames=fieldnames)
-                writer.writeheader()
-                writer.writerow({
-                    'Medication': medication,
-                    'ID': new_id,
-                    'Quantity': str(new_quantity),
-                    'Expiration Date': expiration_date
-                })
-            print("New inventory file created and updated successfully.")
-
-
-    def auto_order(self):
-        """Automatically reorder items if their quantity is below the auto reorder threshold."""
-        rows = []
-        reorder_made = False  # Track if any reorder occurs
-
-        try:
-            with open(self.inventory_file, mode='r') as file:
-                reader = csv.reader(file)
-                header = next(reader)
-                for row in reader:
-                    if len(row) == 4:
-                        medication, item_id, quantity, exp_date = row
-                        quantity = int(quantity)
-                        
-                        # Check if below threshold and if reorder needed
-                        if quantity < self.auto_reorder_threshold:
-                            reorder_amount = self.low_stock_threshold  # Add this fixed amount
-                            quantity += reorder_amount
-                            reorder_made = True  # Set reorder_made to True only if a reorder is placed
-                            print(f"Reorder placed for {medication} with new quantity {quantity}")
-                        rows.append([medication, item_id, str(quantity), exp_date])
-
-            # Write back the updated quantities if any reorder happened
-            if reorder_made:
-                with open(self.inventory_file, mode='w', newline='') as file:
-                    writer = csv.writer(file)
-                    writer.writerow(header)
-                    writer.writerows(rows)
-                print("Reorder made and inventory file updated.")
-
-        except FileNotFoundError:
-            print("Inventory file not found. No auto-order can be placed.")
-            return False
-
-        print(f"Reorder made status: {reorder_made}")
-        return reorder_made  # Return if reorder occurred
-
-
-    def check_low_stock(self):
-        """Check for items with stock below the low stock threshold and display alerts."""
-        low_stock_items = []
-        try:
-            with open(self.inventory_file, mode='r') as file:
-                reader = csv.reader(file)
-                next(reader)  # Skip header
-                for medication, item_id, quantity, exp_date in reader:
-                    if int(quantity) < self.low_stock_threshold:
-                        low_stock_items.append((medication, item_id, quantity, exp_date))
-
-            return low_stock_items
-        except FileNotFoundError:
-            print("Inventory file not found. No low stock medications to report.")
-            return []
-
-
-    def fill_prescription(self, medication, quantity):
-        """Fill a prescription by reducing stock and recording in the filled prescriptions file."""
-        rows = []
-        try:
-            with open(self.inventory_file, mode='r') as file:
-                reader = csv.reader(file)
-                header = next(reader)
-                medication_found = False
-                for row in reader:
-                    if len(row) == 4 and row[0] == medication:
-                        if int(row[2]) >= quantity:
-                            row[2] = str(int(row[2]) - quantity)
-                            medication_found = True
-                        else:
-                            print(f"Insufficient stock for {medication}.")
-                            return
-                    rows.append(row)
-
-            if medication_found:
-                with open(self.inventory_file, mode='w', newline='') as file:
-                    writer = csv.writer(file)
-                    writer.writerow(header)
-                    writer.writerows(rows)
-                print(f"{quantity} units of {medication} dispensed.")
-                self.add_filled_prescription(medication, quantity)
-                self.check_low_stock()
-            else:
-                print(f"{medication} is not in the inventory.")
 
         except FileNotFoundError:
             print("Inventory file not found.")
 
-
-    def add_filled_prescription(self, medication, quantity):
-        """Log a filled prescription in the filled prescriptions file."""
-        with open(self.filled_file, mode='a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([medication, quantity])
-
-            
-    def check_exp_date(self):
-        """Check for items with expiration date within 30 days or already expired."""
-        expiring_items = []
-        today = datetime.today()
-        threshold_date = today + timedelta(days=30)  # Date 30 days from today
-
+    def auto_order(self):
+        reorder_made = False
+        rows = []
+        current_date = datetime.now().strftime('%Y-%m-%d')
         try:
             with open(self.inventory_file, mode='r') as file:
-                reader = csv.reader(file)
-                next(reader)  # Skip header
-                for medication, item_id, quantity, exp_date in reader:
-                    exp_date = exp_date.strip()  # Remove leading/trailing whitespace
-                    if exp_date != 'No Expiration Date':
-                        # Convert exp_date from string to datetime
-                        exp_date_obj = datetime.strptime(exp_date, "%m/%d/%Y")
-                        
-                        # Check if the expiration date is past or within 30 days from today
-                        if exp_date_obj <= threshold_date:
-                            expiring_items.append((medication, item_id, quantity, exp_date))
+                reader = csv.DictReader(file)
+                for row in reader:
+                    if int(row['Quantity']) < self.auto_reorder_threshold:
+                        row['Quantity'] = str(int(row['Quantity']) + self.low_stock_threshold)
+                        row['Date Updated'] = current_date
+                        reorder_made = True
+                    rows.append(row)
 
-            return expiring_items
+            with open(self.inventory_file, mode='w', newline='') as file:
+                writer = csv.DictWriter(file, fieldnames=[
+                    'Medication', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed'
+                ])
+                writer.writeheader()
+                writer.writerows(rows)
         except FileNotFoundError:
-            print("Inventory file not found. No expiring medications to report.")
-            return []
+            print("Inventory file not found.")
+        return reorder_made
+
+    def check_low_stock(self):
+        low_stock_items = []
+        try:
+            with open(self.inventory_file, mode='r') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    if int(row['Quantity']) < self.low_stock_threshold:
+                        low_stock_items.append((row['Medication'], row['ID'], row['Quantity']))
+        except FileNotFoundError:
+            print("Inventory file not found.")
+        return low_stock_items
+
+    def check_exp_date(self):
+        expiring_items = []
+        today = datetime.today()
+        threshold_date = today + timedelta(days=30)
+        try:
+            with open(self.inventory_file, mode='r') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    exp_date = row.get('Expiration Date', '')
+                    if exp_date and datetime.strptime(exp_date, "%Y-%m-%d") <= threshold_date:
+                        expiring_items.append((row['Medication'], row['ID'], row['Quantity'], exp_date))
+        except FileNotFoundError:
+            print("Inventory file not found.")
+        return expiring_items
 
 
 
