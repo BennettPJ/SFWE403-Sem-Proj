@@ -363,6 +363,11 @@
       <string>Total Cost</string>
      </property>
     </column>
+    <column>
+     <property name="text">
+      <string>Prescription</string>
+     </property>
+    </column>
    </widget>
    <widget class="QPushButton" name="removeItemButton">
     <property name="geometry">

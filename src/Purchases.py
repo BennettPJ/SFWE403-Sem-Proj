@@ -1,12 +1,8 @@
-#purchase.py
 from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QTableWidgetItem, QMessageBox, QDialog, QVBoxLayout, QLabel, QPushButton, QTextEdit
 from PyQt5.uic import loadUi
 import os
-import sys
+import csv
 from PyQt5.QtCore import pyqtSlot
-import csv
-from PyQt5.QtWidgets import QComboBox
-import csv
 
 
 class Purchases(QMainWindow):
@@ -18,7 +14,7 @@ class Purchases(QMainWindow):
         # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'Purchase.ui')
         loadUi(ui_path, self)
-            # Set a minimum size for the dashboard
+        # Set a minimum size for the dashboard
         self.setMinimumSize(1100, 600)  # Example size, you can adjust these values
         self.grandTotalLabel.setText("Grand Total: $0.00")
 
@@ -48,6 +44,7 @@ class Purchases(QMainWindow):
             receipt_text += "{:<15} {:<10} {:<10} {:<10}\n".format(item, quantity, price, total)
 
         receipt_text += "-" * 40 + "\n"
+        receipt_text += f"Payment Method: {self.PaymentMethod.currentText()}\n"  # Added payment method to receipt
         receipt_text += f"{self.grandTotalLabel.text()}\n"
         receipt_text += "-" * 40 + "\n"
 
@@ -76,6 +73,13 @@ class Purchases(QMainWindow):
             QMessageBox.warning(self, "Input Error", "Please enter both first and last names.")
             return  # Stop further execution if fields are empty
         
+        # Before completing, check if any prescription medication is being purchased
+        if self.check_for_prescription_items():
+            # Show confirmation dialog for signature before completing purchase
+            confirmation = self.show_signature_popup()
+            if not confirmation:
+                return  # If the user doesn't acknowledge, don't proceed with the purchase
+        
         # Show a confirmation message box
         grand_total = self.grandTotalLabel.text()
         msg = QMessageBox()
@@ -86,12 +90,42 @@ class Purchases(QMainWindow):
         # If user clicks OK, save to CSV, reset table, and clear name fields
         if msg.exec_() == QMessageBox.Ok:
             self.save_to_csv(first_name, last_name, payment_method, grand_total)
-            self.reset_table()  # Reset the table before returning
+            self.reset_table()  # Reset the table to 4 rows before returning
             self.returnToDashboard()
             
             # Clear the first name and last name fields
             self.FName.clear()  # Clear the first name field
             self.LName.clear()  # Clear the last name field
+
+    def check_for_prescription_items(self):
+        """
+        Checks if any items in the cart are marked as 'yes' in the 'Prescription' column.
+        """
+        for row in range(self.ItemsTable.rowCount()):
+            prescription_status = self.ItemsTable.item(row, 4).text().lower()
+            if prescription_status == "yes":
+                return True
+        return False
+
+    def show_signature_popup(self):
+        """
+        Show a popup asking the user to confirm that they acknowledge the prescription medication.
+        This is essentially a confirmation dialog for the 'signature' requirement.
+        """
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Prescription Medication Confirmation")
+        
+        layout = QVBoxLayout(dialog)
+        label = QLabel("Please acknowledge that you have received prescription medication at the point of sale.")
+        layout.addWidget(label)
+        
+        # Add a 'Confirm' button
+        confirm_button = QPushButton("Confirm")
+        confirm_button.clicked.connect(dialog.accept)
+        layout.addWidget(confirm_button)
+
+        # Show the dialog and wait for user confirmation
+        return dialog.exec_() == QDialog.Accepted  # Return True if confirmed, False if canceled
 
     def save_to_csv(self, first_name, last_name, payment_method, grand_total):
         # Construct the path to the CSV file, changing the name to db_purchase_data.csv
@@ -103,7 +137,10 @@ class Purchases(QMainWindow):
             with open(file_path, mode='w', newline='') as file:
                 writer = csv.writer(file)
                 # Write headers if the file doesn't exist yet
-                writer.writerow(['First Name', 'Last Name', 'Item Name', 'Quantity', 'Price', 'Total Cost', 'Grand Total', 'Payment Method'])
+                writer.writerow(['First Name', 'Last Name', 'Item Name', 'Quantity', 'Price', 'Total Cost', 'Grand Total', 'Payment Method', 'Prescription'])
+
+        # Extract only the numeric value from the grand total text (removes "Grand Total: $")
+        grand_total_numeric = float(grand_total.replace("Grand Total: $", "").strip())  # Convert to float
 
         # Open the CSV file in append mode to add new data
         with open(file_path, mode='a', newline='') as file:
@@ -115,12 +152,16 @@ class Purchases(QMainWindow):
                 quantity = self.ItemsTable.item(row, 1).text() if self.ItemsTable.item(row, 1) else "0"
                 price = self.ItemsTable.item(row, 2).text() if self.ItemsTable.item(row, 2) else "0.00"
                 total_cost = self.ItemsTable.item(row, 3).text() if self.ItemsTable.item(row, 3) else "0.00"
+                prescription_status = self.ItemsTable.item(row, 4).text().lower() if self.ItemsTable.item(row, 4) else "no"
                 
-                # Write data for each item
-                writer.writerow([first_name, last_name, item_name, quantity, price, total_cost, grand_total, payment_method])
+                # Write data for each item, including the prescription status
+                writer.writerow([first_name, last_name, item_name, quantity, price, total_cost, grand_total_numeric, payment_method, prescription_status])
 
     def reset_table(self):
-        """Clear all items from the ItemsTable while keeping the rows."""
+        """Reset the table to 4 rows with no data."""
+        self.ItemsTable.setRowCount(4)  # Set number of rows to 4
+        
+        # Clear all the cells in the table
         for row in range(self.ItemsTable.rowCount()):
             for column in range(self.ItemsTable.columnCount()):
                 self.ItemsTable.setItem(row, column, QTableWidgetItem(""))  # Clear the cell contents
@@ -148,7 +189,7 @@ class Purchases(QMainWindow):
         self.ItemsTable.blockSignals(True)
 
         try:
-            # Iterate through each row to calculate the total cost of each item.
+            # Calculate total for all rows in the table.
             for row in range(self.ItemsTable.rowCount()):
                 quantity_item = self.ItemsTable.item(row, 1)  # Assuming 2nd column is Quantity
                 price_item = self.ItemsTable.item(row, 2)     # Assuming 3rd column is Price
@@ -163,14 +204,14 @@ class Purchases(QMainWindow):
                 # Calculate total cost for each row.
                 total_cost = quantity * price
 
-                # Update the total cost in the 4th column (index 3).
+                # Update the total cost in the 4th column (index 3) for the row that was changed
                 self.ItemsTable.setItem(row, 3, QTableWidgetItem(f"{total_cost:.2f}"))
 
                 # Add to grand total.
                 grand_total += total_cost
 
             # Update the grand total label.
-            self.grandTotalLabel.setText(f"{grand_total:.2f}")
+            self.grandTotalLabel.setText(f"Grand Total: ${grand_total:.2f}")
         finally:
             # Reconnect the signal after updating.
             self.ItemsTable.blockSignals(False)
@@ -187,6 +228,7 @@ class Purchases(QMainWindow):
             self.update_grand_total()
         else:
             QMessageBox.warning(self, "Warning", "Please select a row to remove.")
+
 
 class ReceiptDialog(QDialog):
     def __init__(self, receipt_text, parent=None):

@@ -1,8 +1,13 @@
-First Name,Last Name,Item Name,Quantity,Price,Total Cost,Grand Total,Payment Method
-Sharon,O,pizza,4,15.99,63.96,112.93,Cash
-Sharon,O,cookies,2,3.45,6.90,112.93,Cash
-Sharon,O,napkins,5,2.99,14.95,112.93,Cash
-Sharon,O,plates,4,6.78,27.12,112.93,Cash
-Jenny,G,water,2,4.54,9.08,26.69,Cash
-Jenny,G,apple,1,.33,0.33,26.69,Cash
-Jenny,G,advil,4,4.32,17.28,26.69,Cash
+First Name,Last Name,Item Name,Quantity,Price,Total Cost,Grand Total,Payment Method,Prescription
+Bad,Bunny,advil,1,2.33,2.33,69.52,Cash,no
+Bad,Bunny,morphine,1,56.32,56.32,69.52,Cash,yes
+Bad,Bunny,apple,3,2.22,6.66,69.52,Cash,no
+Bad,Bunny,water,1,4.21,4.21,69.52,Cash,no
+Angie,Joli,water,1,2.11,2.11,Grand Total: $37.52,Cash,no
+Angie,Joli,banana,32,.22,7.04,Grand Total: $37.52,Cash,no
+Angie,Joli,Cough Syrup,1,23.67,23.67,Grand Total: $37.52,Cash,yes
+Angie,Joli,advil,2,2.35,4.70,Grand Total: $37.52,Cash,no
+Jay,Balvin,water,3,2.12,6.36,75.05,Cash,no
+Jay,Balvin,Adderall,1,65.22,65.22,75.05,Cash,yes
+Jay,Balvin,pear,1,2.32,2.32,75.05,Cash,no
+Jay,Balvin,apple,5,.23,1.15,75.05,Cash,no
