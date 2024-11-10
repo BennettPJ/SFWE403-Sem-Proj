@@ -228,6 +228,38 @@
      </size>
     </property>
    </widget>
+   <widget class="QPushButton" name="viewStockButton">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>140</y>
+      <width>171</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(180, 212, 255);</string>
+    </property>
+    <property name="text">
+     <string>View Stock</string>
+    </property>
+    <property name="icon">
+     <iconset resource="../resources/pharm.qrc">
+      <normaloff>:/newPrefix/pharmacist.png</normaloff>:/newPrefix/pharmacist.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>25</width>
+      <height>25</height>
+     </size>
+    </property>
+   </widget>
    <widget class="QPushButton" name="autoOrderButton">
     <property name="geometry">
      <rect>
@@ -296,7 +328,7 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>80</y>
+      <y>30</y>
       <width>171</width>
       <height>51</height>
      </rect>
@@ -356,7 +388,7 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>140</y>
+      <y>90</y>
       <width>171</width>
       <height>41</height>
      </rect>
@@ -387,7 +419,7 @@
      <x>0</x>
      <y>0</y>
      <width>1001</width>
-     <height>36</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>
