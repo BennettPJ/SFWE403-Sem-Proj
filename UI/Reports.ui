@@ -61,7 +61,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="ReceiptsButtton">
+   <widget class="QPushButton" name="financialReportButton">
     <property name="geometry">
      <rect>
       <x>70</x>
@@ -80,7 +80,7 @@
      <string notr="true">background-color: rgb(180, 212, 255);</string>
     </property>
     <property name="text">
-     <string>Sales</string>
+     <string>Financial </string>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
@@ -127,7 +127,7 @@
      <string>Inventory</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="PrescriptionsButton">
+   <widget class="QPushButton" name="inventoryTimeReportButton">
     <property name="geometry">
      <rect>
       <x>350</x>
@@ -146,7 +146,7 @@
      <string notr="true">background-color: rgb(180, 212, 255);</string>
     </property>
     <property name="text">
-     <string>Prescriptions</string>
+     <string>Inventory Period</string>
     </property>
    </widget>
    <widget class="QPushButton" name="PrescriptionsButton_2">
@@ -222,7 +222,7 @@
      <string notr="true">background-color: rgb(180, 212, 255);</string>
     </property>
     <property name="text">
-     <string>Transactions</string>
+     <string>LogIn/LogOut</string>
     </property>
    </widget>
   </widget>
