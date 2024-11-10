@@ -1,5 +1,4 @@
 Medication,ID,Quantity,Expiration Date
-Test1,1,200,11/27/2024
+Test1,1,170,11/27/2024
 Test2,2,160,12/12/2024
-Test3,3,173,11/27/2034
-Test4,4,250,12/12/2025
+Test3,3,175,11/27/2034
