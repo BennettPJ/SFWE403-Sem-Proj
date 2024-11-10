@@ -1,11 +1,10 @@
-# Inventory.py
 import csv
 import os
 from LoginRoles import LoginRoles  # Import the LoginRoles class
 from datetime import datetime, timedelta
 
 class Inventory:
-    def __init__(self, low_stock_threshold=120, auto_reorder_threshold=120, inventory_file='../DBFiles/db_inventory.csv', filled_file='../DBFiles/db_filled_prescription.csv', picked_up_file='../DBFiles/db_picked_up_prescription.csv'):
+    def __init__(self, low_stock_threshold=120, auto_reorder_threshold=120, activity_file='../DBFiles/db_inventory_activity_log.csv',inventory_file='../DBFiles/db_inventory.csv', filled_file='../DBFiles/db_filled_prescription.csv', picked_up_file='../DBFiles/db_picked_up_prescription.csv'):
         # Set up the base directory path
         base_path = os.path.dirname(os.path.abspath(__file__))
         print(f"Base path: {base_path}")
@@ -17,9 +16,10 @@ class Inventory:
 
         # Set the file paths relative to the base directory
         self.inventory_file = os.path.join(base_path, inventory_file)
+        self.activity_file = os.path.join(base_path, activity_file)
         self.filled_file = os.path.join(base_path, filled_file)
         self.picked_up_file = os.path.join(base_path, picked_up_file)
-        print(f"Inventory file path: {self.inventory_file}") #debug purpose 
+        #print(f"Inventory file path: {self.inventory_file}") #debug purpose 
 
         # Ensure the inventory file exists, and create it if necessary
         self.ensure_inventory_file_exists()
@@ -30,11 +30,12 @@ class Inventory:
         
         # Ensure the inventory CSV file exists and has the correct header
         self.initialize_csv(self.inventory_file, ['Medication', 'ID', 'Quantity', 'Expiration Date'])
+        #Ensure the activity CSV file exists and has the correct header
+        self.initialize_csv(self.activity_file, ['Medication','ID','Quantity','Expiration Date', 'ID Employee', 'Removal Date'])
         # Ensure the filled prescriptions CSV file exists and has the correct header
         self.initialize_csv(self.filled_file, ['Medication', 'Quantity'])
         # Ensure the picked-up prescriptions CSV file exists and has the correct header
         self.initialize_csv(self.picked_up_file, ['Medication', 'Quantity'])
-
 
     def initialize_csv(self, file_path, headers):
         """Helper method to initialize a CSV file with headers if it does not exist."""
@@ -55,6 +56,7 @@ class Inventory:
     def read_inventory_data(self):
         """Read inventory data from CSV file and return as a list of dictionaries."""
         inventory_data = []
+        
         try:
             with open(self.inventory_file, mode='r') as file:
                 reader = csv.DictReader(file)
@@ -65,7 +67,7 @@ class Inventory:
                         'Quantity': row.get('Quantity', '0'),
                         'Expiration Date': row.get('Expiration Date', 'No Expiration Date')
                     })
-            print(f"Successfully read inventory data: {inventory_data}")
+            #print(f"Successfully read inventory data: {inventory_data}")
         except FileNotFoundError:
             print(f"Inventory file not found: {self.inventory_file}")
         return inventory_data
@@ -201,36 +203,40 @@ class Inventory:
 
 
     def fill_prescription(self, medication, quantity):
-        """Fill a prescription by reducing stock and recording in the filled prescriptions file."""
+        """Deducts the specified quantity of a medication from the inventory when a prescription is filled."""
         rows = []
+        medication_found = False
+
         try:
+            # Read current inventory data
             with open(self.inventory_file, mode='r') as file:
-                reader = csv.reader(file)
-                header = next(reader)
-                medication_found = False
+                reader = csv.DictReader(file)
                 for row in reader:
-                    if len(row) == 4 and row[0] == medication:
-                        if int(row[2]) >= quantity:
-                            row[2] = str(int(row[2]) - quantity)
+                    if row['Medication'].strip().lower() == medication.strip().lower():
+                        current_quantity = int(row['Quantity'])
+                        if current_quantity >= quantity:
+                            row['Quantity'] = str(current_quantity - quantity)
                             medication_found = True
+                            print(f"{quantity} units of {medication} dispensed. Remaining stock: {row['Quantity']}")
                         else:
-                            print(f"Insufficient stock for {medication}.")
-                            return
+                            print(f"Insufficient stock for {medication}. Current stock: {current_quantity}")
+                            return False  # Not enough stock
                     rows.append(row)
 
+            # Write back to the CSV if medication was found and stock was updated
             if medication_found:
                 with open(self.inventory_file, mode='w', newline='') as file:
-                    writer = csv.writer(file)
-                    writer.writerow(header)
+                    writer = csv.DictWriter(file, fieldnames=['Medication', 'ID', 'Quantity', 'Expiration Date'])
+                    writer.writeheader()
                     writer.writerows(rows)
-                print(f"{quantity} units of {medication} dispensed.")
-                self.add_filled_prescription(medication, quantity)
-                self.check_low_stock()
+                return True  # Successfully filled
             else:
-                print(f"{medication} is not in the inventory.")
+                print(f"{medication} not found in inventory.")
+                return False
 
         except FileNotFoundError:
             print("Inventory file not found.")
+            return False
 
 
     def add_filled_prescription(self, medication, quantity):
@@ -265,8 +271,63 @@ class Inventory:
             print("Inventory file not found. No expiring medications to report.")
             return []
 
+    def remove_medication(self, item_id):
+        """Removes an item from the inventory by item_id and updates the CSV file."""
+        rows = []
+        item_found = False
+        
+        try:
+            # Step 1: Read current inventory data
+            with open(self.inventory_file, mode='r') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    # Check if the current row matches the item_id to delete
+                    if row['ID'] == item_id:
+                        item_found = True  # Mark that we found and will remove this item
+                        print(f"Found and removing item with ID: {item_id}")
+                        continue  # Skip this row, effectively removing it from the list
+                    rows.append(row)  # Keep all other rows
 
+            # Step 2: Write back to the CSV if the item was found
+            if item_found:
+                with open(self.inventory_file, mode='w', newline='') as file:
+                    fieldnames = ['Medication', 'ID', 'Quantity', 'Expiration Date']
+                    writer = csv.DictWriter(file, fieldnames=fieldnames)
+                    writer.writeheader()
+                    writer.writerows(rows)  # Write all rows except the deleted one
+                print(f"Item with ID {item_id} removed successfully.")
+                return True
+            else:
+                print(f"Item with ID {item_id} not found in inventory.")
+                return False
 
+        except FileNotFoundError:
+            print("Inventory file not found.")
+            return False
+        
+    def log_removal_activity(self, medication, item_id, quantity, exp_date, employee_id):
+        """
+        Logs the removal of an item in the activity log database.
+        """
+        log_entry = {
+            'Medication': medication,
+            'ID': item_id,
+            'Quantity': quantity,
+            'Expiration Date': exp_date,
+            'ID Employee': employee_id,
+            'Removal Date': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        
+        try:
+            # Open the activity log in append mode
+            with open(self.activity_file, mode='a', newline='') as log_file:
+                writer = csv.DictWriter(log_file, fieldnames=log_entry.keys())
+                if log_file.tell() == 0:  # Write headers if file is new
+                    writer.writeheader()
+                writer.writerow(log_entry)
+            print("Removal action logged successfully.")
+        except Exception as e:
+            print(f"Error logging removal: {e}")
 
 
 # #Inventory.py

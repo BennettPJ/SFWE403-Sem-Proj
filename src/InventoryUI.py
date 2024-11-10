@@ -1,4 +1,3 @@
-#InventoryUI.py
 from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox
 from PyQt5.uic import loadUi
 import os
@@ -30,6 +29,7 @@ class InventoryUI(QMainWindow):
         self.lowStockButton.clicked.connect(self.check_low_stock)  # Check low stock button
         self.exp_date.clicked.connect(self.check_exp_date)  # expiration date button
         self.inv_row.clicked.connect(self.add_empty_row) # Add row button
+        self.removeItem.clicked.connect(self.remove_item) # Remove item button
 
         # Set a minimum size for the dashboard
         self.setMinimumSize(1100, 600) # Example size, you can adjust these values
@@ -168,3 +168,35 @@ class InventoryUI(QMainWindow):
             
         else:
             QMessageBox.information(self, "Expiration Date Alert", "No medications are close to expiration date.")
+
+    def remove_item(self):
+        try:
+            selected_row = self.ItemsTable.currentRow()
+            if selected_row != -1:
+                medication = self.ItemsTable.item(selected_row, 0).text()
+                item_id = self.ItemsTable.item(selected_row, 1).text()
+                quantity = self.ItemsTable.item(selected_row, 2).text()
+                exp_date = self.ItemsTable.item(selected_row, 3).text()
+
+                # Confirm deletion
+                reply = QMessageBox.question(self, "Remove Item", 
+                                            f"Are you sure you want to remove {medication} (ID: {item_id})?",
+                                            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+                if reply == QMessageBox.Yes:
+                    # Call backend to remove item from inventory CSV
+                    item_removed = self.inventory.remove_medication(item_id)
+                    
+                    if item_removed:
+                        # Log the removal action in the activity log
+                        self.inventory.log_removal_activity(medication, item_id, quantity, exp_date, self.username)
+
+                        # Remove row from the UI
+                        self.ItemsTable.removeRow(selected_row)
+                        QMessageBox.information(self, "Success", f"{medication} (ID: {item_id}) removed from inventory.")
+                    else:
+                        QMessageBox.warning(self, "Error", f"Failed to remove {medication} (ID: {item_id}). Item not found.")
+            else:
+                QMessageBox.warning(self, "Error", "Please select a row to remove!")
+        except Exception as e:
+            print(f"Error during item removal: {e}")
