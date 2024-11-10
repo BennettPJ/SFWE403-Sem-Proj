@@ -6,7 +6,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 import resources_rc  # Import the compiled resource file
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidgetItem
 from PyQt5.uic import loadUi
 from Patient import Patient
 from Inventory import Inventory
@@ -111,8 +111,62 @@ class FillPrescriptionUI(QMainWindow):
         self.groupNum.clear()
     
     def fillPrescription(self):
-        pass
-    
+        try:
+            print("Fill Prescription button clicked")
+
+            # Check if the tableWidget widget exists
+            if not hasattr(self, 'tableWidget'):
+                print("Error: tableWidget widget is not available in the UI")
+                QMessageBox.critical(self, "Error", "Prescription table not found in the UI.")
+                return
+
+            # Track if at least one prescription was processed successfully
+            prescription_filled = False
+
+            # Loop through each row in the prescription table
+            for row in range(self.tableWidget.rowCount()):
+                # Retrieve medication name and quantity from the table
+                medication = self.tableWidget.item(row, 1).text() if self.tableWidget.item(row, 1) else ""
+                quantity_str = self.tableWidget.item(row, 4).text() if self.tableWidget.item(row, 4) else ""
+
+                print(f"Row {row}: Medication = {medication}, Quantity = {quantity_str}")
+
+                if not medication or not quantity_str:
+                    continue  # Skip empty rows
+
+                try:
+                    quantity = int(quantity_str)
+                except ValueError:
+                    QMessageBox.warning(self, "Error", f"Invalid quantity for {medication}. Please enter a numeric value.")
+                    return
+
+                # Call the backend to fill the prescription and update inventory
+                success = self.inventory_db.fill_prescription(medication, quantity)
+                print(f"Success status for {medication}: {success}")
+
+                if success:
+                    prescription_filled = True
+                    QMessageBox.information(self, "Prescription Filled", f"Filled {quantity} units of {medication}. Inventory updated.")
+                else:
+                    QMessageBox.warning(self, "Error", f"Failed to fill prescription for {medication}. Insufficient stock or medication not found.")
+
+            # If at least one prescription was filled, clear the table
+            if prescription_filled:
+                self.clearPrescriptionTable()
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            QMessageBox.critical(self, "Error", f"An error occurred while filling the prescription: {e}")
+
+    def clearPrescriptionTable(self):
+        """Clears all rows in the prescription table."""
+        for row in range(self.tableWidget.rowCount()):
+            for column in range(self.tableWidget.columnCount()):
+                self.tableWidget.setItem(row, column, QTableWidgetItem(""))  # Set each cell to an empty string
+
+
+
+        
     def checkStock(self):
         pass
     

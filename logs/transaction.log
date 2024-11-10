@@ -62,6 +62,12 @@
 2024-11-09 11:40:55,342 - Login successful for user: chrissyK
 2024-11-09 11:42:22,163 - Login successful for user: chrissyK
 2024-11-09 14:54:37,077 - Login successful for user: amber
-2024-11-09 19:32:08,396 - Login successful for user: bennett
-2024-11-09 19:32:21,841 - Login successful for user: chrissyK
-2024-11-09 21:56:36,142 - Login successful for user: bennett
+2024-11-09 19:31:51,388 - Login successful for user: amber
+2024-11-09 21:03:06,036 - Login successful for user: amber
+2024-11-09 21:03:19,931 - Login successful for user: chrissyK
+2024-11-09 21:35:52,819 - Failed login for user: chrissyK
+2024-11-09 21:36:05,358 - Login successful for user: chrissyK
+2024-11-09 21:48:30,846 - Login successful for user: chrissyK
+2024-11-09 21:50:39,176 - Login successful for user: chrissyK
+2024-11-09 21:56:29,516 - Failed login with non-existent username: chrisstyK
+2024-11-09 21:56:38,667 - Login successful for user: chrissyK
