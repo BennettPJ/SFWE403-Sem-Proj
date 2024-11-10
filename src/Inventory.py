@@ -17,7 +17,7 @@ class Inventory:
         if not os.path.isfile(self.inventory_file):
             with open(self.inventory_file, mode='w', newline='') as file:
                 writer = csv.DictWriter(
-                    file, fieldnames=['Medication', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed']
+                    file, fieldnames=['Item', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed']
                 )
                 writer.writeheader()
 
@@ -28,7 +28,7 @@ class Inventory:
                 reader = csv.DictReader(file)
                 for row in reader:
                     inventory_data.append({
-                        'Medication': row.get('Medication', ''),
+                        'Item': row.get('Item', ''),
                         'ID': row.get('ID', ''),
                         'Quantity': row.get('Quantity', ''),
                         'Price': row.get('Price', ''),
@@ -41,7 +41,7 @@ class Inventory:
             print("Inventory file not found.")
         return inventory_data
 
-    def update_stock(self, medication, item_id, quantity, exp_date, price=None):
+    def update_stock(self, item, item_id, quantity, exp_date, price=None):
         rows = []
         current_date = datetime.now().strftime('%Y-%m-%d')
         updated = False
@@ -50,17 +50,17 @@ class Inventory:
             with open(self.inventory_file, mode='r') as file:
                 reader = csv.DictReader(file)
                 for row in reader:
-                    if row['Medication'] == medication and row['ID'] == item_id:
+                    if row['Item'] == item and row['ID'] == item_id:
                         row['Quantity'] = str(quantity)
                         row['Price'] = price or row['Price']
                         row['Expiration Date'] = exp_date
-                        row['Date Updated'] = current_date  # Update date
+                        row['Date Updated'] = current_date
                         updated = True
                     rows.append(row)
 
             if not updated:
                 rows.append({
-                    'Medication': medication,
+                    'Item': item,
                     'ID': item_id,
                     'Quantity': str(quantity),
                     'Price': price or "0.00",
@@ -72,14 +72,45 @@ class Inventory:
 
             with open(self.inventory_file, mode='w', newline='') as file:
                 writer = csv.DictWriter(file, fieldnames=[
-                    'Medication', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed'
+                    'Item', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed'
                 ])
                 writer.writeheader()
                 writer.writerows(rows)
 
         except FileNotFoundError:
             print("Inventory file not found.")
+    def remove_item(self, item, item_id):
+        """
+        Mark an item as removed by adding a 'Date Removed' value instead of deleting it.
+        """
+        rows = []
+        current_date = datetime.now().strftime('%Y-%m-%d')
+        removed = False
 
+        try:
+            with open(self.inventory_file, mode='r') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    if row['Item'] == item and row['ID'] == item_id:
+                        row['Date Removed'] = current_date  # Set the removal date
+                        removed = True
+                    rows.append(row)
+
+            if removed:
+                with open(self.inventory_file, mode='w', newline='') as file:
+                    writer = csv.DictWriter(file, fieldnames=[
+                        'Item', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed'
+                    ])
+                    writer.writeheader()
+                    writer.writerows(rows)
+
+            return removed
+
+        except FileNotFoundError:
+            print("Inventory file not found.")
+            return False
+
+    
     def auto_order(self):
         reorder_made = False
         rows = []
@@ -96,7 +127,7 @@ class Inventory:
 
             with open(self.inventory_file, mode='w', newline='') as file:
                 writer = csv.DictWriter(file, fieldnames=[
-                    'Medication', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed'
+                    'Item', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed'
                 ])
                 writer.writeheader()
                 writer.writerows(rows)
@@ -111,7 +142,7 @@ class Inventory:
                 reader = csv.DictReader(file)
                 for row in reader:
                     if int(row['Quantity']) < self.low_stock_threshold:
-                        low_stock_items.append((row['Medication'], row['ID'], row['Quantity']))
+                        low_stock_items.append((row['Item'], row['ID'], row['Quantity']))
         except FileNotFoundError:
             print("Inventory file not found.")
         return low_stock_items
@@ -126,12 +157,10 @@ class Inventory:
                 for row in reader:
                     exp_date = row.get('Expiration Date', '')
                     if exp_date and datetime.strptime(exp_date, "%Y-%m-%d") <= threshold_date:
-                        expiring_items.append((row['Medication'], row['ID'], row['Quantity'], exp_date))
+                        expiring_items.append((row['Item'], row['ID'], row['Quantity'], exp_date))
         except FileNotFoundError:
             print("Inventory file not found.")
         return expiring_items
-
-
 
 
 
