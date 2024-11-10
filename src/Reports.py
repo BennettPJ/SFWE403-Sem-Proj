@@ -78,7 +78,7 @@ class Reports(QMainWindow):
                 log for log in logs if "inventory" in log.lower() and self.is_within_date_range(log, start_date, end_date)
             ]
             self.show_report_popup("Inventory Report for Period", "\n".join(inventory_logs) if inventory_logs else "No records found.")
-
+    
     def get_date_range_from_user(self):
         """Prompt the user to select a date range and return the start and end dates."""
         dialog = QDialog(self)
