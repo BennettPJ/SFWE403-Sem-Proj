@@ -68,8 +68,8 @@
    <widget class="QPushButton" name="PrintReciept">
     <property name="geometry">
      <rect>
-      <x>970</x>
-      <y>480</y>
+      <x>980</x>
+      <y>470</y>
       <width>171</width>
       <height>41</height>
      </rect>
@@ -100,8 +100,8 @@
    <widget class="QPushButton" name="cancelButton">
     <property name="geometry">
      <rect>
-      <x>970</x>
-      <y>420</y>
+      <x>980</x>
+      <y>410</y>
       <width>171</width>
       <height>41</height>
      </rect>
@@ -300,7 +300,7 @@
      <rect>
       <x>20</x>
       <y>350</y>
-      <width>511</width>
+      <width>621</width>
       <height>181</height>
      </rect>
     </property>
@@ -350,6 +350,11 @@
     </column>
     <column>
      <property name="text">
+      <string>ID</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
       <string>Quantity</string>
      </property>
     </column>
@@ -372,8 +377,8 @@
    <widget class="QPushButton" name="removeItemButton">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>480</y>
+      <x>660</x>
+      <y>470</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -388,8 +393,8 @@
    <widget class="QPushButton" name="addItemButton">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>420</y>
+      <x>660</x>
+      <y>410</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -404,8 +409,8 @@
    <widget class="QComboBox" name="PaymentMethod">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>420</y>
+      <x>820</x>
+      <y>410</y>
       <width>141</width>
       <height>41</height>
      </rect>
@@ -432,8 +437,8 @@
    <widget class="QPushButton" name="Complete">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>480</y>
+      <x>820</x>
+      <y>470</y>
       <width>141</width>
       <height>41</height>
      </rect>
@@ -615,8 +620,8 @@
    <widget class="QLabel" name="grandTotalLabel">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>350</y>
+      <x>650</x>
+      <y>330</y>
       <width>161</width>
       <height>51</height>
      </rect>
@@ -718,7 +723,7 @@
      <x>0</x>
      <y>0</y>
      <width>1169</width>
-     <height>36</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
