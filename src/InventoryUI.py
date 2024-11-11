@@ -46,7 +46,7 @@ class InventoryUI(QMainWindow):
 
     def load_inventory_into_table(self):
         """
-        Load inventory data from the CSV file into the QTableWidget.
+        Load inventory data from the CSV file into the QTableWidget, excluding removed items.
         """
         self.ItemsTable.setRowCount(0)  # Clear the table
         inventory_data = self.inventory.read_inventory_data()  # Read from inventory CSV
@@ -57,6 +57,7 @@ class InventoryUI(QMainWindow):
             self.ItemsTable.setItem(i, 2, QTableWidgetItem(item['Quantity']))
             self.ItemsTable.setItem(i, 3, QTableWidgetItem(item['Price']))
             self.ItemsTable.setItem(i, 4, QTableWidgetItem(item['Expiration Date']))
+
 
     def remove_selected_item(self):
         """
