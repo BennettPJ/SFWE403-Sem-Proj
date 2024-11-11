@@ -6,75 +6,89 @@ import csv
 from Inventory import Inventory
 from LoginRoles import LoginRoles
 
+
 class InventoryUI(QMainWindow):
-    def __init__(self, widget, username):  # Accept the widget as an argument
+    def __init__(self, widget, username):
         super(InventoryUI, self).__init__()
-        self.widget = widget  # Store the QStackedWidget reference
-
-
-        self.inventory = Inventory()  # Create an instance of the Inventory class
-
-        self.username = username  # Store the username
+        self.widget = widget
+        self.inventory = Inventory()
+        self.username = username
 
         # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'Inventory.ui')
         if not os.path.exists(ui_path):
-            print(f"UI file not found at: {ui_path}")  # Debug print
+            print(f"UI file not found at: {ui_path}")
         loadUi(ui_path, self)
 
         # Connect buttons
-        self.cancelButton.clicked.connect(self.cancel)  # Cancel button
-        self.viewStockButton.clicked.connect(self.load_inventory_into_table)  # View stock button
-        self.updateStockButton.clicked.connect(self.update_inventory)  # Update inventory button
-        self.autoOrderButton.clicked.connect(self.auto_order_stock)  # Auto reorder button
-        self.lowStockButton.clicked.connect(self.check_low_stock)  # Check low stock button
-        self.exp_date.clicked.connect(self.check_exp_date)  # expiration date button
-        self.inv_row.clicked.connect(self.add_empty_row) # Add row button
+        self.cancelButton.clicked.connect(self.cancel)
+        self.viewStockButton.clicked.connect(self.load_inventory_into_table)
+        self.updateStockButton.clicked.connect(self.update_inventory)
+        self.autoOrderButton.clicked.connect(self.auto_order_stock)
+        self.lowStockButton.clicked.connect(self.check_low_stock)
+        self.exp_date.clicked.connect(self.check_exp_date)
+        self.inv_row.clicked.connect(self.add_empty_row)
+        self.removeItem.clicked.connect(self.remove_selected_item)  # Connect remove button
 
         # Set a minimum size for the dashboard
-        self.setMinimumSize(1100, 600) # Example size, you can adjust these values
+        self.setMinimumSize(1100, 600)
 
         # Initialize the inventory table
         self.initialize_table()
-        
-        self.setup_ui() #Used to grey out auto order button if not manager
-        
-        
-    def setup_ui(self):
-        self.autoOrderButton.setEnabled(True)  # Enable by default
-        #FIXME: Might need to do this for the exp_date button as well
-        roles = LoginRoles()
-        user_role = roles.find_user_role(self.username)
-        if user_role != 'manager':
-            self.autoOrderButton.setEnabled(False)
-        
-        self.autoOrderButton.clicked.connect(self.auto_order_stock)  # Auto reorder button
-
 
     def initialize_table(self):
         """
         Set up the inventory table to display data.
         """
-        self.ItemsTable.setColumnCount(5)  # Add a column for Price
-        self.ItemsTable.setHorizontalHeaderLabels(['Medication', 'ID', 'Quantity', 'Price', 'Expiration Date'])
+        self.ItemsTable.setColumnCount(5)
+        self.ItemsTable.setHorizontalHeaderLabels(['Item', 'ID', 'Quantity', 'Price', 'Expiration Date'])
         self.load_inventory_into_table()
 
     def load_inventory_into_table(self):
         """
-        Load inventory data from the CSV file into the QTableWidget.
+        Load inventory data from the CSV file into the QTableWidget, excluding removed items.
         """
         self.ItemsTable.setRowCount(0)  # Clear the table
         inventory_data = self.inventory.read_inventory_data()  # Read from inventory CSV
         for i, item in enumerate(inventory_data):
             self.ItemsTable.insertRow(i)
-            self.ItemsTable.setItem(i, 0, QTableWidgetItem(item['Medication']))
+            self.ItemsTable.setItem(i, 0, QTableWidgetItem(item['Item']))
             self.ItemsTable.setItem(i, 1, QTableWidgetItem(item['ID']))
             self.ItemsTable.setItem(i, 2, QTableWidgetItem(item['Quantity']))
             self.ItemsTable.setItem(i, 3, QTableWidgetItem(item['Price']))
             self.ItemsTable.setItem(i, 4, QTableWidgetItem(item['Expiration Date']))
-            self.ItemsTable.setItem(i, 5, QTableWidgetItem(item.get('Date Added', '')))
-            self.ItemsTable.setItem(i, 6, QTableWidgetItem(item.get('Date Removed', '')))
 
+
+    def remove_selected_item(self):
+        """
+        Remove the selected item from the table and CSV file.
+        """
+        selected_row = self.ItemsTable.currentRow()
+        if selected_row == -1:
+            QMessageBox.warning(self, "Error", "Please select a row to remove!")
+            return
+
+        # Retrieve item details
+        item = self.ItemsTable.item(selected_row, 0).text()  # Item name
+        item_id = self.ItemsTable.item(selected_row, 1).text()  # Item ID
+
+        # Confirm deletion
+        confirmation = QMessageBox.question(
+            self,
+            "Confirm Removal",
+            f"Are you sure you want to remove the item '{item}' (ID: {item_id})?",
+            QMessageBox.Yes | QMessageBox.No
+        )
+
+        if confirmation == QMessageBox.Yes:
+            # Remove from CSV
+            success = self.inventory.remove_item(item, item_id)
+            if success:
+                # Remove row from table
+                self.ItemsTable.removeRow(selected_row)
+                QMessageBox.information(self, "Success", f"Item '{item}' (ID: {item_id}) has been removed.")
+            else:
+                QMessageBox.warning(self, "Error", "Failed to remove the item from the inventory.")
 
     def add_empty_row(self):
         """
@@ -82,31 +96,20 @@ class InventoryUI(QMainWindow):
         """
         row_count = self.ItemsTable.rowCount()
         self.ItemsTable.insertRow(row_count)
-        self.ItemsTable.setItem(row_count, 0, QTableWidgetItem(""))  # Medication
+        self.ItemsTable.setItem(row_count, 0, QTableWidgetItem(""))  # Item
         self.ItemsTable.setItem(row_count, 1, QTableWidgetItem(""))  # ID
         self.ItemsTable.setItem(row_count, 2, QTableWidgetItem(""))  # Quantity
         self.ItemsTable.setItem(row_count, 3, QTableWidgetItem(""))  # Price
         self.ItemsTable.setItem(row_count, 4, QTableWidgetItem(""))  # Expiration Date
-
-      
-
-    def add_empty_row(self):
-        row_count = self.ItemsTable.rowCount()
-        self.ItemsTable.insertRow(row_count)
-        self.ItemsTable.setItem(row_count, 0, QTableWidgetItem(""))  # Medication
-        self.ItemsTable.setItem(row_count, 1, QTableWidgetItem(""))  # ID
-        self.ItemsTable.setItem(row_count, 2, QTableWidgetItem(""))  # Quantity
-        self.ItemsTable.setItem(row_count, 3, QTableWidgetItem(""))  # Expiration Date
-
-
+        
     def update_inventory(self):
         """
-        Update stock for a specific medication from the selected row in the table.
+        Update stock for a specific item from the selected row in the table.
         """
         selected_row = self.ItemsTable.currentRow()
         if selected_row != -1:
-            medication = self.ItemsTable.item(selected_row, 0).text()
-            id = self.ItemsTable.item(selected_row, 1).text()  # ID from the second column
+            item = self.ItemsTable.item(selected_row, 0).text()
+            item_id = self.ItemsTable.item(selected_row, 1).text()  # ID from the second column
             new_quantity_str = self.ItemsTable.item(selected_row, 2).text()
             price = self.ItemsTable.item(selected_row, 3).text()  # Price column
             expiration_date = self.ItemsTable.item(selected_row, 4).text()
@@ -117,70 +120,61 @@ class InventoryUI(QMainWindow):
                 QMessageBox.warning(self, "Error", "Invalid quantity entered.")
                 return
 
-            self.inventory.update_stock(medication, id, new_quantity, expiration_date, price)
-            QMessageBox.information(self, "Success", f"Updated {medication} (ID: {id}) stock to {new_quantity}, Price: {price}, Expiration Date: {expiration_date}")
+            self.inventory.update_stock(item, item_id, new_quantity, expiration_date, price)
+            QMessageBox.information(
+                self, "Success",
+                f"Updated {item} (ID: {item_id}) stock to {new_quantity}, Price: {price}, Expiration Date: {expiration_date}"
+            )
         else:
             QMessageBox.warning(self, "Error", "Please select a row to update!")
-
 
     def auto_order_stock(self):
         # Run auto_order to check if reorder is needed and refresh inventory table
         reorder_made = self.inventory.auto_order()
 
-        # Use only one QMessageBox based on reorder_made status
         if reorder_made:
             QMessageBox.information(self, "Auto Order", "Auto reorder placed for low-stock items.")
         else:
             QMessageBox.information(self, "Auto Order", "No items required reordering.")
-            
-        self.load_inventory_into_table()  # Refresh table after attempting reorder
 
+        self.load_inventory_into_table()  # Refresh table after attempting reorder
 
     def check_low_stock(self):
         low_stock_items = self.inventory.check_low_stock()
-    
+
         if low_stock_items:
-            message = "Low stock alert for the following medications:\n"
+            message = "Low stock alert for the following items:\n"
             for item in low_stock_items:
-                medication, item_id, quantity, exp_date = item
-                message += f"- {medication} (ID: {item_id}): {quantity} units left, Expiration Date: {exp_date}\n"
-            
+                item_name, item_id, quantity = item
+                message += f"- {item_name} (ID: {item_id}): {quantity} units left\n"
+
             QMessageBox.warning(self, "Low Stock Alert", message)
         else:
-            QMessageBox.information(self, "Low Stock Alert", "No low stock medications at the moment.")
+            QMessageBox.information(self, "Low Stock Alert", "No low stock items at the moment.")
 
     def cancel(self):
         from src.Dashboard import Dashboard  # Move the import here to avoid circular import
 
-
-        # Always create a new instance of MainUI
         dashboard = Dashboard(self.widget, self.username)
-
         self.widget.addWidget(dashboard)
         self.widget.setCurrentIndex(self.widget.indexOf(dashboard))
         self.widget.setFixedSize(1050, 600)
 
-
     def check_exp_date(self):
         exp_date_items = self.inventory.check_exp_date()
-    
+
         if exp_date_items:
-            # Construct the message with each item on a new line
-            message = "Expiration date alert for the following medications:\n"
+            message = "Expiration date alert for the following items:\n"
             for item in exp_date_items:
-                medication, item_id, quantity, exp_date = item
-                message += f"- {medication} (ID: {item_id}): {quantity} units left, Expiration Date: {exp_date}\n"
-            
-            # Show the message in a warning popup with multiline support
+                item_name, item_id, quantity, exp_date = item
+                message += f"- {item_name} (ID: {item_id}): {quantity} units left, Expiration Date: {exp_date}\n"
+
             msg_box = QMessageBox(self)
             msg_box.setIcon(QMessageBox.Warning)
             msg_box.setWindowTitle("Expiration Date Alert")
             msg_box.setText(message)
             msg_box.setStandardButtons(QMessageBox.Ok)
-            
-            # Set a larger text area for better readability
             msg_box.setStyleSheet("QLabel{min-width: 400px;}")
             msg_box.exec_()
-            
         else:
-            QMessageBox.information(self, "Expiration Date Alert", "No medications are close to expiration date.")
+            QMessageBox.information(self, "Expiration Date Alert", "No items are close to expiration date.")
