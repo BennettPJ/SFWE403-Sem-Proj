@@ -1,0 +1,8 @@
+Date,Item Name,ID,Quantity,Price,Total Cost,Grand Total,Payment Method,Prescription
+2024-11-10,Test1,1,1,10.0,10.0,15.79,Cash,no
+2024-11-10,Test1,6,1,5.79,5.79,15.79,Cash,no
+2024-11-10,Test1,1,1,10.0,10.0,10.0,Cash,no
+2024-11-10,Test1,1,1,10.0,10.0,10.0,Cash,no
+2024-11-10,Test1,6,1,5.79,5.79,5.79,Cash,no
+2024-11-10,Test1,6,1,5.79,5.79,5.79,Cash,no
+2024-11-10,Test1,6,300,5.79,1737.0,1737.0,Cash,no
