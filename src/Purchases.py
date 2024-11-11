@@ -3,6 +3,7 @@ from PyQt5.uic import loadUi
 import os
 import csv
 from PyQt5.QtCore import pyqtSlot
+from datetime import datetime  # Import datetime for recording the current date
 
 
 class Purchases(QMainWindow):
@@ -76,11 +77,67 @@ class Purchases(QMainWindow):
         grand_total = self.grandTotalLabel.text()
         QMessageBox.information(self, "Purchase Complete", f"Purchase completed successfully.\n{grand_total}")
 
+        # Save the purchase details to the purchase CSV
         self.save_to_csv(first_name, last_name, payment_method, grand_total)
+
+        # Update the inventory based on the items purchased
+        self.update_inventory_after_purchase()
+
+        # Reset the table and clear fields
         self.reset_table()
         self.FName.clear()
         self.LName.clear()
         self.returnToDashboard()
+
+    def update_inventory_after_purchase(self):
+        """
+        Update the db_inventory.csv file to reflect the purchased quantities.
+        """
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        inventory_file = os.path.join(base_path, '..', 'DBFiles', 'db_inventory.csv')
+
+        if not os.path.exists(inventory_file):
+            QMessageBox.critical(self, "Error", "Inventory file not found.")
+            return
+
+        # Load the inventory data into a dictionary
+        inventory = {}
+        with open(inventory_file, mode='r') as file:
+            reader = csv.DictReader(file)
+            fieldnames = reader.fieldnames
+            for row in reader:
+                inventory[row['ID']] = row
+
+        # Update the inventory quantities based on the items purchased
+        for row in range(self.ItemsTable.rowCount()):
+            item_id = self.ItemsTable.item(row, 1).text().strip() if self.ItemsTable.item(row, 1) else ""
+
+            # Ignore rows where the ID is empty
+            if not item_id:
+                continue
+
+            quantity_purchased_text = self.ItemsTable.item(row, 2).text() if self.ItemsTable.item(row, 2) else "0"
+
+            try:
+                quantity_purchased = int(quantity_purchased_text)
+            except ValueError:
+                quantity_purchased = 0  # Default to 0 if the value is invalid
+
+            if item_id in inventory:
+                try:
+                    current_quantity = int(inventory[item_id]['Quantity'])
+                except ValueError:
+                    current_quantity = 0  # Default to 0 if the value is invalid in the CSV
+
+                new_quantity = max(0, current_quantity - quantity_purchased)  # Ensure quantity doesn't go negative
+                inventory[item_id]['Quantity'] = str(new_quantity)
+
+        # Write the updated inventory back to the CSV
+        with open(inventory_file, mode='w', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(inventory.values())
+
 
     def check_for_prescription_items(self):
         """Checks if any items in the cart are marked as 'yes' in the 'Prescription' column."""
@@ -105,6 +162,8 @@ class Purchases(QMainWindow):
 
         return dialog.exec_() == QDialog.Accepted
 
+
+
     def save_to_csv(self, first_name, last_name, payment_method, grand_total):
         # Construct the path to the CSV file
         base_path = os.path.dirname(os.path.abspath(__file__))  # Get the base directory path
@@ -115,10 +174,13 @@ class Purchases(QMainWindow):
             with open(file_path, mode='w', newline='') as file:
                 writer = csv.writer(file)
                 # Write headers if the file doesn't exist yet
-                writer.writerow(['First Name', 'Last Name', 'Item Name', 'ID', 'Quantity', 'Price', 'Total Cost', 'Grand Total', 'Payment Method', 'Prescription'])
+                writer.writerow(['Date', 'First Name', 'Last Name', 'Item Name', 'ID', 'Quantity', 'Price', 'Total Cost', 'Grand Total', 'Payment Method', 'Prescription'])
 
         # Extract only the numeric value from the grand total text (removes "Grand Total: $")
         grand_total_numeric = float(grand_total.replace("Grand Total: $", "").strip())
+
+        # Get the current date in "YYYY-MM-DD" format
+        current_date = datetime.now().strftime("%Y-%m-%d")
 
         # Open the CSV file in append mode to add new data
         with open(file_path, mode='a', newline='') as file:
@@ -137,8 +199,8 @@ class Purchases(QMainWindow):
                 if not item_id.strip():
                     continue
 
-                # Write data for each item, including the prescription status
-                writer.writerow([first_name, last_name, item_name, item_id, quantity, price, total_cost, grand_total_numeric, payment_method, prescription_status])
+                # Write data for each item, including the current date and prescription status
+                writer.writerow([current_date, first_name, last_name, item_name, item_id, quantity, price, total_cost, grand_total_numeric, payment_method, prescription_status])
 
     def reset_table(self):
         self.ItemsTable.setRowCount(4)
@@ -184,7 +246,54 @@ class Purchases(QMainWindow):
             self.ItemsTable.blockSignals(False)
 
     def add_item(self):
-        self.ItemsTable.insertRow(self.ItemsTable.rowCount())
+        """
+        Populate table rows based on the ID column from db_inventory.csv.
+        Skip rows where the ID column is empty.
+        """
+        # Iterate through all rows in the table
+        for row in range(self.ItemsTable.rowCount()):
+            id_item = self.ItemsTable.item(row, 1)  # Assuming column 1 is ID
+
+            # Skip the row if the ID column is empty or invalid
+            if id_item is None or not id_item.text().strip():
+                continue
+
+            item_id = id_item.text().strip()
+
+            # Read from db_inventory.csv
+            base_path = os.path.dirname(os.path.abspath(__file__))
+            inventory_file = os.path.join(base_path, '..', 'DBFiles', 'db_inventory.csv')
+
+            if not os.path.exists(inventory_file):
+                QMessageBox.critical(self, "Error", "Inventory file not found.")
+                return
+
+            # Look up the item in the inventory file
+            item_found = False
+            with open(inventory_file, mode='r') as file:
+                reader = csv.DictReader(file)
+                for row_data in reader:
+                    if row_data['ID'] == item_id:
+                        # Populate the table row with the item's details
+                        self.ItemsTable.setItem(row, 0, QTableWidgetItem(row_data['Item']))  # Item Name
+                        self.ItemsTable.setItem(row, 2, QTableWidgetItem("1"))  # Default Quantity to 1
+                        self.ItemsTable.setItem(row, 3, QTableWidgetItem(row_data['Price']))  # Price
+                        self.ItemsTable.setItem(row, 5, QTableWidgetItem("No"))  # Default Prescription Status
+                        item_found = True
+                        break
+
+            # If the item was not found, clear the row's data and show a warning
+            if not item_found:
+                QMessageBox.warning(self, "Not Found", f"Item with ID {item_id} not found in inventory.")
+                self.ItemsTable.setItem(row, 0, QTableWidgetItem(""))  # Clear Item Name
+                self.ItemsTable.setItem(row, 2, QTableWidgetItem(""))  # Clear Quantity
+                self.ItemsTable.setItem(row, 3, QTableWidgetItem(""))  # Clear Price
+                self.ItemsTable.setItem(row, 5, QTableWidgetItem(""))  # Clear Prescription Status
+
+        # Recalculate the total after adding/updating items
+        self.update_grand_total()
+
+
 
     def remove_item(self):
         selected_items = self.ItemsTable.selectedItems()
