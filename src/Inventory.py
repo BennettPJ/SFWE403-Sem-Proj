@@ -22,24 +22,30 @@ class Inventory:
                 writer.writeheader()
 
     def read_inventory_data(self):
+        """
+        Read the inventory data from the CSV file, excluding removed items.
+        """
         inventory_data = []
         try:
             with open(self.inventory_file, mode='r') as file:
                 reader = csv.DictReader(file)
                 for row in reader:
-                    inventory_data.append({
-                        'Item': row.get('Item', ''),
-                        'ID': row.get('ID', ''),
-                        'Quantity': row.get('Quantity', ''),
-                        'Price': row.get('Price', ''),
-                        'Expiration Date': row.get('Expiration Date', ''),
-                        'Date Added': row.get('Date Added', ''),
-                        'Date Updated': row.get('Date Updated', ''),
-                        'Date Removed': row.get('Date Removed', '')
-                    })
+                    # Exclude rows with a non-empty 'Date Removed' field
+                    if not row.get('Date Removed'):  
+                        inventory_data.append({
+                            'Item': row.get('Item', ''),
+                            'ID': row.get('ID', ''),
+                            'Quantity': row.get('Quantity', ''),
+                            'Price': row.get('Price', ''),
+                            'Expiration Date': row.get('Expiration Date', ''),
+                            'Date Added': row.get('Date Added', ''),
+                            'Date Updated': row.get('Date Updated', ''),
+                            'Date Removed': row.get('Date Removed', '')
+                        })
         except FileNotFoundError:
             print("Inventory file not found.")
         return inventory_data
+
 
     def update_stock(self, item, item_id, quantity, exp_date, price=None):
         rows = []
