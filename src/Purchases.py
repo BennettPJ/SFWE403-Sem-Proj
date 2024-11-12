@@ -4,6 +4,7 @@ import os
 import csv
 from PyQt5.QtCore import pyqtSlot
 from datetime import datetime  # Import datetime for recording the current date
+from Inventory import Inventory
 
 
 class Purchases(QMainWindow):
@@ -11,6 +12,7 @@ class Purchases(QMainWindow):
         super(Purchases, self).__init__()
         self.widget = widget  # Store the QStackedWidget reference
         self.username = username  # Store the username
+        self.inventory = Inventory() # instance of Inventory
 
         # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'Purchase.ui')
@@ -63,6 +65,15 @@ class Purchases(QMainWindow):
 
     @pyqtSlot()
     def complete_purchase(self):
+
+         # Check for expired items in the cart
+        for row in range(self.ItemsTable.rowCount()):
+            item_id = self.ItemsTable.item(row, 0).text().strip() if self.ItemsTable.item(row, 0) else ""
+            
+            if item_id and self.inventory.is_expired(item_id):  # Assuming is_expired method takes an item ID
+                QMessageBox.warning(self, "Expiration Warning", f"The item {item_id} is expired and cannot be sold.")
+                return  # Stop purchase if expired item is found
+
         first_name = self.FName.text()
         last_name = self.LName.text()
         payment_method = self.PaymentMethod.currentText()

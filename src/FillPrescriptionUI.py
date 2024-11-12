@@ -127,12 +127,17 @@ class FillPrescriptionUI(QMainWindow):
             for row in range(self.tableWidget.rowCount()):
                 # Retrieve medication name and quantity from the table
                 medication = self.tableWidget.item(row, 1).text() if self.tableWidget.item(row, 1) else ""
-                quantity_str = self.tableWidget.item(row, 4).text() if self.tableWidget.item(row, 4) else ""
+                quantity_str = self.tableWidget.item(row, 3).text() if self.tableWidget.item(row, 3) else ""
 
                 print(f"Row {row}: Medication = {medication}, Quantity = {quantity_str}")
 
                 if not medication or not quantity_str:
                     continue  # Skip empty rows
+                
+                # Check for expired medication
+                if self.inventory_db.is_expired(medication):
+                    QMessageBox.warning(self, "Error", f"Cannot fill prescription: {medication} is expired.")
+                    continue  # Skip filling expired medication
 
                 try:
                     quantity = int(quantity_str)
