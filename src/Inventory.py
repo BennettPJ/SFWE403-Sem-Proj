@@ -4,7 +4,7 @@ from LoginRoles import LoginRoles  # Import the LoginRoles class
 from datetime import datetime, timedelta
 
 class Inventory:
-    def __init__(self, low_stock_threshold=120, auto_reorder_threshold=120, activity_file='../DBFiles/db_inventory_activity_log.csv',inventory_file='../DBFiles/db_inventory.csv', filled_file='../DBFiles/db_filled_prescriptions.csv', picked_up_file='../DBFiles/db_picked_up_prescription.csv'):
+    def __init__(self, low_stock_threshold=120, auto_reorder_threshold=120, activity_file='../DBFiles/db_inventory_activity_log.csv',inventory_file='../DBFiles/db_inventory.csv'):
         # Set up the base directory path
         base_path = os.path.dirname(os.path.abspath(__file__))
         print(f"Base path: {base_path}")
@@ -17,8 +17,6 @@ class Inventory:
         # Set the file paths relative to the base directory
         self.inventory_file = os.path.join(base_path, inventory_file)
         self.activity_file = os.path.join(base_path, activity_file)
-        self.filled_file = os.path.join(base_path, filled_file)
-        self.picked_up_file = os.path.join(base_path, picked_up_file)
         #print(f"Inventory file path: {self.inventory_file}") #debug purpose 
 
         # Ensure the inventory file exists, and create it if necessary
@@ -32,10 +30,6 @@ class Inventory:
         self.initialize_csv(self.inventory_file, ['Medication', 'ID', 'Quantity', 'Expiration Date'])
         #Ensure the activity CSV file exists and has the correct header
         self.initialize_csv(self.activity_file, ['Medication','ID','Quantity','Expiration Date', 'ID Employee', 'Removal Date'])
-        # Ensure the filled prescriptions CSV file exists and has the correct header
-        self.initialize_csv(self.filled_file, ['Medication', 'Quantity'])
-        # Ensure the picked-up prescriptions CSV file exists and has the correct header
-        self.initialize_csv(self.picked_up_file, ['Medication', 'Quantity'])
 
     def initialize_csv(self, file_path, headers):
         """Helper method to initialize a CSV file with headers if it does not exist."""
@@ -237,13 +231,6 @@ class Inventory:
         except FileNotFoundError:
             print("Inventory file not found.")
             return False
-
-
-    def add_filled_prescription(self, medication, quantity):
-        """Log a filled prescription in the filled prescriptions file."""
-        with open(self.filled_file, mode='a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([medication, quantity])
 
             
     def check_exp_date(self):

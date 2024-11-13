@@ -52,7 +52,7 @@
      <string notr="true">font: 75 35pt &quot;Perpetua&quot;;</string>
     </property>
     <property name="text">
-     <string>Enter Prescriptions to be Filled</string>
+     <string>Manage Prescriptions</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -112,8 +112,8 @@
    <widget class="QLineEdit" name="PatientLastName">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>130</y>
+      <x>130</x>
+      <y>170</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -131,8 +131,8 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>180</y>
+      <x>40</x>
+      <y>220</y>
       <width>81</width>
       <height>31</height>
      </rect>
@@ -153,8 +153,8 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>80</y>
+      <x>10</x>
+      <y>120</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -175,8 +175,8 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>130</y>
+      <x>10</x>
+      <y>170</y>
       <width>111</width>
       <height>31</height>
      </rect>
@@ -197,8 +197,8 @@
    <widget class="QLineEdit" name="PatientDOB">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>180</y>
+      <x>130</x>
+      <y>220</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -216,8 +216,8 @@
    <widget class="QLineEdit" name="PatientFirstName">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>80</y>
+      <x>130</x>
+      <y>120</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -235,8 +235,8 @@
    <widget class="QLineEdit" name="PrescriptionNumber">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>230</y>
+      <x>130</x>
+      <y>270</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -254,8 +254,8 @@
    <widget class="QLineEdit" name="Medication">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>280</y>
+      <x>130</x>
+      <y>320</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -273,8 +273,8 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>230</y>
+      <x>0</x>
+      <y>270</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -295,8 +295,8 @@
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>280</y>
+      <x>50</x>
+      <y>320</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -317,8 +317,8 @@
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>330</y>
+      <x>60</x>
+      <y>370</y>
       <width>61</width>
       <height>31</height>
      </rect>
@@ -339,8 +339,8 @@
    <widget class="QLineEdit" name="Quantity">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>330</y>
+      <x>130</x>
+      <y>370</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -358,7 +358,7 @@
    <widget class="QPushButton" name="FindPrescriptionsPatient">
     <property name="geometry">
      <rect>
-      <x>390</x>
+      <x>180</x>
       <y>420</y>
       <width>191</width>
       <height>41</height>
@@ -374,10 +374,10 @@
    <widget class="QTableWidget" name="ItemsTable">
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>330</x>
       <y>70</y>
-      <width>621</width>
-      <height>301</height>
+      <width>661</width>
+      <height>331</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -442,11 +442,54 @@
       <string>Quantity</string>
      </property>
     </column>
+    <column>
+     <property name="text">
+      <string>Status</string>
+     </property>
+    </column>
    </widget>
    <widget class="QPushButton" name="clearTable">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>60</x>
+      <y>420</y>
+      <width>101</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(180, 212, 255);</string>
+    </property>
+    <property name="text">
+     <string>Clear Table</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>70</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 12pt &quot;Perpetua&quot;;</string>
+    </property>
+    <property name="text">
+     <string>New Prescription To Be Filled</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pickUp">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
       <y>420</y>
       <width>191</width>
       <height>41</height>
@@ -456,7 +499,7 @@
      <string notr="true">background-color: rgb(180, 212, 255);</string>
     </property>
     <property name="text">
-     <string>Clear Table</string>
+     <string>Prescription Picked Up</string>
     </property>
    </widget>
   </widget>

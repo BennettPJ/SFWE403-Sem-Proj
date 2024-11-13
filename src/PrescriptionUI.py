@@ -3,11 +3,11 @@ from PyQt5.uic import loadUi
 import os
 import sys
 from PyQt5.QtCore import pyqtSlot
-from src.PendingPrescriptions import PendingPrescription
+from Prescriptions import Prescriptions
 
-class PendingPrescriptionUI(QMainWindow):
+class PrescriptionUI(QMainWindow):
     def __init__(self, widget, username):  # Accept the widget as an argument
-        super(PendingPrescriptionUI, self).__init__()
+        super(PrescriptionUI, self).__init__()
         self.widget = widget  # Store the QStackedWidget reference
         self.username = username  # Store the username
 
@@ -20,8 +20,9 @@ class PendingPrescriptionUI(QMainWindow):
         self.addPrescription.clicked.connect(self.addPrescriptionToDB)
         self.FindPrescriptionsPatient.clicked.connect(self.findPatient)
         self.clearTable.clicked.connect(self.reset_table)
+        self.pickUp.clicked.connect(self.pickUpPrescription)
         
-        self.pending_prescription_db = PendingPrescription()
+        self.pending_prescription_db = Prescriptions()
         
 
     def backButton(self):
@@ -113,3 +114,32 @@ class PendingPrescriptionUI(QMainWindow):
             for row_index, row_data in enumerate(patient_prescription_data):
                 for col_index, value in enumerate(row_data.values()):  # Use row_data.values() to get dictionary values
                     self.ItemsTable.setItem(row_index, col_index, QTableWidgetItem(str(value)))
+                    
+    def pickUpPrescription(self):
+        """Change the status of the selected prescription to Picked Up."""
+        # Get the selected row
+        selected_row = self.ItemsTable.currentRow()
+        if selected_row == -1:
+            QMessageBox.warning(self, "Warning", "No row selected. Please select a prescription to pick up.")
+            return
+
+        # Retrieve the Prescription Number from the selected row
+        prescription_number_item = self.ItemsTable.item(selected_row, 3)  # Assuming the 4th column is Prescription_Number
+        if prescription_number_item is None:
+            QMessageBox.warning(self, "Warning", "Invalid selection. Please select a valid row.")
+            return
+
+        prescription_number = prescription_number_item.text()
+
+        # Call the database method to update the status
+        success = self.pending_prescription_db.pickup_prescription(prescription_number)
+
+        if success:
+            # Update the status in the UI
+            self.ItemsTable.setItem(selected_row, 6, QTableWidgetItem("Picked Up"))  # Assuming the 7th column is Status
+
+            # Show success message
+            QMessageBox.information(self, "Success", f"Prescription {prescription_number} marked as Picked Up.")
+        else:
+            # Show error message
+            QMessageBox.warning(self, "Error", "Failed to update the prescription. Please try again.")

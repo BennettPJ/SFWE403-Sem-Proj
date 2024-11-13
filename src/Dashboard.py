@@ -14,7 +14,7 @@ from src.PatientUI import PatientUI
 from src.Reports import Reports
 from FillPrescriptionUI import FillPrescriptionUI
 from src.InventoryUI import InventoryUI
-from PendingPrescriptionUI import PendingPrescriptionUI
+from PrescriptionUI import PrescriptionUI
 from src.AdminUI import AdminUI
 from LoginRoles import LoginRoles
 
@@ -156,12 +156,12 @@ class Dashboard(QMainWindow):
 
     def goToPendingPrescription(self):
         for i in range(self.widget.count()):
-            if isinstance(self.widget.widget(i), PendingPrescriptionUI):
+            if isinstance(self.widget.widget(i), PrescriptionUI):
                 self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
                 self.widget.setFixedSize(1050, 500)
                 return
 
-        medication_screen = PendingPrescriptionUI(self.widget, self.username)  # Pass self.username as well
+        medication_screen = PrescriptionUI(self.widget, self.username)  # Pass self.username as well
         self.widget.addWidget(medication_screen)
         self.widget.setCurrentIndex(self.widget.indexOf(medication_screen))
         self.widget.setFixedSize(1050, 500)
