@@ -14,7 +14,7 @@ from src.PatientUI import PatientUI
 from src.Reports import Reports
 from FillPrescriptionUI import FillPrescriptionUI
 from src.InventoryUI import InventoryUI
-from src.OrderMedication import OrderMedication
+from PendingPrescriptionUI import PendingPrescriptionUI
 from src.AdminUI import AdminUI
 from LoginRoles import LoginRoles
 
@@ -40,7 +40,7 @@ class Dashboard(QMainWindow):
         self.InventoryButton.clicked.connect(self.goToInventoryUI)
         self.fillPrescripButton.clicked.connect(self.fillPrescription)
         self.updatePatientInfoButton.clicked.connect(self.patientInfo)
-        self.MedButton.clicked.connect(self.goToMedication)
+        self.MedButton.clicked.connect(self.goToPendingPrescription)
         self.AdminButton.clicked.connect(self.goToAdmin)
 
         # Set QLCDNumber to handle 8 digits (HH:MM:SS)
@@ -154,14 +154,14 @@ class Dashboard(QMainWindow):
         self.widget.setFixedSize(1010, 500)
         
 
-    def goToMedication(self):
+    def goToPendingPrescription(self):
         for i in range(self.widget.count()):
-            if isinstance(self.widget.widget(i), OrderMedication):
+            if isinstance(self.widget.widget(i), PendingPrescriptionUI):
                 self.widget.setCurrentIndex(self.widget.indexOf(self.widget.widget(i)))
                 self.widget.setFixedSize(1050, 500)
                 return
 
-        medication_screen = OrderMedication(self.widget, self.username)  # Pass self.username as well
+        medication_screen = PendingPrescriptionUI(self.widget, self.username)  # Pass self.username as well
         self.widget.addWidget(medication_screen)
         self.widget.setCurrentIndex(self.widget.indexOf(medication_screen))
         self.widget.setFixedSize(1050, 500)

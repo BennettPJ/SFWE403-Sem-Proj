@@ -149,7 +149,7 @@
    <widget class="QPushButton" name="MedButton">
     <property name="geometry">
      <rect>
-      <x>570</x>
+      <x>320</x>
       <y>440</y>
       <width>191</width>
       <height>81</height>
@@ -165,7 +165,7 @@
      <string notr="true">background-color: rgb(180, 212, 255);</string>
     </property>
     <property name="text">
-     <string>Order Medication</string>
+     <string>Enter Prescriptions</string>
     </property>
     <property name="icon">
      <iconset resource="../resources/pharm.qrc">
@@ -181,7 +181,7 @@
    <widget class="QPushButton" name="ReportsButton">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>570</x>
       <y>440</y>
       <width>191</width>
       <height>81</height>
