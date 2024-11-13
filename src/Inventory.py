@@ -197,39 +197,60 @@ class Inventory:
 
 
     def fill_prescription(self, medication, quantity):
-        """Deducts the specified quantity of a medication from the inventory when a prescription is filled."""
+        """Deduct the specified quantity of a medication from inventory, prioritizing earliest expiration date."""
         rows = []
         medication_found = False
+        remaining_quantity = quantity
 
         try:
             # Read current inventory data
             with open(self.inventory_file, mode='r') as file:
                 reader = csv.DictReader(file)
-                for row in reader:
-                    if row['Medication'].strip().lower() == medication.strip().lower():
-                        current_quantity = int(row['Quantity'])
-                        if current_quantity >= quantity:
-                            row['Quantity'] = str(current_quantity - quantity)
-                            medication_found = True
-                            print(f"{quantity} units of {medication} dispensed. Remaining stock: {row['Quantity']}")
-                        else:
-                            print(f"Insufficient stock for {medication}. Current stock: {current_quantity}")
-                            return False  # Not enough stock
-                    rows.append(row)
+                inventory = [row for row in reader]
 
-            # Write back to the CSV if medication was found and stock was updated
-            if medication_found:
-                with open(self.inventory_file, mode='w', newline='') as file:
-                    writer = csv.DictWriter(file, fieldnames=['Medication', 'ID', 'Quantity', 'Expiration Date'])
-                    writer.writeheader()
-                    writer.writerows(rows)
-                return True  # Successfully filled
-            else:
+            # Filter and sort matching rows by expiration date (earliest first)
+            matching_rows = [
+                row for row in inventory
+                if row['Item'].strip().lower() == medication.strip().lower()
+            ]
+            matching_rows.sort(key=lambda x: datetime.strptime(x['Expiration Date'], '%Y-%m-%d'))
+
+            if not matching_rows:
                 print(f"{medication} not found in inventory.")
+                return False  # Medication not found
+
+            # Deduct stock from the matching rows
+            for row in matching_rows:
+                current_quantity = int(row['Quantity'])
+                if current_quantity >= remaining_quantity:
+                    row['Quantity'] = str(current_quantity - remaining_quantity)
+                    remaining_quantity = 0
+                    medication_found = True
+                    print(f"Filled {quantity} units of {medication}. Remaining in this batch: {row['Quantity']}")
+                    break  # Fully filled
+                else:
+                    remaining_quantity -= current_quantity
+                    row['Quantity'] = '0'
+                    print(f"Used {current_quantity} units of {medication} from batch with expiration {row['Expiration Date']}.")
+
+            # Check if the prescription was fully filled
+            if remaining_quantity > 0:
+                print(f"Insufficient stock for {medication}. Unable to fill {remaining_quantity} units.")
                 return False
+
+            # Write the updated inventory back to the CSV
+            with open(self.inventory_file, mode='w', newline='') as file:
+                writer = csv.DictWriter(file, fieldnames=['Item', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed'])
+                writer.writeheader()
+                writer.writerows(inventory)
+
+            return medication_found
 
         except FileNotFoundError:
             print("Inventory file not found.")
+            return False
+        except Exception as e:
+            print(f"An error occurred while filling prescription: {e}")
             return False
 
             
@@ -257,6 +278,7 @@ class Inventory:
         except FileNotFoundError:
             print("Inventory file not found. No expiring medications to report.")
             return []
+
 
     def remove_medication(self, item_id):
         """Removes an item from the inventory by item_id and updates the CSV file."""
@@ -317,17 +339,30 @@ class Inventory:
             print(f"Error logging removal: {e}")
     
     def is_expired(self, medication):
-        """Check if the specified medication is expired."""
+        """Check if the given medication is expired."""
         today = datetime.today()
-
-        try:
-            with open(self.inventory_file, mode='r') as file:
-                reader = csv.DictReader(file)
-                for row in reader:
-                    if row['Item'].strip().lower() == medication.strip().lower():
-                        exp_date_str = row['Expiration Date']
-                        exp_date = datetime.strptime(exp_date_str, "%Y-%m-%d")
-                        return exp_date < today  # Returns True if expired
-        except FileNotFoundError:
-            print("Inventory file not found.")
+        with open(self.inventory_file, mode='r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if row['Item'].strip().lower() == medication.strip().lower():  # Use 'Item' instead of 'Medication'
+                    expiration_date = datetime.strptime(row['Expiration Date'], '%Y-%m-%d')
+                    if expiration_date < today:
+                        return True
         return False
+    
+    
+    def check_stock(self, medication):
+        """Retrieve all stock entries for a given medication."""
+        results = []
+        with open(self.inventory_file, mode='r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if row['Item'] == medication:
+                    results.append({
+                        'Medication': row['Item'],
+                        'Quantity': int(row['Quantity']),
+                        'Expiration Date': row['Expiration Date']
+                    })
+        if not results:
+            raise ValueError(f"Medication '{medication}' not found in inventory.")
+        return results

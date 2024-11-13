@@ -1,6 +1,7 @@
 #FillPrescription.py
 import sys
 import os
+from datetime import datetime
 
 # Add the 'src' folder to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__)))
@@ -8,7 +9,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__)))
 import resources_rc  # Import the compiled resource file
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidgetItem
 from PyQt5.uic import loadUi
-from Patient import Patient
+from Prescriptions import Prescriptions
 from Inventory import Inventory
 
 
@@ -26,15 +27,30 @@ class FillPrescriptionUI(QMainWindow):
         self.setMinimumSize(1000, 600)  # Example size, you can adjust these values
         
         self.cancelButton.clicked.connect(self.backToDashboard)
-        self.FindPatient.clicked.connect(self.findPatient)
         self.fillPerscription.clicked.connect(self.fillPrescription)
         self.CheckStock.clicked.connect(self.checkStock)
-        self.clear.clicked.connect(self.clearFields)
-        
-        self.patient_db = Patient()
+        self.Refresh.clicked.connect(self.refreshTable)
+
+        self.prescriptions_db = Prescriptions()
         self.inventory_db = Inventory()
         
+        # Load the inventory database
+        self.initializeTable()
         
+        
+    def initializeTable(self):
+        # Query the database for all pending prescriptions
+        pending_prescriptions = [p for p in self.prescriptions_db.read_prescriptions() if p['Status'] == 'Pending']
+
+        # Set the table's row count to the number of pending prescriptions
+        self.tableWidget.setRowCount(len(pending_prescriptions))
+
+        # Populate the table with data
+        for row_index, prescription in enumerate(pending_prescriptions):
+            for col_index, value in enumerate(prescription.values()):
+                self.tableWidget.setItem(row_index, col_index, QTableWidgetItem(str(value)))
+    
+    
     def backToDashboard(self):
         from src.Dashboard import Dashboard  # Importing MainUI inside the function to avoid circular import
 
@@ -43,137 +59,118 @@ class FillPrescriptionUI(QMainWindow):
         self.widget.addWidget(dashboard)
         self.widget.setCurrentIndex(self.widget.indexOf(dashboard))
         self.widget.setFixedSize(1050, 600)
-        
-    def findPatient(self):
-        # Create a dialog to search for a patient
-        dialog = QDialog(self)
-        dialog.setWindowTitle("Enter Patient Information")
-        dialog.setFixedSize(300, 200)
-        layout = QVBoxLayout(dialog)
-
-        firstNameInput = QLineEdit(dialog)
-        firstNameInput.setPlaceholderText("First Name")
-        layout.addWidget(QLabel("First Name"))
-        layout.addWidget(firstNameInput)
-
-        lastNameInput = QLineEdit(dialog)
-        lastNameInput.setPlaceholderText("Last Name")
-        layout.addWidget(QLabel("Last Name"))
-        layout.addWidget(lastNameInput)
-
-        dobInput = QLineEdit(dialog)
-        dobInput.setPlaceholderText("Date of Birth (MM/DD/YYYY)")
-        layout.addWidget(QLabel("Date of Birth"))
-        layout.addWidget(dobInput)
-
-        confirmButton = QPushButton("Confirm", dialog)
-        layout.addWidget(confirmButton)
-        confirmButton.clicked.connect(dialog.accept)
-
-        if dialog.exec_() == QDialog.Accepted:
-            first_name = firstNameInput.text().strip()
-            last_name = lastNameInput.text().strip()
-            dob = dobInput.text().strip()
-
-            patient_data = self.patient_db.find_patient(first_name, last_name, dob)
-
-            if patient_data:
-                self.firstName.setText(patient_data['FirstName'])
-                self.lastName.setText(patient_data['LastName'])
-                self.DOB.setText(patient_data['DateOfBirth'])
-                self.address.setText(patient_data['StreetAddress'])
-                self.city.setText(patient_data['City'])
-                self.state.setText(patient_data['State'])
-                self.zip.setText(patient_data['ZipCode'])
-                self.phoneNumber.setText(patient_data['PhoneNumber'])
-                self.email.setText(patient_data['Email'])
-                self.nameInsured.setText(patient_data['NameInsured'])
-                self.provider.setText(patient_data['Provider'])
-                self.policyNum.setText(patient_data['PolicyNumber'])
-                self.groupNum.setText(patient_data['GroupNumber'])
-                QMessageBox.information(self, "Success", "Patient information loaded successfully!")
-            else:
-                QMessageBox.warning(self, "Error", "Patient not found.")
-
-    def clearFields(self):
-        self.firstName.clear()
-        self.lastName.clear()
-        self.DOB.clear()
-        self.address.clear()
-        self.city.clear()
-        self.state.clear()
-        self.zip.clear()
-        self.phoneNumber.clear()
-        self.email.clear()
-        self.nameInsured.clear()
-        self.provider.clear()
-        self.policyNum.clear()
-        self.groupNum.clear()
+    
     
     def fillPrescription(self):
+        """Fill the selected prescription if it is not expired and update its status."""
         try:
-            print("Fill Prescription button clicked")
-
-            # Check if the tableWidget widget exists
-            if not hasattr(self, 'tableWidget'):
-                print("Error: tableWidget widget is not available in the UI")
-                QMessageBox.critical(self, "Error", "Prescription table not found in the UI.")
+            # Get the selected row
+            selected_row = self.tableWidget.currentRow()
+            if selected_row == -1:
+                QMessageBox.warning(self, "Warning", "No row selected. Please select a prescription to fill.")
                 return
 
-            # Track if at least one prescription was processed successfully
-            prescription_filled = False
+            # Retrieve the medication name, quantity, and prescription number from the selected row
+            medication_item = self.tableWidget.item(selected_row, 4)  
+            quantity_item = self.tableWidget.item(selected_row, 5) 
+            prescription_number_item = self.tableWidget.item(selected_row, 3) 
 
-            # Loop through each row in the prescription table
-            for row in range(self.tableWidget.rowCount()):
-                # Retrieve medication name and quantity from the table
-                medication = self.tableWidget.item(row, 1).text() if self.tableWidget.item(row, 1) else ""
-                quantity_str = self.tableWidget.item(row, 3).text() if self.tableWidget.item(row, 3) else ""
+            if not medication_item or not quantity_item or not prescription_number_item:
+                QMessageBox.warning(self, "Warning", "Incomplete data in the selected row.")
+                return
 
-                print(f"Row {row}: Medication = {medication}, Quantity = {quantity_str}")
+            medication = medication_item.text().strip()
+            try:
+                quantity = int(quantity_item.text().strip())
+            except ValueError:
+                QMessageBox.warning(self, "Error", "Invalid quantity. Please enter a valid number.")
+                return
 
-                if not medication or not quantity_str:
-                    continue  # Skip empty rows
-                
-                # Check for expired medication
-                if self.inventory_db.is_expired(medication):
-                    QMessageBox.warning(self, "Error", f"Cannot fill prescription: {medication} is expired.")
-                    continue  # Skip filling expired medication
+            prescription_number = prescription_number_item.text().strip()
 
-                try:
-                    quantity = int(quantity_str)
-                except ValueError:
-                    QMessageBox.warning(self, "Error", f"Invalid quantity for {medication}. Please enter a numeric value.")
-                    return
+            # Check if the medication is expired
+            if self.inventory_db.is_expired(medication):
+                QMessageBox.warning(self, "Warning", f"The medication '{medication}' is expired and cannot be dispensed.")
+                return
 
-                # Call the backend to fill the prescription and update inventory
-                success = self.inventory_db.fill_prescription(medication, quantity)
-                print(f"Success status for {medication}: {success}")
+            # Attempt to fill the prescription
+            success = self.inventory_db.fill_prescription(medication, quantity)
 
-                if success:
-                    prescription_filled = True
-                    QMessageBox.information(self, "Prescription Filled", f"Filled {quantity} units of {medication}. Inventory updated.")
+            if success:
+                # Update the prescription status in the database
+                status_updated = self.prescriptions_db.update_status(prescription_number, "Filled")
+
+                if status_updated:
+                    QMessageBox.information(self, "Success", f"Successfully filled {quantity} units of '{medication}'. Prescription status updated.")
                 else:
-                    QMessageBox.warning(self, "Error", f"Failed to fill prescription for {medication}. Insufficient stock or medication not found.")
+                    QMessageBox.warning(self, "Error", f"Failed to update status for prescription {prescription_number}.")
 
-            # If at least one prescription was filled, clear the table
-            if prescription_filled:
-                self.clearPrescriptionTable()
+                self.refreshTable()  # Refresh the table to reflect updated data
+            else:
+                QMessageBox.warning(self, "Error", f"Failed to fill the prescription for '{medication}'. Insufficient stock or medication not found.")
 
         except Exception as e:
-            print(f"An error occurred: {e}")
+            print(f"An error occurred while filling the prescription: {e}")
             QMessageBox.critical(self, "Error", f"An error occurred while filling the prescription: {e}")
 
-    def clearPrescriptionTable(self):
-        """Clears all rows in the prescription table."""
-        for row in range(self.tableWidget.rowCount()):
-            for column in range(self.tableWidget.columnCount()):
-                self.tableWidget.setItem(row, column, QTableWidgetItem(""))  # Set each cell to an empty string
 
-
-
-        
     def checkStock(self):
-        pass
+        """Check the stock of the medication for the selected prescription."""
+        # Get the selected row
+        selected_row = self.tableWidget.currentRow()
+        if selected_row == -1:
+            QMessageBox.warning(self, "Warning", "No row selected. Please select a prescription to check stock.")
+            return
+
+        # Retrieve the medication name from the selected row (assume column 4 is the medication name)
+        medication_item = self.tableWidget.item(selected_row, 4)  # Adjust column index if needed
+        if not medication_item:
+            QMessageBox.warning(self, "Warning", "Medication name not found in the selected row.")
+            return
+
+        medication = medication_item.text()
+
+        # Check the stock from the inventory database
+        try:
+            stock_entries = self.inventory_db.check_stock(medication)
+            if stock_entries:
+                # Create a string to display all entries
+                message = f"Stock information for {medication}:\n\n"
+                for entry in stock_entries:
+                    message += f"Quantity: {entry['Quantity']}, Expiration Date: {entry['Expiration Date']}\n"
+                QMessageBox.information(self, "Stock Information", message)
+            else:
+                QMessageBox.warning(self, "Warning", f"No stock information found for {medication}.")
+
+        except Exception as e:
+            print(f"An error occurred while checking stock: {e}")
+            QMessageBox.critical(self, "Error", f"An error occurred while checking stock: {e}")
     
+    
+    def refreshTable(self):
+        """
+        Populates the table with prescriptions that have a status of 'Pending'.
+        """
+        try:
+            # Clear the table before refreshing
+            self.tableWidget.clearContents()
+
+            # Query the database for all pending prescriptions
+            pending_prescriptions = [p for p in self.prescriptions_db.read_prescriptions() if p['Status'] == 'Pending']
+
+            # Set the table's row count to the number of pending prescriptions
+            self.tableWidget.setRowCount(len(pending_prescriptions))
+
+            # Populate the table with data
+            for row_index, prescription in enumerate(pending_prescriptions):
+                for col_index, value in enumerate(prescription.values()):
+                    self.tableWidget.setItem(row_index, col_index, QTableWidgetItem(str(value)))
+
+            QMessageBox.information(self, "Success", f"Loaded {len(pending_prescriptions)} pending prescriptions.")
+
+        except Exception as e:
+            print(f"An error occurred while refreshing the table: {e}")
+            QMessageBox.critical(self, "Error", f"An error occurred while refreshing the table: {e}")
+        
     
     

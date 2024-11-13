@@ -15,33 +15,16 @@ class Prescriptions:
 
     def add_prescription(self, first_name, last_name, dob, prescription_number, medication, quantity):
         """Add a new pending prescription to the database."""
-        with open(self.pending_file, mode='a', newline='') as file:
+        with open(self.prescription_file, mode='a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([first_name, last_name, dob, prescription_number, medication, quantity, 'Pending'])
 
 
     def read_prescriptions(self):
         """Read all prescriptions from the database."""
-        with open(self.pending_file, mode='r') as file:
+        with open(self.prescription_file, mode='r') as file:
             reader = csv.DictReader(file)
             return [row for row in reader]
-        
-
-    def Fill_prescription(self, prescription_number):
-        pass
-        # """
-        # Delete a prescription based on the prescription number.
-        # :param prescription_number: Unique identifier of the prescription to delete.
-        # """
-        # prescriptions = self.read_prescriptions()
-        # updated_prescriptions = [p for p in prescriptions if p['Prescription_Number'] != prescription_number]
-
-        # with open(self.pending_file, mode='w', newline='') as file:
-        #     writer = csv.DictWriter(file, fieldnames=['Patient_First_Name', 'Patient_Last_Name', 'Patient_DOB', 'Prescription_Number', 'Medication', 'Quantity', 'Status'])
-        #     writer.writeheader()
-        #     writer.writerows(updated_prescriptions)
-
-        # return len(updated_prescriptions) < len(prescriptions)
     
     
     def findByPatient(self, firstName, lastName, dob):
@@ -62,10 +45,33 @@ class Prescriptions:
                 break
 
         # Write the updated prescriptions back to the CSV file
-        with open(self.pending_file, mode='w', newline='') as file:
+        with open(self.prescription_file, mode='w', newline='') as file:
             writer = csv.DictWriter(file, fieldnames=['Patient_First_Name', 'Patient_Last_Name', 'Patient_DOB',
                                                       'Prescription_Number', 'Medication', 'Quantity', 'Status'])
             writer.writeheader()
             writer.writerows(prescriptions)
+
+        return updated
+    
+    
+    def update_status(self, prescription_number, new_status):
+        """Update the status of a prescription in the database."""
+        prescriptions = self.read_prescriptions()
+        updated = False
+
+        # Update the status of the selected prescription
+        for p in prescriptions:
+            if p['Prescription_Number'] == prescription_number:
+                p['Status'] = new_status
+                updated = True
+                break
+
+        # Write back to the CSV
+        if updated:
+            with open(self.prescription_file, mode='w', newline='') as file:
+                writer = csv.DictWriter(file, fieldnames=['Patient_First_Name', 'Patient_Last_Name', 'Patient_DOB',
+                                                        'Prescription_Number', 'Medication', 'Quantity', 'Status'])
+                writer.writeheader()
+                writer.writerows(prescriptions)
 
         return updated

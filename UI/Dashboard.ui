@@ -165,7 +165,7 @@
      <string notr="true">background-color: rgb(180, 212, 255);</string>
     </property>
     <property name="text">
-     <string>Enter Prescriptions</string>
+     <string>Manage Prescriptions</string>
     </property>
     <property name="icon">
      <iconset resource="../resources/pharm.qrc">
