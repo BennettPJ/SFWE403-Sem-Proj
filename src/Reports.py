@@ -1,5 +1,4 @@
 #Reports.py
-#Reports.py
 from PyQt5.QtWidgets import QMainWindow, QDialog, QVBoxLayout, QLabel, QPushButton, QTextEdit, QDateEdit, QMessageBox, QHBoxLayout
 from PyQt5.uic import loadUi
 import os
