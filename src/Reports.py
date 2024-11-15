@@ -341,8 +341,8 @@ class Reports(QMainWindow):
         try:
             # Data structures to hold the aggregated data
             total_revenue = 0.0
-            revenue_by_item = defaultdict(float)
-            revenue_by_payment = defaultdict(float)
+            revenue_by_item = {}
+            revenue_by_payment = {}
             transactions = []
 
             # Read the CSV file
@@ -357,8 +357,19 @@ class Reports(QMainWindow):
 
                     # Update totals
                     total_revenue += total_cost
-                    revenue_by_item[item_name] += total_cost
-                    revenue_by_payment[payment_method] += grand_total
+
+                    # Aggregate revenue by item
+                    if item_name in revenue_by_item:
+                        revenue_by_item[item_name] += total_cost
+                    else:
+                        revenue_by_item[item_name] = total_cost
+
+                    # Aggregate revenue by payment method
+                    if payment_method in revenue_by_payment:
+                        revenue_by_payment[payment_method] += grand_total
+                    else:
+                        revenue_by_payment[payment_method] = grand_total
+
                     transactions.append(row)
 
             # Generate and print the report
@@ -367,39 +378,32 @@ class Reports(QMainWindow):
 
             # Revenue by item
             print("--- Revenue by Item ---")
-            item_table = PrettyTable(['Item Name', 'Revenue'])
+            print("{:<20} {:<10}".format("Item Name", "Revenue"))
             for item, revenue in revenue_by_item.items():
-                item_table.add_row([item, f"${revenue:.2f}"])
-            print(item_table)
+                print(f"{item:<20} ${revenue:.2f}")
 
             # Revenue by payment method
             print("\n--- Revenue by Payment Method ---")
-            payment_table = PrettyTable(['Payment Method', 'Revenue'])
+            print("{:<20} {:<10}".format("Payment Method", "Revenue"))
             for method, revenue in revenue_by_payment.items():
-                payment_table.add_row([method, f"${revenue:.2f}"])
-            print(payment_table)
+                print(f"{method:<20} ${revenue:.2f}")
 
             # Transaction details
             print("\n--- Transaction Details ---")
-            transaction_table = PrettyTable(['Date', 'First Name', 'Last Name', 'Grand Total', 'Payment Method'])
+            print("{:<20} {:<15} {:<15} {:<10} {:<20}".format(
+                "Date", "First Name", "Last Name", "Total", "Payment Method"
+            ))
             for transaction in transactions:
-                transaction_table.add_row([
+                print("{:<20} {:<15} {:<15} ${:<10} {:<20}".format(
                     transaction['Date'],
                     transaction['First Name'],
                     transaction['Last Name'],
-                    f"${transaction['Grand Total']}",
+                    transaction['Grand Total'],
                     transaction['Payment Method']
-                ])
-            print(transaction_table)
+                ))
 
         except Exception as e:
             print(f"Error generating financial report: {e}")
-
-    # File path to the CSV file
-    csv_file_path = 'db_purchase_data.csv'
-
-    # Generate the report
-    generate_financial_report(csv_file_path)
 
 
     def get_date_range_from_user(self):
