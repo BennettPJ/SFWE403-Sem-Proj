@@ -149,7 +149,7 @@
      <string>Inventory Period</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="PrescriptionsButton_2">
+   <widget class="QPushButton" name="prescriptionReports">
     <property name="geometry">
      <rect>
       <x>360</x>
@@ -168,7 +168,7 @@
      <string notr="true">background-color: rgb(180, 212, 255);</string>
     </property>
     <property name="text">
-     <string>Employees</string>
+     <string>Prescription Reports</string>
     </property>
    </widget>
    <widget class="QPushButton" name="cancelButton">
@@ -209,7 +209,7 @@
       <x>70</x>
       <y>290</y>
       <width>171</width>
-      <height>81</height>
+      <height>91</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -222,7 +222,7 @@
      <string notr="true">background-color: rgb(180, 212, 255);</string>
     </property>
     <property name="text">
-     <string>LogIn/LogOut</string>
+     <string>Employee Tranactions</string>
     </property>
    </widget>
   </widget>

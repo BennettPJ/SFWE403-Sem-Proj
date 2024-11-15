@@ -7,3 +7,15 @@ Date,First Name,Last Name,Item Name,ID,Quantity,Price,Total Cost,Grand Total,Pay
 2024-11-10,Jane,Austin,Test1,6,1,5.79,5.79,5.79,Cash,no
 2024-11-10,Alice,Cooper,Test1,6,1,5.79,5.79,5.79,Cash,no
 2024-11-10,Jamie,Fox,Test1,6,300,5.79,1737.00,1737.0,Cash,no
+2024-11-14,Keisha,Cole,Advil,1,1,8.99,8.99,18.48,Cash,no
+2024-11-14,Keisha,Cole,Tylenol,2,1,9.49,9.49,18.48,Cash,no
+2024-11-14,Tina,Turner,Ibuprofen,6,20,7.89,157.80,237.6,Cash,no
+2024-11-14,Tina,Turner,Band-Aids,9,20,3.99,79.80,237.6,Cash,no
+2024-11-14,Luis,Miguel,Vitamin C,7,30,10.00,300.00,300.0,Debit Card,no
+2024-11-14,Selina,Q,Gatorade,11,47,1.89,88.83,88.83,Credit Card,no
+2024-11-14,Shakira,Shakira,Claritin,12,57,13.99,797.43,797.43,Credit Card,no
+2024-11-14,Sergio,S,Water Bottle,8,79,0.99,78.21,78.21,Credit Card,no
+2024-11-14,June,Bug,Tylenol,2,27,9.49,256.23,256.23,Credit Card,no
+2024-11-14,Jimmy ,Hendrix,Ibuprofen,6,27,7.89,213.03,213.03,Debit Card,no
+2024-11-14,Ruben,T,Crestor,47,5,22.49,112.45,112.45,Credit Card,no
+2024-11-14,Brittnay,S,Prozac,36,2,22.99,45.98,45.98,Debit Card,no

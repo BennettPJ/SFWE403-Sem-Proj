@@ -113,7 +113,6 @@
 2024-11-09 21:50:39,176 - Login successful for user: chrissyK
 2024-11-09 21:56:29,516 - Failed login with non-existent username: chrisstyK
 2024-11-09 21:56:38,667 - Login successful for user: chrissyK
-
 2024-11-10 00:46:53,928 - Login successful for user: amber
 2024-11-10 00:51:54,508 - Login successful for user: amber
 2024-11-10 00:52:53,915 - Login successful for user: amber
@@ -260,3 +259,38 @@
 2024-11-14 19:25:17,788 - Login successful for user: amber
 2024-11-14 20:15:12,384 - Login successful for user: amber
 2024-11-14 20:19:09,224 - Login successful for user: amber
+2024-11-14 20:45:40,219 - Login successful for user: amber
+2024-11-14 20:48:59,523 - Login successful for user: amber
+2024-11-14 20:50:55,198 - Login successful for user: amber
+2024-11-14 21:30:28,625 - Login successful for user: amber
+2024-11-14 21:39:27,170 - Login successful for user: amber
+2024-11-14 21:48:46,943 - Login successful for user: amber
+2024-11-14 21:51:32,340 - Login successful for user: amber
+2024-11-14 21:51:55 - USER: amber - ACTION: PURCHASE
+2024-11-14 21:56:15,448 - Login successful for user: amber
+2024-11-14 21:59:37,837 - Login successful for user: amber
+2024-11-14 22:01:15,027 - Login successful for user: amber
+2024-11-14 22:04:08,174 - Login successful for user: amber
+2024-11-14 22:07:14,264 - Login successful for user: amber
+2024-11-14 22:08:20,428 - Login successful for user: amber
+2024-11-14 22:09:53,248 - Login successful for user: amber
+2024-11-14 22:11:53,240 - Login successful for user: amber
+2024-11-14 22:12:34,352 - Failed login for user: amber
+2024-11-14 22:12:41,994 - Login successful for user: amber
+2024-11-14 22:13:22,356 - Failed login for user: amber
+2024-11-14 22:13:27,193 - Login successful for user: amber
+2024-11-14 22:16:35,080 - Login successful for user: amber
+2024-11-14 22:19:22,776 - Login successful for user: amber
+2024-11-14 22:23:19,835 - Failed login for user: amber
+2024-11-14 22:23:24,626 - Login successful for user: amber
+2024-11-14 22:24:18 - USER: amber - ACTION: PURCHASE
+2024-11-14 22:24:39 - USER: amber - ACTION: PURCHASE
+2024-11-14 22:26:53,081 - Login successful for user: amber
+2024-11-14 22:31:44,978 - Login successful for user: amber
+2024-11-14 22:37:10,118 - Login successful for user: jenny
+2024-11-14 22:40:18,491 - Login successful for user: jenny
+2024-11-14 22:45:38,483 - Login successful for user: jenny
+2024-11-14 22:51:15,340 - Login successful for user: jenny
+2024-11-14 22:52:50,477 - Login successful for user: jenny
+2024-11-14 22:54:05,526 - Login successful for user: jenny
+2024-11-14 22:55:36,389 - Login successful for user: jenny

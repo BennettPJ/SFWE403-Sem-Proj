@@ -28,6 +28,8 @@ class Reports(QMainWindow):
         self.userTransactionsReport.clicked.connect(self.show_user_transactions)
         self.financialReportButton.clicked.connect(self.show_financial_report)
         self.inventoryTimeReportButton.clicked.connect(self.show_inventory_report_for_period)
+        self.prescriptionReports.clicked.connect(self.show_prescription_report)
+
 
     def read_log_file(self):
         """Read the transaction log file."""
@@ -123,59 +125,69 @@ class Reports(QMainWindow):
 
     def show_user_transactions(self):
         """
-        Generate a PDF report for user login/logout activity.
+        Generate a PDF report for user login/logout activity within a specified date range.
         """
         logs = self.read_log_file()
         formatted_logs = []
 
+        # Get the date range from the user
+        start_date, end_date = self.get_date_range_from_user()
+        if not (start_date and end_date):
+            QMessageBox.warning(self, "Invalid Dates", "Please select a valid date range.")
+            return
+
         if logs:
             for log in logs:
                 try:
-                    # Extract the date and rest of the log message
+                    # Extract the date and the rest of the log message
                     date_part, log_message = log.split(" - ", 1)
-                    # Convert date to datetime object
+                    # Convert the log's date to a datetime object
                     log_datetime = datetime.strptime(date_part.split(",")[0], "%Y-%m-%d %H:%M:%S")
-                    # Format the date as MM-DD-YYYY
-                    formatted_date = log_datetime.strftime("%m-%d-%Y %I:%M:%S %p")
-                    # Append the formatted log
-                    formatted_logs.append({"Date": formatted_date, "Log Message": log_message.strip()})
+
+                    # Filter logs by the user-selected date range
+                    if start_date <= log_datetime.date() <= end_date:
+                        # Format the date as MM-DD-YYYY and include it in the log
+                        formatted_date = log_datetime.strftime("%m-%d-%Y %I:%M:%S %p")
+                        formatted_logs.append({"Date": formatted_date, "Log Message": log_message.strip()})
                 except ValueError:
-                    # If log does not match expected format, append as is
-                    formatted_logs.append({"Date": "", "Log Message": log.strip()})
+                    # Handle logs that do not match the expected format
+                    formatted_logs.append({"Date": "Invalid Timestamp", "Log Message": log.strip()})
 
-            # Generate the PDF
-            pdf = FPDF()
-            pdf.set_auto_page_break(auto=True, margin=15)
-            pdf.add_page()
-            pdf.set_font("Arial", size=10)
+            if formatted_logs:
+                # Generate the PDF
+                pdf = FPDF()
+                pdf.set_auto_page_break(auto=True, margin=15)
+                pdf.add_page()
+                pdf.set_font("Arial", size=10)
 
-            # Add title
-            pdf.set_font("Arial", style='B', size=14)
-            pdf.cell(200, 10, txt="User Transactions Report", ln=True, align='C')
-            pdf.ln(10)
+                # Add title
+                pdf.set_font("Arial", style='B', size=14)
+                pdf.cell(200, 10, txt="User Transactions Report", ln=True, align='C')
+                pdf.ln(10)
 
-            # Add table headers
-            headers = ['Date', 'Log Message']
-            col_widths = [60, 120]  # Adjust these widths as needed
-            pdf.set_font("Arial", style='B', size=10)
-            for i, header in enumerate(headers):
-                pdf.cell(col_widths[i], 10, header, border=1, align='C')
-            pdf.ln()
-
-            # Add table rows
-            pdf.set_font("Arial", size=10)
-            for log in formatted_logs:
-                pdf.cell(col_widths[0], 10, str(log['Date']), border=1, align='C')
-                pdf.cell(col_widths[1], 10, str(log['Log Message']), border=1, align='L')
+                # Add table headers
+                headers = ['Date', 'Log Message']
+                col_widths = [60, 120]  # Adjust these widths as needed
+                pdf.set_font("Arial", style='B', size=10)
+                for i, header in enumerate(headers):
+                    pdf.cell(col_widths[i], 10, header, border=1, align='C')
                 pdf.ln()
 
-            # Save the PDF to a temporary file
-            temp_pdf_path = os.path.join(tempfile.gettempdir(), "User_Transactions_Report.pdf")
-            pdf.output(temp_pdf_path)
+                # Add table rows
+                pdf.set_font("Arial", size=10)
+                for log in formatted_logs:
+                    pdf.cell(col_widths[0], 10, str(log['Date']), border=1, align='C')
+                    pdf.cell(col_widths[1], 10, str(log['Log Message']), border=1, align='L')
+                    pdf.ln()
 
-            # Open the PDF in the default viewer
-            webbrowser.open(temp_pdf_path)
+                # Save the PDF to a temporary file
+                temp_pdf_path = os.path.join(tempfile.gettempdir(), "User_Transactions_Report.pdf")
+                pdf.output(temp_pdf_path)
 
+                # Open the PDF in the default viewer
+                webbrowser.open(temp_pdf_path)
+            else:
+                QMessageBox.information(self, "No Data", "No logs found within the specified date range.")
         else:
             QMessageBox.warning(self, "No Data", "No log file found or it is empty.")
 
@@ -404,6 +416,72 @@ class Reports(QMainWindow):
 
         except Exception as e:
             print(f"Error generating financial report: {e}")
+    def show_prescription_report(self):
+        """
+        Generate a full PDF report for all prescription activity logs with columns adjusted to fit the page width.
+        """
+        prescription_file = os.path.join(os.path.dirname(__file__), '..', 'DBFiles', 'db_prescriptions.csv')
+
+        if not os.path.exists(prescription_file):
+            QMessageBox.warning(self, "File Not Found", "The prescription data file could not be located.")
+            return
+
+        try:
+            # Read prescription data
+            prescription_data = pd.read_csv(prescription_file)
+
+            # Ensure the 'Patient_DOB' is parsed as datetime for formatting
+            prescription_data['Patient_DOB'] = pd.to_datetime(
+                prescription_data['Patient_DOB'], format='%m/%d/%Y', errors='coerce'
+            )
+
+            # Initialize PDF
+            pdf = FPDF()
+            pdf.set_auto_page_break(auto=True, margin=15)
+            pdf.add_page()
+            pdf.set_font("Arial", size=10)
+
+            # Add title
+            pdf.set_font("Arial", style='B', size=14)
+            pdf.cell(200, 10, txt="Full Prescription Activity Log Report", ln=True, align='C')
+            pdf.ln(10)
+
+            # Define column headers and calculate dynamic widths
+            headers = [
+                'Patient Name', 'DOB', 'Prescription Number',
+                'Medication', 'Quantity', 'Status'
+            ]
+            page_width = 190  # Approximate usable width for A4 size (210mm - margins)
+            col_relative_widths = [2.5, 1.5, 2.5, 2, 1, 2]  # Relative widths for each column
+            total_relative_width = sum(col_relative_widths)
+            col_widths = [page_width * (rel_width / total_relative_width) for rel_width in col_relative_widths]
+
+            # Add table headers
+            pdf.set_font("Arial", style='B', size=10)
+            for i, header in enumerate(headers):
+                pdf.cell(col_widths[i], 10, header, border=1, align='C')
+            pdf.ln()
+
+            # Add table rows
+            pdf.set_font("Arial", size=10)
+            for _, row in prescription_data.iterrows():
+                pdf.cell(col_widths[0], 10, f"{row['Patient_First_Name']} {row['Patient_Last_Name']}", border=1, align='C')
+                pdf.cell(col_widths[1], 10, row['Patient_DOB'].strftime('%m-%d-%Y') if pd.notna(row['Patient_DOB']) else '', border=1, align='C')
+                pdf.cell(col_widths[2], 10, str(row['Prescription_Number']), border=1, align='C')
+                pdf.cell(col_widths[3], 10, str(row['Medication']), border=1, align='C')
+                pdf.cell(col_widths[4], 10, str(row['Quantity']), border=1, align='C')
+                pdf.cell(col_widths[5], 10, str(row['Status']), border=1, align='C')
+                pdf.ln()
+
+            # Save the PDF to a temporary file
+            temp_pdf_path = os.path.join(tempfile.gettempdir(), "Full_Prescription_Report.pdf")
+            pdf.output(temp_pdf_path)
+
+            # Open the PDF in the default viewer
+            webbrowser.open(temp_pdf_path)
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"An error occurred while generating the prescription report:\n{e}")
 
 
     def get_date_range_from_user(self):

@@ -96,9 +96,9 @@
    <widget class="QPushButton" name="addPrescription">
     <property name="geometry">
      <rect>
-      <x>600</x>
+      <x>580</x>
       <y>420</y>
-      <width>191</width>
+      <width>211</width>
       <height>41</height>
      </rect>
     </property>
@@ -273,10 +273,10 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>270</y>
-      <width>121</width>
-      <height>31</height>
+      <x>30</x>
+      <y>260</y>
+      <width>101</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -290,6 +290,9 @@
     </property>
     <property name="text">
      <string>Prescription Number:</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="label_7">
@@ -358,9 +361,9 @@
    <widget class="QPushButton" name="FindPrescriptionsPatient">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>140</x>
       <y>420</y>
-      <width>191</width>
+      <width>221</width>
       <height>41</height>
      </rect>
     </property>
@@ -451,7 +454,7 @@
    <widget class="QPushButton" name="clearTable">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>30</x>
       <y>420</y>
       <width>101</width>
       <height>41</height>
@@ -489,7 +492,7 @@
    <widget class="QPushButton" name="pickUp">
     <property name="geometry">
      <rect>
-      <x>390</x>
+      <x>380</x>
       <y>420</y>
       <width>191</width>
       <height>41</height>
@@ -509,7 +512,7 @@
      <x>0</x>
      <y>0</y>
      <width>1001</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

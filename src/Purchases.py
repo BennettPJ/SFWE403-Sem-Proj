@@ -65,11 +65,9 @@ class Purchases(QMainWindow):
 
     @pyqtSlot()
     def complete_purchase(self):
-
-         # Check for expired items in the cart
+        # Check for expired items in the cart
         for row in range(self.ItemsTable.rowCount()):
             item_id = self.ItemsTable.item(row, 0).text().strip() if self.ItemsTable.item(row, 0) else ""
-            
             if item_id and self.inventory.is_expired(item_id):  # Assuming is_expired method takes an item ID
                 QMessageBox.warning(self, "Expiration Warning", f"The item {item_id} is expired and cannot be sold.")
                 return  # Stop purchase if expired item is found
@@ -91,6 +89,9 @@ class Purchases(QMainWindow):
         # Save the purchase details to the purchase CSV
         self.save_to_csv(first_name, last_name, payment_method, grand_total)
 
+        # Log the purchase details
+        self.log_purchase()  # No arguments needed now
+
         # Update the inventory based on the items purchased
         self.update_inventory_after_purchase()
 
@@ -99,6 +100,26 @@ class Purchases(QMainWindow):
         self.FName.clear()
         self.LName.clear()
         self.returnToDashboard()
+
+    def log_purchase(self):
+        """
+        Log purchase details to the transaction log with only the USER and the action.
+        """
+        log_file = os.path.join(os.path.dirname(__file__), '..', 'logs', 'transaction.log')
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        username = self.username
+
+        # Format the log entry
+        log_entry = f"{timestamp} - USER: {username} - ACTION: PURCHASE\n"
+
+        # Write the log entry to the file
+        try:
+            with open(log_file, mode='a') as file:
+                file.write(log_entry)
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to write to log file: {e}")
+
+
 
     def update_inventory_after_purchase(self):
         """
