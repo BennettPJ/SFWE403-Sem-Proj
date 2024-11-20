@@ -4,7 +4,7 @@ This will be a repository to hold the teams SFWE 403 source code for the semeste
 
 
 # Project Directory Structure:
-'''.
+''' .
 ├── DBFiles
 │   ├── db_activity_log.csv
 │   ├── db_inventory.csv
