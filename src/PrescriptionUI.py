@@ -15,7 +15,7 @@ class PrescriptionUI(QMainWindow):
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'PendingPrescription.ui')
         loadUi(ui_path, self)
                 # Set a minimum size for the dashboard
-        self.setMinimumSize(900, 500)
+        self.setMinimumSize(950, 800)
         self.cancelButton.clicked.connect(self.backButton)
         self.addPrescription.clicked.connect(self.addPrescriptionToDB)
         self.FindPrescriptionsPatient.clicked.connect(self.findPatient)

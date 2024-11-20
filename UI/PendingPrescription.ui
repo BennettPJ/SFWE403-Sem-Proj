@@ -149,6 +149,9 @@
     <property name="text">
      <string>Patient DOB:</string>
     </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
@@ -171,6 +174,9 @@
     <property name="text">
      <string>Patient First Name:</string>
     </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
@@ -192,6 +198,9 @@
     </property>
     <property name="text">
      <string>Patient Last Name:</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLineEdit" name="PatientDOB">
@@ -315,6 +324,9 @@
     </property>
     <property name="text">
      <string>Medication:</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="label_8">
@@ -512,7 +524,7 @@
      <x>0</x>
      <y>0</y>
      <width>1001</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
