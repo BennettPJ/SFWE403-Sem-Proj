@@ -4,24 +4,24 @@ This will be a repository to hold the teams SFWE 403 source code for the semeste
 
 
 # Project Directory Structure:
-''' .
-├── DBFiles
-│   ├── db_activity_log.csv
-│   ├── db_inventory.csv
-│   ├── db_inventory_activity_log.csv
-│   ├── db_patient_info.csv
-│   ├── db_pharmacy_info.csv
-│   ├── db_prescriptions.csv
-│   ├── db_purchase_data.csv
-│   ├── db_user_account.csv
-│   └── purchase.csv
-├── README.md
-├── Reports
-│   ├── Financial_Report_2024-11-10.csv
-│   ├── Financial_Report_Period_2024-11-10.csv
-│   ├── Inventory_Report_2024-11-10.csv
-│   ├── Inventory_Report_Period_2024-11-10.csv
-│   └── User_Transactions_Report_2024-11-10.csv
+.<br>
+├── DBFiles <br>
+│   ├── db_activity_log.csv <br>
+│   ├── db_inventory.csv <br>
+│   ├── db_inventory_activity_log.csv <br>
+│   ├── db_patient_info.csv <br>
+│   ├── db_pharmacy_info.csv <br>
+│   ├── db_prescriptions.csv <br>
+│   ├── db_purchase_data.csv <br>
+│   ├── db_user_account.csv <br>
+│   └── purchase.csv <br>
+├── README.md <br>
+├── Reports <br>
+│   ├── Financial_Report_2024-11-10.csv <br>
+│   ├── Financial_Report_Period_2024-11-10.csv <br>
+│   ├── Inventory_Report_2024-11-10.csv <br>
+│   ├── Inventory_Report_Period_2024-11-10.csv <br>
+│   └── User_Transactions_Report_2024-11-10.csv <br>
 ├── Resources
 │   ├── Pharmacies-in-Portsmouth-and-Southsea.jpg
 │   ├── Pharmacology.jpg
