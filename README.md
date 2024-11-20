@@ -4,7 +4,7 @@ This will be a repository to hold the teams SFWE 403 source code for the semeste
 
 
 # Project Directory Structure:
-.
+'''.
 ├── DBFiles
 │   ├── db_activity_log.csv
 │   ├── db_inventory.csv
@@ -134,5 +134,6 @@ This will be a repository to hold the teams SFWE 403 source code for the semeste
     │   └── resources_rc.cpython-310.pyc
     ├── pharmacy_info.py
     └── resources_rc.py
+'''
 
 14 directories, 116 files
