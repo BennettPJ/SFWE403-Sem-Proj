@@ -184,7 +184,7 @@
    <widget class="QLabel" name="label_monday_hours">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>430</x>
       <y>370</y>
       <width>231</width>
       <height>16</height>
@@ -197,7 +197,7 @@
    <widget class="QLabel" name="label_tuesday_hours">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>430</x>
       <y>390</y>
       <width>231</width>
       <height>16</height>
@@ -210,7 +210,7 @@
    <widget class="QLabel" name="label_wednesday_hours">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>430</x>
       <y>410</y>
       <width>241</width>
       <height>16</height>
@@ -223,7 +223,7 @@
    <widget class="QLabel" name="label_thursday_hours">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>430</x>
       <y>430</y>
       <width>221</width>
       <height>16</height>
@@ -236,7 +236,7 @@
    <widget class="QLabel" name="label_friday_hours">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>430</x>
       <y>450</y>
       <width>221</width>
       <height>16</height>
@@ -249,7 +249,7 @@
    <widget class="QLabel" name="label_saturday_hours">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>430</x>
       <y>470</y>
       <width>211</width>
       <height>16</height>
@@ -262,7 +262,7 @@
    <widget class="QLabel" name="label_sunday_hours">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>430</x>
       <y>490</y>
       <width>231</width>
       <height>16</height>
@@ -301,7 +301,7 @@
      <x>0</x>
      <y>0</y>
      <width>1001</width>
-     <height>24</height>
+     <height>36</height>
     </rect>
    </property>
   </widget>

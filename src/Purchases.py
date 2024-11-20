@@ -3,20 +3,20 @@ from PyQt5.uic import loadUi
 import os
 import csv
 from PyQt5.QtCore import pyqtSlot
-from datetime import datetime  # Import datetime for recording the current date
+from datetime import datetime
 from Inventory import Inventory
 
 
 class Purchases(QMainWindow):
-    def __init__(self, widget, username):  # Accept the widget as an argument
+    def __init__(self, widget, username):
         super(Purchases, self).__init__()
-        self.widget = widget  # Store the QStackedWidget reference
-        self.username = username  # Store the username
-        self.inventory = Inventory() # instance of Inventory
+        self.widget = widget
+        self.username = username
+        self.inventory = Inventory()
 
-        # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'Purchase.ui')
         loadUi(ui_path, self)
+
         # Set a minimum size for the dashboard
         self.setMinimumSize(1100, 600)
         self.grandTotalLabel.setText("Grand Total: $0.00")
@@ -25,13 +25,10 @@ class Purchases(QMainWindow):
         self.removeItemButton.clicked.connect(self.remove_item)
         self.cancelButton.clicked.connect(self.cancelPurchase)
         self.Complete.clicked.connect(self.complete_purchase)
-        self.PrintReciept.clicked.connect(self.print_receipt)  # Connect the Print Receipt button
-
-        # Connect changes in the ItemsTable to the function that recalculates the total.
+        self.PrintReciept.clicked.connect(self.print_receipt)
         self.ItemsTable.itemChanged.connect(self.update_grand_total)
 
     def print_receipt(self):
-        """Display a receipt of the current items in a new dialog window."""
         receipt_text = "Receipt\n"
         receipt_text += "-" * 40 + "\n"
         receipt_text += "{:<15} {:<10} {:<10} {:<10}\n".format("Item", "Qty", "Price", "Total")
@@ -51,12 +48,12 @@ class Purchases(QMainWindow):
         receipt_text += f"{self.grandTotalLabel.text()}\n"
         receipt_text += "-" * 40 + "\n"
 
-        # Create and show the receipt dialog.
+        # Create & show receipt
         receipt_dialog = ReceiptDialog(receipt_text)
         receipt_dialog.exec_()
 
     def cancelPurchase(self):
-        from src.Dashboard import Dashboard  # Importing inside the function to avoid circular import
+        from src.Dashboard import Dashboard
 
         dashboard = Dashboard(self.widget, self.username)
         self.widget.addWidget(dashboard)
@@ -68,9 +65,9 @@ class Purchases(QMainWindow):
         # Check for expired items in the cart
         for row in range(self.ItemsTable.rowCount()):
             item_id = self.ItemsTable.item(row, 0).text().strip() if self.ItemsTable.item(row, 0) else ""
-            if item_id and self.inventory.is_expired(item_id):  # Assuming is_expired method takes an item ID
+            if item_id and self.inventory.is_expired(item_id):
                 QMessageBox.warning(self, "Expiration Warning", f"The item {item_id} is expired and cannot be sold.")
-                return  # Stop purchase if expired item is found
+                return
 
         first_name = self.FName.text()
         last_name = self.LName.text()
@@ -86,25 +83,22 @@ class Purchases(QMainWindow):
         grand_total = self.grandTotalLabel.text()
         QMessageBox.information(self, "Purchase Complete", f"Purchase completed successfully.\n{grand_total}")
 
-        # Save the purchase details to the purchase CSV
+        # Saving purchaes details to purchase CSV
         self.save_to_csv(first_name, last_name, payment_method, grand_total)
 
-        # Log the purchase details
-        self.log_purchase()  # No arguments needed now
+        self.log_purchase()
 
         # Update the inventory based on the items purchased
         self.update_inventory_after_purchase()
 
-        # Reset the table and clear fields
+        # Reset table
         self.reset_table()
         self.FName.clear()
         self.LName.clear()
         self.returnToDashboard()
 
     def log_purchase(self):
-        """
-        Log purchase details to the transaction log with only the USER and the action.
-        """
+
         log_file = os.path.join(os.path.dirname(__file__), '..', 'logs', 'transaction.log')
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         username = self.username
@@ -122,9 +116,6 @@ class Purchases(QMainWindow):
 
 
     def update_inventory_after_purchase(self):
-        """
-        Update the db_inventory.csv file to reflect the purchased quantities.
-        """
         base_path = os.path.dirname(os.path.abspath(__file__))
         inventory_file = os.path.join(base_path, '..', 'DBFiles', 'db_inventory.csv')
 
@@ -153,15 +144,15 @@ class Purchases(QMainWindow):
             try:
                 quantity_purchased = int(quantity_purchased_text)
             except ValueError:
-                quantity_purchased = 0  # Default to 0 if the value is invalid
+                quantity_purchased = 0
 
             if item_id in inventory:
                 try:
                     current_quantity = int(inventory[item_id]['Quantity'])
                 except ValueError:
-                    current_quantity = 0  # Default to 0 if the value is invalid in the CSV
+                    current_quantity = 0
 
-                new_quantity = max(0, current_quantity - quantity_purchased)  # Ensure quantity doesn't go negative
+                new_quantity = max(0, current_quantity - quantity_purchased)
                 inventory[item_id]['Quantity'] = str(new_quantity)
 
         # Write the updated inventory back to the CSV
@@ -172,7 +163,7 @@ class Purchases(QMainWindow):
 
 
     def check_for_prescription_items(self):
-        """Checks if any items in the cart are marked as 'yes' in the 'Prescription' column."""
+        # Checks if any items in the cart are marked as 'yes' in the 'Prescription' column
         for row in range(self.ItemsTable.rowCount()):
             prescription_status = self.ItemsTable.item(row, 5).text().lower() if self.ItemsTable.item(row, 5) else "no"
             if prescription_status == "yes":
@@ -180,7 +171,6 @@ class Purchases(QMainWindow):
         return False
 
     def show_signature_popup(self):
-        """Show a popup asking the user to confirm that they acknowledge the prescription medication."""
         dialog = QDialog(self)
         dialog.setWindowTitle("Prescription Medication Confirmation")
 
@@ -197,28 +187,25 @@ class Purchases(QMainWindow):
 
 
     def save_to_csv(self, first_name, last_name, payment_method, grand_total):
-        # Construct the path to the CSV file
-        base_path = os.path.dirname(os.path.abspath(__file__))  # Get the base directory path
-        file_path = os.path.join(base_path, '..', 'DBFiles', 'db_purchase_data.csv')  # Path to the CSV file
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(base_path, '..', 'DBFiles', 'db_purchase_data.csv')
 
-        # Ensure the CSV file exists
+        # does csv exist?
         if not os.path.exists(file_path):
             with open(file_path, mode='w', newline='') as file:
                 writer = csv.writer(file)
                 # Write headers if the file doesn't exist yet
                 writer.writerow(['Date', 'First Name', 'Last Name', 'Item Name', 'ID', 'Quantity', 'Price', 'Total Cost', 'Grand Total', 'Payment Method', 'Prescription'])
 
-        # Extract only the numeric value from the grand total text (removes "Grand Total: $")
         grand_total_numeric = float(grand_total.replace("Grand Total: $", "").strip())
 
-        # Get the current date in "YYYY-MM-DD" format
         current_date = datetime.now().strftime("%Y-%m-%d")
 
         # Open the CSV file in append mode to add new data
         with open(file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
 
-            # Collect all rows (item name, quantity, price, total cost)
+            # Collect all rows
             for row in range(self.ItemsTable.rowCount()):
                 item_name = self.ItemsTable.item(row, 0).text() if self.ItemsTable.item(row, 0) else ""
                 item_id = self.ItemsTable.item(row, 1).text() if self.ItemsTable.item(row, 1) else ""
@@ -231,7 +218,7 @@ class Purchases(QMainWindow):
                 if not item_id.strip():
                     continue
 
-                # Write data for each item, including the current date and prescription status
+                # Write data for each item
                 writer.writerow([current_date, first_name, last_name, item_name, item_id, quantity, price, total_cost, grand_total_numeric, payment_method, prescription_status])
 
     def reset_table(self):
@@ -278,13 +265,9 @@ class Purchases(QMainWindow):
             self.ItemsTable.blockSignals(False)
 
     def add_item(self):
-        """
-        Populate table rows based on the ID column from db_inventory.csv.
-        Skip rows where the ID column is empty.
-        """
         # Iterate through all rows in the table
         for row in range(self.ItemsTable.rowCount()):
-            id_item = self.ItemsTable.item(row, 1)  # Assuming column 1 is ID
+            id_item = self.ItemsTable.item(row, 1)
 
             # Skip the row if the ID column is empty or invalid
             if id_item is None or not id_item.text().strip():
@@ -307,20 +290,20 @@ class Purchases(QMainWindow):
                 for row_data in reader:
                     if row_data['ID'] == item_id:
                         # Populate the table row with the item's details
-                        self.ItemsTable.setItem(row, 0, QTableWidgetItem(row_data['Item']))  # Item Name
-                        self.ItemsTable.setItem(row, 2, QTableWidgetItem("1"))  # Default Quantity to 1
-                        self.ItemsTable.setItem(row, 3, QTableWidgetItem(row_data['Price']))  # Price
-                        self.ItemsTable.setItem(row, 5, QTableWidgetItem("No"))  # Default Prescription Status
+                        self.ItemsTable.setItem(row, 0, QTableWidgetItem(row_data['Item']))  
+                        self.ItemsTable.setItem(row, 2, QTableWidgetItem("1"))  
+                        self.ItemsTable.setItem(row, 3, QTableWidgetItem(row_data['Price']))
+                        self.ItemsTable.setItem(row, 5, QTableWidgetItem("No"))
                         item_found = True
                         break
 
             # If the item was not found, clear the row's data and show a warning
             if not item_found:
                 QMessageBox.warning(self, "Not Found", f"Item with ID {item_id} not found in inventory.")
-                self.ItemsTable.setItem(row, 0, QTableWidgetItem(""))  # Clear Item Name
-                self.ItemsTable.setItem(row, 2, QTableWidgetItem(""))  # Clear Quantity
-                self.ItemsTable.setItem(row, 3, QTableWidgetItem(""))  # Clear Price
-                self.ItemsTable.setItem(row, 5, QTableWidgetItem(""))  # Clear Prescription Status
+                self.ItemsTable.setItem(row, 0, QTableWidgetItem(""))
+                self.ItemsTable.setItem(row, 2, QTableWidgetItem(""))
+                self.ItemsTable.setItem(row, 3, QTableWidgetItem(""))
+                self.ItemsTable.setItem(row, 5, QTableWidgetItem(""))
 
         # Recalculate the total after adding/updating items
         self.update_grand_total()
