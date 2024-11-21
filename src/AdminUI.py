@@ -1,7 +1,7 @@
+# Import necessary libraries for PyQt5 and system operations
+import os
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from PyQt5.uic import loadUi
-import os
-
 from src.LoginRoles import LoginRoles
 
 class AdminUI(QMainWindow):
