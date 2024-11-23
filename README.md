@@ -14,7 +14,7 @@ This project contains roughly 59,223 lines of code.
 
 ## Project Structure
 
-### High-Level project overview
+### High-Level project overview of file directories
 . <br>
 ├── DBFiles               --> Contains CSV database files for persistent data storage <br>
 ├── Reports               --> Generated financial, inventory, and activity reports <br>
@@ -23,11 +23,6 @@ This project contains roughly 59,223 lines of code.
 ├── UI                    --> PyQt .ui files for graphical interfaces <br>
 ├── logs                  --> System transaction logs <br>
 ├── src                   --> Main Source code for backend logic <br>
-│</t> ├── AdminUI.py        --> AdminUI backend <br>
-│</t> ├── Inventory.py      --> Inventory management backend <br>
-│</t> ├── Patient.py        --> Patient management backend <br>
-│</t> ├── Reports.py        --> Report generation backend <br>
-│</t> └── …                 --> Other backend files <br>
 ├── main.py               --> Application entry point <br>
 └── README.md             --> Project documentation <br>
 
@@ -41,16 +36,13 @@ This project contains roughly 59,223 lines of code.
 ---
 
 ### **DBFiles**
-Contains the CSV database files used to store persistent data for the application.
-- `db_activity_log.csv`: Logs system activities.
-- `db_inventory.csv`: Tracks inventory data.
-- `db_inventory_activity_log.csv`: Logs inventory operations.
-- `db_patient_info.csv`: Stores patient information.
-- `db_pharmacy_info.csv`: Pharmacy details.
-- `db_prescriptions.csv`: Stores prescription data.
-- `db_purchase_data.csv`: Purchase transaction records.
-- `db_user_account.csv`: User account details.
-- `purchase.csv`: Records specific purchase actions.
+Contains all the CSV database files used to store persistent data for the application.
+- `db_inventory.csv`: Holds all of the inventory data. This contains the headers -> Item,ID,Quantity,Price,Expiration Date,Date Added,Date Updated,Date Removed
+- `db_patient_info.csv`: Holds all of the patient information entered into the system. This contains the headers -> FirstName,LastName,DateOfBirth,StreetAddress,City,State,ZipCode,PhoneNumber,Email,NameInsured,Provider,PolicyNumber,GroupNumber
+- `db_pharmacy_info.csv`: This will only contain one row entry. This holds all of the pharmacies information. The headers are -> name,website,address,owner,phone_number,mon_hours,tue_hours,wed_hours,thu_hours,fri_hours,sat_hours,sun_hours
+- `db_prescriptions.csv`: This stores all of the prescriptions that are entered into the system. This file also tracks if a prescription is filled, picked up, or pending. The headers are -> Patient_First_Name,Patient_Last_Name,Patient_DOB,Prescription_Number,Medication,Quantity,Status
+- `db_purchase_data.csv`: This stores the purchase transaction records. The headers are -> Date,First Name,Last Name,Item Name,ID,Quantity,Price,Total Cost,Grand Total,Payment Method,Prescription
+- `db_user_account.csv`: This stores authorized user information including usernames and passwords. The headers are -> Username,Email,Password,Role,Locked_counter,Locked_status
 
 ---
 
@@ -81,16 +73,24 @@ Contains test scripts and data used for unit testing:
 
 ### **UI**
 PyQt UI files for the graphical interface:
-- `AdminUI.ui`: Admin panel.
-- `Dashboard.ui`: Main dashboard.
-- `Inventory.ui`: Inventory management.
-- `LogInGUI.ui`: Login screen.
-- `Purchase.ui`: Purchase screen.
-
+- `AdminUI.ui`: This display's the admin screen that can be found by navigating through the dashboard UI. This is where admins can update users passwords and lock/unlock users accounts.
+- `createAccount.ui`: This display's the screen where a manager can create a new pharmacy staff account allowing the new user to login.
+- `Dashboard.ui`: This display's the main dashboard that allows users to navigate to different pages. Each page within the dashboard provides the user with different functionalities that can be carried out.
+- `FillPrescription.ui`: This display's the screen where pharmacists can fill any pending prescription that is in the system. This screen is blocked by access control only allowing pharmacists to view it.
+- `Inventory.ui`: This display's the UI that allows users to manage the inventory that is linked to the pharmacy management system.
+- `LogInGUI.ui`: This display's the page that the user is greeted with when opening the pharmacy management system application. The user will login on this page. This page also allows all users to view store hours and managers to create accounts.
+- `PendingPrescription.ui`: This display's the prescription management page. Here pharmacy staff can enter in new prescriptions, mark prescriptions as picked up, and search for prescriptions by patient.
+- `Purchase.ui`: This display's the screen that allows pharmacy staff to enter in items a customer will want to purchase. This will also display a recipt for any item that was purchased by the user.
+- `Reports.ui`: This display's different buttons that the user can interact with to generate different types of reports for different aspects of the system.
+- `storeHours.ui`: This display's the screen that contains the store hours as well as a calendar and the time of day. The manager can change the store information from this UI as well.
+- `template.ui`: This is a template page that the team worked off of. This has no functionality and was purely for team internal use.
+- `UpdateCustomerInfo.ui`: This display's the UI that allows staff to update and add patients to the system.
+  
 ---
 
 ### **logs**
-- `transaction.log`: A log file that tracks all system transactions.
+Contains a master log file to store different actions that happen within the application
+- `transaction.log`: This keeps track of logins, logouts, purchases, and other data. This file is used to track everything so reports can be built based on it.
 
 ---
 
