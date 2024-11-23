@@ -2,7 +2,7 @@ import csv
 import os
 
 class Prescriptions:
-    def __init__(self, prescription_file='../DBFiles/db_prescriptions.csv'):
+    def __init__(self, prescription_file='../DBFiles/db_prescriptions.csv'): # Default file path
         base_path = os.path.dirname(os.path.abspath(__file__))
         self.prescription_file = os.path.join(base_path, prescription_file)
 
@@ -14,28 +14,30 @@ class Prescriptions:
 
 
     def add_prescription(self, first_name, last_name, dob, prescription_number, medication, quantity):
-        """Add a new pending prescription to the database."""
+        # Add a new prescription to the database
+        # Status is set to 'Pending' by default when a new prescription is added
         with open(self.prescription_file, mode='a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([first_name, last_name, dob, prescription_number, medication, quantity, 'Pending'])
 
 
     def read_prescriptions(self):
-        """Read all prescriptions from the database."""
+        # Read all prescriptions from the database
         with open(self.prescription_file, mode='r') as file:
             reader = csv.DictReader(file)
             return [row for row in reader]
     
     
     def findByPatient(self, firstName, lastName, dob):
+        # Find all prescriptions for a specific patient
         prescriptions = self.read_prescriptions()
         return [p for p in prescriptions if p['Patient_First_Name'] == firstName and p['Patient_Last_Name'] == lastName and p['Patient_DOB'] == dob]
     
     
     def pickup_prescription(self, prescription_number):
-        """Mark the prescription as picked up by updating its status."""
+        # Update the status of a prescription to 'Picked Up' if button is clicked
         prescriptions = self.read_prescriptions()
-        updated = False
+        updated = False # Flag to indicate if the prescription was found and updated
 
         # Update the status of the prescription
         for p in prescriptions:
@@ -55,9 +57,9 @@ class Prescriptions:
     
     
     def update_status(self, prescription_number, new_status):
-        """Update the status of a prescription in the database."""
+        # Update the status of a prescription to a new status
         prescriptions = self.read_prescriptions()
-        updated = False
+        updated = False # Flag to indicate if the prescription was found and updated
 
         # Update the status of the selected prescription
         for p in prescriptions:

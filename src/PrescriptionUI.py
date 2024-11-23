@@ -1,31 +1,34 @@
 from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox, QDialog, QVBoxLayout, QLineEdit, QLabel, QPushButton
 from PyQt5.uic import loadUi
 import os
-import sys
-from PyQt5.QtCore import pyqtSlot
 from Prescriptions import Prescriptions
 
 class PrescriptionUI(QMainWindow):
-    def __init__(self, widget, username):  # Accept the widget as an argument
+    def __init__(self, widget, username):  # Accept the widget and username as an argument
         super(PrescriptionUI, self).__init__()
-        self.widget = widget  # Store the QStackedWidget reference
-        self.username = username  # Store the username
+        self.widget = widget  
+        self.username = username  
 
         # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'PendingPrescription.ui')
         loadUi(ui_path, self)
-                # Set a minimum size for the dashboard
+        
+        # Set the window title
         self.setMinimumSize(950, 800)
+        
+        # Connect the buttons to their respective functions
         self.cancelButton.clicked.connect(self.backButton)
         self.addPrescription.clicked.connect(self.addPrescriptionToDB)
         self.FindPrescriptionsPatient.clicked.connect(self.findPatient)
         self.clearTable.clicked.connect(self.reset_table)
         self.pickUp.clicked.connect(self.pickUpPrescription)
         
+        # Initialize the Prescriptions class to interact with the prescription database
         self.pending_prescription_db = Prescriptions()
         
 
     def backButton(self):
+        # Goes back to the Dashboard page
         from src.Dashboard import Dashboard  # Importing MainUI inside the function to avoid circular import
 
         # Reset the table before returning to the dashboard.
@@ -36,7 +39,11 @@ class PrescriptionUI(QMainWindow):
         self.widget.addWidget(dashboard)
         self.widget.setCurrentIndex(self.widget.indexOf(dashboard))
 
+
     def addPrescriptionToDB(self):
+        # Add a prescription to the database
+        
+        # Get the values from the input fields
         firstName = self.PatientFirstName.text().strip()
         lastName = self.PatientLastName.text().strip()
         date_of_birth = self.PatientDOB.text().strip()
@@ -44,7 +51,9 @@ class PrescriptionUI(QMainWindow):
         medication = self.Medication.text().strip()
         quantity = self.Quantity.text().strip()
         
+        # Check if any field is empty
         if not all([firstName, lastName, date_of_birth, prescription_number, medication, quantity]):
+            # Notify user if the fields are empty
             QMessageBox.warning(self, "Warning", "Please fill all fields.")
             return
         
@@ -66,19 +75,24 @@ class PrescriptionUI(QMainWindow):
         self.Medication.clear()
         self.Quantity.clear()
 
+
     def reset_table(self):
-        """Clear all items from the ItemsTable while keeping the rows."""
+        # Clear all items in the table if button is pressed
         for row in range(self.ItemsTable.rowCount()):
             for column in range(self.ItemsTable.columnCount()):
                 self.ItemsTable.setItem(row, column, QTableWidgetItem(""))  # Clear the cell contents
                 
+                
     def findPatient(self):
+        # Find a patient's prescriptions
+        
         # Create a dialog to search for a patient
         dialog = QDialog(self)
         dialog.setWindowTitle("Enter Patient Information")
         dialog.setFixedSize(300, 200)
         layout = QVBoxLayout(dialog)
 
+        # Add input fields for first name, last name, and date of birth
         firstNameInput = QLineEdit(dialog)
         firstNameInput.setPlaceholderText("First Name")
         layout.addWidget(QLabel("First Name"))
@@ -98,6 +112,7 @@ class PrescriptionUI(QMainWindow):
         layout.addWidget(confirmButton)
         confirmButton.clicked.connect(dialog.accept)
 
+        # If the dialog is accepted, search for the patient in the database
         if dialog.exec_() == QDialog.Accepted:
             first_name = firstNameInput.text().strip()
             last_name = lastNameInput.text().strip()
@@ -114,18 +129,25 @@ class PrescriptionUI(QMainWindow):
             for row_index, row_data in enumerate(patient_prescription_data):
                 for col_index, value in enumerate(row_data.values()):  # Use row_data.values() to get dictionary values
                     self.ItemsTable.setItem(row_index, col_index, QTableWidgetItem(str(value)))
+                  
                     
     def pickUpPrescription(self):
-        """Change the status of the selected prescription to Picked Up."""
+        # Change the status of a prescription to 'Picked Up'
+        
         # Get the selected row
         selected_row = self.ItemsTable.currentRow()
+        
+        # Check if a row is selected
         if selected_row == -1:
+            # Notify user if no row is selected
             QMessageBox.warning(self, "Warning", "No row selected. Please select a prescription to pick up.")
             return
 
         # Retrieve the Prescription Number from the selected row
-        prescription_number_item = self.ItemsTable.item(selected_row, 3)  # Assuming the 4th column is Prescription_Number
+        prescription_number_item = self.ItemsTable.item(selected_row, 3) 
+        
         if prescription_number_item is None:
+            # Notify user if the prescription number is not found
             QMessageBox.warning(self, "Warning", "Invalid selection. Please select a valid row.")
             return
 

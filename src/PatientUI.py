@@ -5,7 +5,7 @@ from src.Patient import Patient  # Import the Patient class
 from LoginRoles import LoginRoles
 
 class PatientUI(QMainWindow):
-    def __init__(self, widget, username):
+    def __init__(self, widget, username): # Accept the widget and username as arguments
         super(PatientUI, self).__init__()
         self.widget = widget
         self.username = username
@@ -14,7 +14,10 @@ class PatientUI(QMainWindow):
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'UpdateCustomerInfo.ui')
         loadUi(ui_path, self)
         
-        self.setMinimumSize(1000, 500)  # Set a minimum size
+        # Set the window title
+        self.setMinimumSize(1000, 500)  
+        
+        # Connect the buttons to their respective functions
         self.cancelButton.clicked.connect(self.backToDashboard)
         self.savePatient.clicked.connect(self.savePatientInfo)
         self.updatePatient.clicked.connect(self.updatePatientInfo)
@@ -24,22 +27,31 @@ class PatientUI(QMainWindow):
         # Initialize the Patient class to interact with the patient database
         self.patient_db = Patient()
         
+        # Initialize the LoginRoles class to check user permissions
+        self.roles = LoginRoles()
+        
         # Set up user role permissions
         self.setup_ui()
         
+        
     def setup_ui(self):
-        roles = LoginRoles()
-        user_role = roles.find_user_role(self.username)
+        user_role = self.roles.find_user_role(self.username)
         # Only enable the remove button for managers or pharmacists
         self.removePatientButton.setEnabled(user_role in ['manager', 'pharmacist'])
         
+        
     def backToDashboard(self):
-        from src.Dashboard import Dashboard
+        # Goes back to the Dashboard page
+        from src.Dashboard import Dashboard # Import the Dashboard class don't want circular imports
+        
+        # Create a new instance of the Dashboard class and add it to the stacked widget
         dashboard = Dashboard(self.widget, self.username)
         self.widget.addWidget(dashboard)
         self.widget.setCurrentIndex(self.widget.indexOf(dashboard))
         
+        
     def savePatientInfo(self):
+        # Save patient information to the database
         patient_data = {
             'FirstName': self.firstName.text(),
             'LastName': self.lastName.text(),
@@ -56,12 +68,14 @@ class PatientUI(QMainWindow):
             'GroupNumber': self.groupNum.text()
         }
 
+        # Check if the patient already exists in the database
         existing_patient = self.patient_db.find_patient(
             patient_data['FirstName'],
             patient_data['LastName'],
             patient_data['DateOfBirth']
         )
 
+        # If patient exists, update the information, otherwise add a new patient
         if existing_patient:
             self.patient_db.update_patient(
                 patient_data['FirstName'],
@@ -74,13 +88,15 @@ class PatientUI(QMainWindow):
             self.patient_db.add_patient(patient_data)
             QMessageBox.information(self, "Success", "New patient information saved successfully!")
 
+
     def updatePatientInfo(self):
-        # Create a dialog to search for a patient
+        # Create a dialog popup to search for a patient
         dialog = QDialog(self)
         dialog.setWindowTitle("Enter Patient Information")
         dialog.setFixedSize(300, 200)
         layout = QVBoxLayout(dialog)
 
+        # Add input fields for first name, last name, and date of birth
         firstNameInput = QLineEdit(dialog)
         firstNameInput.setPlaceholderText("First Name")
         layout.addWidget(QLabel("First Name"))
@@ -100,6 +116,7 @@ class PatientUI(QMainWindow):
         layout.addWidget(confirmButton)
         confirmButton.clicked.connect(dialog.accept)
 
+        # If the dialog is accepted, search for the patient in the database
         if dialog.exec_() == QDialog.Accepted:
             first_name = firstNameInput.text().strip()
             last_name = lastNameInput.text().strip()
@@ -107,6 +124,7 @@ class PatientUI(QMainWindow):
 
             patient_data = self.patient_db.find_patient(first_name, last_name, dob)
 
+            # If the patient is found, populate the fields with the patient data
             if patient_data:
                 self.firstName.setText(patient_data['FirstName'])
                 self.lastName.setText(patient_data['LastName'])
@@ -123,9 +141,12 @@ class PatientUI(QMainWindow):
                 self.groupNum.setText(patient_data['GroupNumber'])
                 QMessageBox.information(self, "Success", "Patient information loaded successfully!")
             else:
+                # If the patient is not found, display an error message
                 QMessageBox.warning(self, "Error", "Patient not found.")
 
+
     def clearFields(self):
+        # Clear all input fields
         self.firstName.clear()
         self.lastName.clear()
         self.DOB.clear()
@@ -140,7 +161,9 @@ class PatientUI(QMainWindow):
         self.policyNum.clear()
         self.groupNum.clear()
 
+
     def prompt_retry(self):
+        # Display a dialog to prompt the user to retry or return to the Update Patient Info page
         retry_dialog = QMessageBox(self)
         retry_dialog.setWindowTitle("Next Step")
         retry_dialog.setText("Would you like to try again or go back to Update Patient Info?")
@@ -154,10 +177,14 @@ class PatientUI(QMainWindow):
         elif response == QMessageBox.Close:
             self.returnToUpdatePatientInfo()  # Return to Update Patient Info page
 
+
     def returnToUpdatePatientInfo(self):
+        # Return to the Update Patient Info page
         self.widget.setCurrentIndex(self.widget.indexOf(self))
 
+
     def removePatient(self):
+        # Create a dialog popup to search for a patient to remove
         dialog = QDialog(self)
         dialog.setWindowTitle("Enter Patient Information")
         dialog.setFixedSize(300, 200)
@@ -168,6 +195,7 @@ class PatientUI(QMainWindow):
         layout.addWidget(QLabel("First Name"))
         layout.addWidget(firstNameInput)
 
+        # Add input fields for first name, last name, and date of birth
         lastNameInput = QLineEdit(dialog)
         lastNameInput.setPlaceholderText("Last Name")
         layout.addWidget(QLabel("Last Name"))
@@ -182,17 +210,21 @@ class PatientUI(QMainWindow):
         layout.addWidget(confirmButton)
         confirmButton.clicked.connect(dialog.accept)
 
+        # If the dialog is accepted, search for the patient in the database
         if dialog.exec_() == QDialog.Accepted:
             first_name = firstNameInput.text().strip()
             last_name = lastNameInput.text().strip()
             dob = dobInput.text().strip()
 
+            # Check if all fields are filled out
             if not first_name or not last_name or not dob:
                 QMessageBox.warning(self, "Error", "All fields are required.")
                 self.prompt_retry()
                 return
 
             patient_exists = self.patient_db.find_patient(first_name, last_name, dob)
+            
+            # If the patient exists, remove the patient from the database
             if patient_exists:
                 if self.patient_db.remove_patient(first_name, last_name, dob):
                     QMessageBox.information(self, "Success", "Patient information removed successfully!")
@@ -200,5 +232,4 @@ class PatientUI(QMainWindow):
                     QMessageBox.warning(self, "Error", "Failed to remove patient.")
             else:
                 QMessageBox.warning(self, "Error", "Patient not found.")
-            
-            self.prompt_retry()
+                self.prompt_retry()

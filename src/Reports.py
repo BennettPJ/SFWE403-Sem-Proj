@@ -11,7 +11,7 @@ import webbrowser
 
 
 class Reports(QMainWindow):
-    def __init__(self, widget, username):
+    def __init__(self, widget, username): # Accept the widget and username as arguments
         super(Reports, self).__init__()
         self.widget = widget
         self.username = username
@@ -20,6 +20,7 @@ class Reports(QMainWindow):
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'Reports.ui')
         loadUi(ui_path, self)
 
+        # Set the window title
         self.setMinimumSize(900, 600)
 
         # Connect existing buttons
@@ -32,15 +33,16 @@ class Reports(QMainWindow):
 
 
     def read_log_file(self):
-        """Read the transaction log file."""
+        # Read the transaction log file
         log_file = os.path.join(os.path.dirname(__file__), '..', 'logs', 'transaction.log')
         if not os.path.exists(log_file):
             return []
         with open(log_file, 'r') as file:
             return file.readlines()
 
+
     def export_to_csv(self, data, report_name):
-        """Export the report data to a CSV file."""
+        # Export data to the current CSV file
         current_date = datetime.now().strftime("%Y-%m-%d")
         file_name = f"{report_name}_{current_date}.csv"
         file_path = os.path.join(os.path.dirname(__file__), '..', 'Reports', file_name)
@@ -53,11 +55,8 @@ class Reports(QMainWindow):
         QMessageBox.information(self, "Export Successful", f"{report_name} has been exported to {file_path}.")
 
 
-
     def show_inventory_report(self):
-        """
-        Generate a PDF inventory report and display it.
-        """
+        # Generate a PDF inventory report and display it
         inventory_file = os.path.join(os.path.dirname(__file__), '..', 'DBFiles', 'db_inventory.csv')
         if not os.path.exists(inventory_file):
             QMessageBox.warning(self, "File Not Found", "The inventory file could not be located.")
@@ -122,11 +121,8 @@ class Reports(QMainWindow):
         webbrowser.open(temp_pdf_path)
 
 
-
     def show_user_transactions(self):
-        """
-        Generate a PDF report for user login/logout activity within a specified date range.
-        """
+        # Generate a PDF report for user login/logout activity within a specified date range.
         logs = self.read_log_file()
         formatted_logs = []
 
@@ -193,9 +189,7 @@ class Reports(QMainWindow):
 
 
     def show_financial_report(self):
-        """
-        Generate a financial report for a specified date range and display it as a PDF.
-        """
+        # Generate a financial report for a specified date range and display it as a PDF.
         purchase_file = os.path.join(os.path.dirname(__file__), '..', 'DBFiles', 'db_purchase_data.csv')
 
         if not os.path.exists(purchase_file):
@@ -267,15 +261,15 @@ class Reports(QMainWindow):
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred while generating the financial report:\n{e}")
 
+
     def show_inventory_report_for_period(self):
-        """
-        Generate a PDF inventory report for a specified period and display it.
-        """
+        # Generate a PDF inventory report for a specified period and display it.
         start_date, end_date = self.get_date_range_from_user()
         if not (start_date and end_date):
             QMessageBox.warning(self, "Invalid Dates", "Please select a valid date range.")
             return
 
+        # Load the inventory data
         inventory_file = os.path.join(os.path.dirname(__file__), '..', 'DBFiles', 'db_inventory.csv')
         if not os.path.exists(inventory_file):
             QMessageBox.warning(self, "File Not Found", "The inventory file could not be located.")
@@ -313,9 +307,9 @@ class Reports(QMainWindow):
 
             # Add table headers
             headers = ['Item', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed']
-            col_relative_widths = [2, 1, 1, 1, 2, 2, 2, 2]  # Adjust these relative weights
+            col_relative_widths = [2, 1, 1, 1, 2, 2, 2, 2]  
             total_width = sum(col_relative_widths)
-            page_width = 190  # Approximate usable width for A4
+            page_width = 190  
             col_widths = [page_width * (w / total_width) for w in col_relative_widths]
 
             pdf.set_font("Arial", style='B', size=10)
@@ -347,9 +341,8 @@ class Reports(QMainWindow):
             QMessageBox.critical(self, "Error", f"An error occurred while generating the inventory report:\n{e}")
 
 
-
-
     def generate_financial_report(file_path):
+        # Generate a financial report from the purchase data CSV file
         try:
             # Data structures to hold the aggregated data
             total_revenue = 0.0
@@ -416,10 +409,12 @@ class Reports(QMainWindow):
 
         except Exception as e:
             print(f"Error generating financial report: {e}")
+            
+            
     def show_prescription_report(self):
-        """
-        Generate a full PDF report for all prescription activity logs with columns adjusted to fit the page width.
-        """
+        # Generate a full PDF report for all prescription activity logs with columns adjusted to fit the page width.
+        
+        # Load the prescription data
         prescription_file = os.path.join(os.path.dirname(__file__), '..', 'DBFiles', 'db_prescriptions.csv')
 
         if not os.path.exists(prescription_file):
@@ -451,8 +446,8 @@ class Reports(QMainWindow):
                 'Patient Name', 'DOB', 'Prescription Number',
                 'Medication', 'Quantity', 'Status'
             ]
-            page_width = 190  # Approximate usable width for A4 size (210mm - margins)
-            col_relative_widths = [2.5, 1.5, 2.5, 2, 1, 2]  # Relative widths for each column
+            page_width = 190  
+            col_relative_widths = [2.5, 1.5, 2.5, 2, 1, 2]  
             total_relative_width = sum(col_relative_widths)
             col_widths = [page_width * (rel_width / total_relative_width) for rel_width in col_relative_widths]
 
@@ -485,7 +480,9 @@ class Reports(QMainWindow):
 
 
     def get_date_range_from_user(self):
-        """Prompt the user to select a date range."""
+        # Prompt the user to select a date range.
+        
+        # Create a dialog to select the date range
         dialog = QDialog(self)
         dialog.setWindowTitle("Select Date Range")
         layout = QVBoxLayout(dialog)
@@ -510,17 +507,21 @@ class Reports(QMainWindow):
         confirm_button.clicked.connect(dialog.accept)
         layout.addWidget(confirm_button)
 
+        # If the dialog is accepted, return the selected dates
         if dialog.exec_() == QDialog.Accepted:
             start_date = self.start_date_edit.date().toPyDate()
             end_date = self.end_date_edit.date().toPyDate()
             return start_date, end_date
         return None, None
 
+
     def show_report_popup(self, title, report_text):
-        """Display a report in a popup dialog."""
+        # Display a report in a popup dialog.
+        
+        # Create a dialog to display the report
         dialog = QDialog(self)
         dialog.setWindowTitle(title)
-        dialog.setMinimumSize(900, 600)  # Increased popup window size
+        dialog.setMinimumSize(900, 600)  
 
         layout = QVBoxLayout(dialog)
         log_display = QTextEdit()
@@ -535,9 +536,11 @@ class Reports(QMainWindow):
 
         dialog.exec_()
 
+
     def cancelPurchase(self):
-        """Return to the dashboard."""
-        from src.Dashboard import Dashboard
+        # Return to the dashboard.
+        from src.Dashboard import Dashboard # Import Dashboard inside the function to avoid circular import
+        
         dashboard = Dashboard(self.widget, self.username)
         self.widget.addWidget(dashboard)
         self.widget.setCurrentIndex(self.widget.indexOf(dashboard))

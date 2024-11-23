@@ -4,7 +4,7 @@ import csv
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-from Purchase import Purchase # Adjust import path as needed
+from Purchases import Purchases # Adjust import path as needed
 
 def setup_test_file(test_file):
     """Setup a fresh test file with the correct headers."""
@@ -16,7 +16,7 @@ def run_tests():
     test_roles_file = os.path.join(os.path.dirname(__file__), 'Test_databases/test_db_purchase.csv')
     setup_test_file(test_roles_file)
     
-    purchase = Purchase(purchase_file=test_roles_file)
+    purchase = Purchases(purchase_file=test_roles_file)
     
     print("\nTest 1: Add Items")
     purchase.add_item('Apple', 1, 1)
