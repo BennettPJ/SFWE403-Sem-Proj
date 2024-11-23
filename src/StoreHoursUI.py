@@ -9,12 +9,17 @@ from src.StoreInfoManager import StoreInfoManager
 class StoreHoursUI(QMainWindow):
     def __init__(self, widget):  # Accept the widget as an argument
         super(StoreHoursUI, self).__init__()
-        self.widget = widget  # Store the QStackedWidget reference
+        self.widget = widget
+        
+        # Instantiate StoreInfoManager
+        self.info_manager = StoreInfoManager()
+
 
         # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'storeHours.ui')
         loadUi(ui_path, self)
 
+        # Set the window title
         self.widget.setFixedSize(1000, 500)
         
         # Set QLCDNumber to handle 8 digits (HH:MM:SS)
@@ -29,7 +34,7 @@ class StoreHoursUI(QMainWindow):
         # Initial clock display
         self.update_clock()
         
-        # Assuming these labels are created in the UI and set as attributes
+        # Take the label input and store it in the variable
         self.label_pharmacy_name = self.findChild(QLabel, "label_pharmacy_name")
         self.label_pharmacy_website = self.findChild(QLabel, "label_pharmacy_website")
         self.label_pharmacy_address = self.findChild(QLabel, "label_pharmacy_address")
@@ -47,20 +52,21 @@ class StoreHoursUI(QMainWindow):
         # Load the initial pharmacy info from CSV into labels
         self.load_pharmacy_info()
         
-        self.backBtn.clicked.connect(self.back_to_login)  #back to MainUI
+        # Connect the buttons to their respective functions
+        self.backBtn.clicked.connect(self.back_to_login) 
         self.hoursUpdateBtn.clicked.connect(self.update_store_hours)
         
-        
-        
+    
     def update_clock(self):
+        # Update the clock display with the current time
         current_time = QTime.currentTime()
         time_string = current_time.toString('hh:mm AP')
         self.lcdNumber.display(time_string)
         
         
     def load_pharmacy_info(self):
-        info_manager = StoreInfoManager()
-        data = info_manager.get_info()
+        # Get the pharmacy information from the CSV
+        data = self.info_manager.get_info()
 
         # Set label text with CSV data
         self.label_pharmacy_name.setText(f"Pharmacy Name: {data['name']}")
@@ -78,29 +84,27 @@ class StoreHoursUI(QMainWindow):
         self.label_saturday_hours.setText(f"Saturday: {data['sat_hours']}")
         self.label_sunday_hours.setText(f"Sunday: {data['sun_hours']}")
         
+        
     def back_to_login(self):
+        # Go back to the login screen
         from src.LogInGUI import MainUI  # Import MainUI inside the function to avoid circular import
 
         # Check if MainUI (login screen) is already in the stack to avoid duplicates
         for i in range(self.widget.count()):
             if isinstance(self.widget.widget(i), MainUI):
                 self.widget.setCurrentIndex(i)
-                self.widget.setFixedSize(800, 525)  # Resize to match login screen
+                self.widget.setFixedSize(800, 525)
                 return
 
         # If not found, create a new MainUI instance
         login_screen = MainUI(self.widget)
         self.widget.addWidget(login_screen)
         self.widget.setCurrentIndex(self.widget.indexOf(login_screen))
-        self.widget.setFixedSize(800, 525)  # Resize to match login screen
-        
+        self.widget.setFixedSize(800, 525)  
         
 
     def update_store_hours(self):
-        # Instantiate PharmacyInfoManager
-        info_manager = StoreInfoManager()
-
-        # Step 1: Authenticate Manager
+        # Authenticate the manager since they are the only ones that can make changes
         manager_username, ok = QInputDialog.getText(self, "Manager Approval", "Enter Manager Username:")
         if not ok or not manager_username:
             QMessageBox.warning(self, "Update Cancelled", "Manager approval is required to update store hours.")
@@ -118,7 +122,7 @@ class StoreHoursUI(QMainWindow):
             QMessageBox.warning(self, "Authorization Failed", "Manager approval failed. Please try again.")
             return
 
-        # Step 2: Update Pharmacy Information
+        # Update the pharmacy information
         fields = {
             "Pharmacy Name": ("name", self.label_pharmacy_name),
             "Pharmacy Website": ("website", self.label_pharmacy_website),
@@ -131,9 +135,8 @@ class StoreHoursUI(QMainWindow):
             new_value, ok = QInputDialog.getText(self, "Update Pharmacy Info", f"Enter {field_name} (Leave blank to skip):")
             if ok and new_value:  # Only update if the user provided a new value
                 label.setText(f"{field_name}: {new_value}")
-                info_manager.update_info(csv_field, new_value)
+                self.info_manager.update_info(csv_field, new_value)
 
-        # Step 3: Update Working Hours
         days = {
             "Monday": ("mon_hours", self.label_monday_hours),
             "Tuesday": ("tue_hours", self.label_tuesday_hours),
@@ -148,7 +151,7 @@ class StoreHoursUI(QMainWindow):
             hours, ok = QInputDialog.getText(self, "Update Pharmacy Info", f"Enter {day} Working Hours (Leave blank to skip):")
             if ok and hours:  # Only update if the user provided new hours
                 label.setText(f"{day}: {hours}")
-                info_manager.update_info(csv_field, hours)
+                self.info_manager.update_info(csv_field, hours)
 
         # Reload labels to ensure display reflects the updated CSV
         self.load_pharmacy_info()

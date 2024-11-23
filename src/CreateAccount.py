@@ -3,6 +3,7 @@ import sys
 import os
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
 from PyQt5.uic import loadUi
+from src.LoginRoles import LoginRoles
 
 # Add the 'src' folder to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__)))
@@ -12,6 +13,9 @@ class CreateAccountUI(QMainWindow):
     def __init__(self, widget):  
         super(CreateAccountUI, self).__init__()
         self.widget = widget 
+        
+        # Create an instance of the LoginRoles class
+        self.roles = LoginRoles() 
 
         # Load the UI file relative to the project's root directory
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'createAccount.ui')
@@ -31,12 +35,8 @@ class CreateAccountUI(QMainWindow):
         password = self.createPassword.text()  # Get the entered password
         repassword = self.reEnterPass.text()  # Get the re-entered password
         role = self.rolesBox.currentText() # Get the selected role from the dropdown
-
-        from src.LoginRoles import LoginRoles
-        # Create an instance of the LoginRoles class
-        roles = LoginRoles() 
         
-         # Check if the passwords match
+        # Check if the passwords match
         if password != repassword:
             # Display a warning popup if passwords do not match
             msg = QMessageBox()
@@ -45,7 +45,7 @@ class CreateAccountUI(QMainWindow):
             msg.exec_()
         else:
             # Call the create_account function from LoginRoles to create the new account
-            roles.create_account(role, username, password, email)
+            self.roles.create_account(role, username, password, email)
             # Display a popup for successful creation of account
             msg = QMessageBox()
             msg.setWindowTitle("Account Created")

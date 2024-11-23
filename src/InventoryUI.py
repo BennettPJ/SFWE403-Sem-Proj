@@ -2,17 +2,16 @@
 from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox
 from PyQt5.uic import loadUi
 import os
-import csv
 from Inventory import Inventory
-from LoginRoles import LoginRoles
-
 
 class InventoryUI(QMainWindow):
-    def __init__(self, widget, username):
+    def __init__(self, widget, username): #Takes in the widget and current username as parameters
         super(InventoryUI, self).__init__()
         self.widget = widget
-        self.inventory = Inventory()
         self.username = username
+        
+        # Initialize the Inventory class
+        self.inventory = Inventory()
 
         # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'Inventory.ui')
@@ -36,18 +35,16 @@ class InventoryUI(QMainWindow):
         # Initialize the inventory table
         self.initialize_table()
 
+
     def initialize_table(self):
-        """
-        Set up the inventory table to display data.
-        """
+        # Populates the table with the inventory data on load
         self.ItemsTable.setColumnCount(5)
         self.ItemsTable.setHorizontalHeaderLabels(['Item', 'ID', 'Quantity', 'Price', 'Expiration Date'])
         self.load_inventory_into_table()
 
+
     def load_inventory_into_table(self):
-        """
-        Load inventory data from the CSV file into the QTableWidget, excluding removed items.
-        """
+        # Loads the actual inventory data into the table
         self.ItemsTable.setRowCount(0)  # Clear the table
         inventory_data = self.inventory.read_inventory_data()  # Read from inventory CSV
         for i, item in enumerate(inventory_data):
@@ -60,9 +57,7 @@ class InventoryUI(QMainWindow):
 
 
     def remove_selected_item(self):
-        """
-        Remove the selected item from the table and CSV file.
-        """
+        #Removes the selected row from the table and the CSV file
         selected_row = self.ItemsTable.currentRow()
         if selected_row == -1:
             QMessageBox.warning(self, "Error", "Please select a row to remove!")
@@ -90,10 +85,9 @@ class InventoryUI(QMainWindow):
             else:
                 QMessageBox.warning(self, "Error", "Failed to remove the item from the inventory.")
 
+
     def add_empty_row(self):
-        """
-        Add an empty row to the inventory table.
-        """
+        # Adds an empty row to the table
         row_count = self.ItemsTable.rowCount()
         self.ItemsTable.insertRow(row_count)
         self.ItemsTable.setItem(row_count, 0, QTableWidgetItem(""))  # Item
@@ -102,10 +96,9 @@ class InventoryUI(QMainWindow):
         self.ItemsTable.setItem(row_count, 3, QTableWidgetItem(""))  # Price
         self.ItemsTable.setItem(row_count, 4, QTableWidgetItem(""))  # Expiration Date
         
+        
     def update_inventory(self):
-        """
-        Update stock for a specific item from the selected row in the table.
-        """
+        # Updates the inventory with the new values from the table
         selected_row = self.ItemsTable.currentRow()
         if selected_row != -1:
             item = self.ItemsTable.item(selected_row, 0).text()
@@ -115,18 +108,21 @@ class InventoryUI(QMainWindow):
             expiration_date = self.ItemsTable.item(selected_row, 4).text()
 
             try:
+                # Try to convert the quantity to an integer value
                 new_quantity = int(new_quantity_str)
             except ValueError:
                 QMessageBox.warning(self, "Error", "Invalid quantity entered.")
                 return
 
+            # Update the inventory with the new values
             self.inventory.update_stock(item, item_id, new_quantity, expiration_date, price)
             QMessageBox.information(
                 self, "Success",
                 f"Updated {item} (ID: {item_id}) stock to {new_quantity}, Price: {price}, Expiration Date: {expiration_date}"
-            )
+                )
         else:
             QMessageBox.warning(self, "Error", "Please select a row to update!")
+
 
     def auto_order_stock(self):
         # Run auto_order to check if reorder is needed and refresh inventory table
@@ -139,7 +135,9 @@ class InventoryUI(QMainWindow):
 
         self.load_inventory_into_table()  # Refresh table after attempting reorder
 
+
     def check_low_stock(self):
+        # Check for low stock items and display a message
         low_stock_items = self.inventory.check_low_stock()
 
         if low_stock_items:
@@ -152,7 +150,9 @@ class InventoryUI(QMainWindow):
         else:
             QMessageBox.information(self, "Low Stock Alert", "No low stock items at the moment.")
 
+
     def cancel(self):
+        # Return to the dashboard
         from src.Dashboard import Dashboard  # Move the import here to avoid circular import
 
         dashboard = Dashboard(self.widget, self.username)
@@ -160,7 +160,9 @@ class InventoryUI(QMainWindow):
         self.widget.setCurrentIndex(self.widget.indexOf(dashboard))
         self.widget.setFixedSize(1050, 600)
 
+
     def check_exp_date(self):
+        # Check for items close to expiration date and display a message
         exp_date_items = self.inventory.check_exp_date()
 
         if exp_date_items:

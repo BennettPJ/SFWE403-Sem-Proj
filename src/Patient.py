@@ -2,7 +2,7 @@ import csv
 import os
 
 class Patient:
-    def __init__(self, db_file='../DBFiles/db_patient_info.csv'):
+    def __init__(self, db_file='../DBFiles/db_patient_info.csv'): # Default file path
         base_path = os.path.dirname(os.path.abspath(__file__))
         self.db_file = os.path.join(base_path, db_file)
 
@@ -13,8 +13,9 @@ class Patient:
                 writer.writerow(['FirstName', 'LastName', 'DateOfBirth', 'StreetAddress', 'City', 'State', 'ZipCode', 
                                  'PhoneNumber', 'Email', 'NameInsured', 'Provider', 'PolicyNumber', 'GroupNumber'])
 
+
     def add_patient(self, patient_data):
-        """Adds a new patient record to the database."""
+        # Add a new patient record to the database
         with open(self.db_file, mode='a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([
@@ -24,13 +25,14 @@ class Patient:
                 patient_data['NameInsured'], patient_data['Provider'], patient_data['PolicyNumber'], 
                 patient_data['GroupNumber']
             ])
-        print(f"Patient '{patient_data['FirstName']} {patient_data['LastName']}' added successfully.")
+
 
     def update_patient(self, first_name, last_name, dob, updated_data):
-        """Updates a patient's information based on their name and date of birth."""
+        # Update an existing patient record in the database
         rows = []
-        updated = False
+        updated = False # Flag to indicate if the patient was found and updated
 
+        # Read the existing data and update the matching patient
         with open(self.db_file, mode='r') as file:
             reader = csv.DictReader(file)
             for row in reader:
@@ -42,19 +44,19 @@ class Patient:
                 rows.append(row)
 
         if updated:
+            # Write the updated rows back to the file if the patient was updated
             with open(self.db_file, mode='w', newline='') as file:
                 writer = csv.DictWriter(file, fieldnames=reader.fieldnames)
                 writer.writeheader()
                 writer.writerows(rows)
-            print(f"Patient '{first_name} {last_name}' updated successfully.")
-        else:
-            print("Patient not found.")
+          
             
     def remove_patient(self, first_name, last_name, dob):
-        """Removes a patient record based on their name and date of birth."""
+        # Remove a patient record from the database based on their name and date of birth
         rows = []
-        found = False
+        found = False # Flag to indicate if the patient was found and removed
 
+        # Read the existing data and skip the matching patient to exclude it from the new file
         with open(self.db_file, mode='r') as file:
             reader = csv.DictReader(file)
             for row in reader:
@@ -69,14 +71,13 @@ class Patient:
                 writer = csv.DictWriter(file, fieldnames=reader.fieldnames)
                 writer.writeheader()
                 writer.writerows(rows)
-            print(f"Patient '{first_name} {last_name}' removed successfully.")
             return True  # Return True to indicate a successful removal
         else:
-            print("Patient not found.")
             return False  # Return False if no matching patient was found
 
+
     def find_patient(self, first_name, last_name, dob):
-        """Finds and returns a patient's record based on their name and date of birth."""
+        # Find a patient record in the database based on their name and date of birth
         with open(self.db_file, mode='r') as file:
             reader = csv.DictReader(file)
             for row in reader:
@@ -84,5 +85,4 @@ class Patient:
                 row = {key.strip(): value for key, value in row.items()}
                 if row['FirstName'] == first_name and row['LastName'] == last_name and row['DateOfBirth'] == dob:
                     return row
-        print("Patient not found.")
         return None

@@ -1,36 +1,36 @@
 #FillPrescription.py
 import sys
 import os
-from datetime import datetime
 
 # Add the 'src' folder to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__)))
 
 import resources_rc  # Import the compiled resource file
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QTableWidgetItem
 from PyQt5.uic import loadUi
 from Prescriptions import Prescriptions
 from Inventory import Inventory
 
-
 class FillPrescriptionUI(QMainWindow):
-    def __init__(self, widget, username):  # Accept the widget as an argument
+    def __init__(self, widget, username):  # Accept the widget and the current username as an argument
         super(FillPrescriptionUI, self).__init__()
-        self.widget = widget  # Store the QStackedWidget reference
+        self.widget = widget 
         self.username = username
 
         # Load the UI file relative to the project's root
         ui_path = os.path.join(os.path.dirname(__file__), '..', 'UI', 'FillPrescription.ui')
         loadUi(ui_path, self)
         
-            # Set a minimum size for the dashboard
-        self.setMinimumSize(1000, 600)  # Example size, you can adjust these values
+        # Set a minimum size for the dashboard
+        self.setMinimumSize(1000, 600)
         
+        # Connect buttons to functions
         self.cancelButton.clicked.connect(self.backToDashboard)
         self.fillPerscription.clicked.connect(self.fillPrescription)
         self.CheckStock.clicked.connect(self.checkStock)
         self.Refresh.clicked.connect(self.refreshTable)
 
+        # Initialize the database connections
         self.prescriptions_db = Prescriptions()
         self.inventory_db = Inventory()
         
@@ -62,9 +62,9 @@ class FillPrescriptionUI(QMainWindow):
     
     
     def fillPrescription(self):
-        """Fill the selected prescription if it is not expired and update its status."""
+        # Allow the pharmacist to fill the prescription if its not expired
         try:
-            # Get the selected row
+            # Get the selected row from the user interface
             selected_row = self.tableWidget.currentRow()
             if selected_row == -1:
                 QMessageBox.warning(self, "Warning", "No row selected. Please select a prescription to fill.")
@@ -75,10 +75,12 @@ class FillPrescriptionUI(QMainWindow):
             quantity_item = self.tableWidget.item(selected_row, 5) 
             prescription_number_item = self.tableWidget.item(selected_row, 3) 
 
+            # Check if the data is complete, if not warn the pharmacist
             if not medication_item or not quantity_item or not prescription_number_item:
                 QMessageBox.warning(self, "Warning", "Incomplete data in the selected row.")
                 return
 
+            # Extract the medication name
             medication = medication_item.text().strip()
             try:
                 quantity = int(quantity_item.text().strip())
@@ -86,6 +88,7 @@ class FillPrescriptionUI(QMainWindow):
                 QMessageBox.warning(self, "Error", "Invalid quantity. Please enter a valid number.")
                 return
 
+            # Extract the prescription number
             prescription_number = prescription_number_item.text().strip()
 
             # Check if the medication is expired
@@ -97,37 +100,37 @@ class FillPrescriptionUI(QMainWindow):
             success = self.inventory_db.fill_prescription(medication, quantity)
 
             if success:
-                # Update the prescription status in the database
+                # Update the prescription status in the inventory database
                 status_updated = self.prescriptions_db.update_status(prescription_number, "Filled")
-
                 if status_updated:
                     QMessageBox.information(self, "Success", f"Successfully filled {quantity} units of '{medication}'. Prescription status updated.")
                 else:
                     QMessageBox.warning(self, "Error", f"Failed to update status for prescription {prescription_number}.")
-
                 self.refreshTable()  # Refresh the table to reflect updated data
             else:
                 QMessageBox.warning(self, "Error", f"Failed to fill the prescription for '{medication}'. Insufficient stock or medication not found.")
 
         except Exception as e:
+            # Catch any exceptions that occur during the process and notify the user
             print(f"An error occurred while filling the prescription: {e}")
             QMessageBox.critical(self, "Error", f"An error occurred while filling the prescription: {e}")
 
 
     def checkStock(self):
-        """Check the stock of the medication for the selected prescription."""
+        # Check the stock for the medication selected by the pharmacist
         # Get the selected row
         selected_row = self.tableWidget.currentRow()
         if selected_row == -1:
             QMessageBox.warning(self, "Warning", "No row selected. Please select a prescription to check stock.")
             return
 
-        # Retrieve the medication name from the selected row (assume column 4 is the medication name)
-        medication_item = self.tableWidget.item(selected_row, 4)  # Adjust column index if needed
+        # Retrieve the medication name from the selected row 
+        medication_item = self.tableWidget.item(selected_row, 4)
         if not medication_item:
             QMessageBox.warning(self, "Warning", "Medication name not found in the selected row.")
             return
 
+        # Extract the medication name
         medication = medication_item.text()
 
         # Check the stock from the inventory database
@@ -148,9 +151,7 @@ class FillPrescriptionUI(QMainWindow):
     
     
     def refreshTable(self):
-        """
-        Populates the table with prescriptions that have a status of 'Pending'.
-        """
+        # Refresh the table to display the latest prescriptions that are marked as pending
         try:
             # Clear the table before refreshing
             self.tableWidget.clearContents()
@@ -171,6 +172,3 @@ class FillPrescriptionUI(QMainWindow):
         except Exception as e:
             print(f"An error occurred while refreshing the table: {e}")
             QMessageBox.critical(self, "Error", f"An error occurred while refreshing the table: {e}")
-        
-    
-    
