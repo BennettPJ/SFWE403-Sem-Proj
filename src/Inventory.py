@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 class Inventory:
     # Class constructor to initialize the inventory system, takes in the low stock threshold, auto reorder threshold, and paths to CSV databases
     def __init__(self, low_stock_threshold=120, auto_reorder_threshold=120, 
-                 activity_file='../DBFiles/db_inventory_activity_log.csv',
                  inventory_file='../DBFiles/db_inventory.csv'):
         
         # Set up the base directory path
@@ -20,7 +19,6 @@ class Inventory:
 
         # Set the file paths relative to the base directory
         self.inventory_file = os.path.join(base_path, inventory_file)
-        self.activity_file = os.path.join(base_path, activity_file)
         
         # Define thresholds for low stock and auto-reorder
         self.low_stock_threshold = low_stock_threshold
@@ -30,7 +28,6 @@ class Inventory:
         
         # Initialize CSV files with headers if they don't exist
         self.initialize_csv(self.inventory_file, ['Item', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed'])
-        self.initialize_csv(self.activity_file, ['Medication','ID','Quantity','Expiration Date', 'ID Employee', 'Removal Date'])
 
 
     # Function to initialize a CSV file with headers if it does not exist
