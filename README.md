@@ -135,15 +135,18 @@ PyQt UI files for the graphical interface:
 ---
 
 ## How to Run
-1. Install the required dependencies:
+1. Install Anaconda and setup the environment:
+   - Follow this link to learn more about how to setup and install Anaconda: https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html
+  
+2. Install the required dependencies:
     ```bash
     pip install PyQt5 fpdf pandas
    
-2. Clone the repository:
+3. Clone the repository:
     ```bash
     git clone https://github.com/BennettPJ/SFWE403-Sem-Proj.git
     cd SFWE403-Sem-Proj
    
-3. Run the main.py file:
+4. Run the main.py file:
     ```bash
     python main.py
