@@ -134,16 +134,6 @@ PyQt UI files for the graphical interface:
 
 ---
 
-## Features
-1. **Inventory Management**: Manage stock levels and order medications.
-2. **Patient Information**: Store and retrieve patient details securely.
-3. **Prescription Processing**: Create, update, and manage prescriptions.
-4. **Reporting**: Generate financial, inventory, and user transaction reports.
-5. **User Authentication**: Secure login with role-based access control.
-6. **Audit Logging**: Track all significant system activities for accountability.
-
----
-
 ## How to Run
 1. Install the required dependencies:
     ```bash
