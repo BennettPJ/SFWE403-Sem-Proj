@@ -46,18 +46,64 @@ Contains all the CSV database files used to store persistent data for the applic
 
 ---
 
+### **logs**
+Contains a master log file to store different actions that happen within the application.
+- `transaction.log`: This keeps track of logins, logouts, purchases, and other data. This file is used to track everything so reports can be built based on it.
+
+---
+
 ### **Reports**
 Generated reports are saved here:
-- `Financial_Report_*.csv`: Financial summaries.
-- `Inventory_Report_*.csv`: Inventory status reports.
-- `User_Transactions_Report_*.csv`: Tracks user activity within the system.
+- `Financial_Report_*.csv`: This is a CSV file that stores all of the financial data related to sales in the system. The date that takes place instead of the * is the date that the report was created on. This file is used for generating a PDF report to display to the user.
+- `Financial_Report_Period_*.csv`: This file is a CSV file that holds all financial data related to sales for a set period of time determined by the user. This file is used to create a PDF report of that information.
+- `Inventory_Report_*.csv`: This is a CSV file that stores all of the inventory data. The date that takes place instead of the * is the date that the report was created on. This file is used for generating a PDF report to display to the user.
+- `Inventory_Report_Period_*.csv`: This file is a CSV file that holds all inventory data for a set period of time determined by the user. This file is used to create a PDF report of that information.
+- `User_Transactions_Report_*.csv`: This file is a CSV file that tracks user logins and logouts. This file is used to create a PDF report of that information.
 
 ---
 
 ### **Resources**
-A collection of images and resources used in the application's UI:
-- Icons such as `pharmacist.png`, `medicine.png`, `user.png`, etc.
-- UI-related resources like `pharm.qrc`.
+A collection of images and resources used in the application's UI. All images are copyright free. All images were used to enhance the UI/UX of the application.
+- `computer.png`: This is an image of a computer with a medication displayed on it.
+- `consultation.png`: This is an image of a phone with a medication inside a text bubble.
+- `floppy-disk.png`: This is a floppy disk which represents saving something within the system.
+- `information.png`: This is an image of a medical help desk.
+- `medicine.png`: This is a image of the medical symbol commonly seen in the medical field.
+- `pharm.png`: This is an image of a pharmacist behind the pharmacy counter.
+- `pharm.qrc`: This is an XML formatted file identifying the images used within this project.
+- `pharmacist.png`: This is an image of the outline of a pharmacist.
+- `pharmacy.png`: This is an image of medications.
+- `prescription.png`: This is an image of a prescription form.
+- `report.png`: This is an image of a report file with additional charts.
+- `right.png`: This is an image with an arrow pointing to the right.
+- `Screenshot 2024-10-02 201939.png`: This is an image of a pharmacist behind the pharmacy counter.
+- `treatment.png`: This is an image of a hand holding a medical package.
+- `user.png`: This is an image of a person next to a gear to represent user settings.
+- `vaccine.png`: This is an image of a medical vaccine.
+
+---
+
+### **src**
+The main source code for the backend of the pharmacy management system:
+- **\_\_pycache\_\_**:
+  - All files contained in here are compiles bytecode for all of the .py files listed below. This is used to speed up the execution of the application. 
+- `AdminUI.py`: This file acts as the backend to the Admin fronted page. This file handles all the logic to allow store managers to manage user accounts. This includes locking and unlocking accounts, deleting users, changing passwords, and more.
+- `CreateAccount.py`: This is the backend to the page that allows managers to create new accounts for the pharmacy management system. This handles password checking logic to ensure a password is valid as well as adding the new user account to the database.
+- `Dashboard.py`: This is the backend that routes to all the different pages within the application. This also handles logic for the access control system ensuring certain user groups can only access pages they are allowed to access.
+- `FillPrescriptionUI.py`: This handles all the backend logic for allowing a pharmacist to fill a prescription. Within this file it reads from the prescriptions database to populate the table with all the pending prescriptions. This backend file also interfaces with the inventory class to ensure that a medication being filled is in stock and not expired.
+- `Inventory.py`: This is a helper file that contains a class for interacting with the inventory database. This includes functionality such as checking the stock for a medication, checking if a medication is expired, and more. This class is used in many backend files throughout the project.
+- `InventoryUI.py`: This is the backed file for the inventory page. This file handles interactions between the inventory class and the frontend page based on user input.
+- `LogInGUI.py`: This backend file handles the interface between the LoginRoles class and the frontend UI based on user input. This backend file also handles the page routing based on what page the user the user navigates to.
+- `LoginRoles.py`: This is a helper class that handles the validation of users as well as the interaction between the user accounts database. Some of the functionality in this class is username and password validation, finding user accounts by username, the removal of users, and more.
+- `Patient.py`: This file is a helper class that handles the interaction with the patient info database. This file contains functionality such as adding and removing patient, updating patient info, and looking up patient info by their name and date of birth.
+- `PatientUI.py`: This backend file relies on the Patient helper class. This file handles the users input from the frontend and passes the data off to the helper patient class for database interaction. 
+- `Prescriptions.py`: This is a helper class that handles all interactions with the prescriptions database. This includes functionality such as adding a prescription, updating a prescription's status, and looking up prescriptions by patient.
+- `PrescriptionUI.py`: This file handles the interaction between the frontend and the Prescriptions helper class. This includes passing data between the frontend and the database class. This also handles displaying popups on the frontend to the user. 
+- `Purchases.py`: This file handles the interaction between the frontend and the purchases database. This class also interfaces with the inventory helper class to ensure that the inventory display's accurate data. Additionally, this class handles displaying receipt popups as there is no physical hardware integrations. 
+- `Reports.py`: This class handles making PDF files out of the logged system data. This also handles the interaction between the frontend and the popups allowing users to select a date range for their generated reports. 
+- `resources_rc.py`: This is an auto-generated resource file by PyQt. This contains compiled resource object code. 
+- `StoreHoursUI.py`: This file handles the transfer of data between the pharmacy info database and the frontend. This file also relies on the LoginRoles helper class to validate manager credentials for changing the information displayed on the page. 
+- `StoreInfoManager.py`: This is a helper class that interacts with the pharmacy info database. This includes reading and writing to the CSV file database. This helper class is used in the StoreHoursUI file. 
 
 ---
 
@@ -80,31 +126,11 @@ PyQt UI files for the graphical interface:
 - `Inventory.ui`: This display's the UI that allows users to manage the inventory that is linked to the pharmacy management system.
 - `LogInGUI.ui`: This display's the page that the user is greeted with when opening the pharmacy management system application. The user will login on this page. This page also allows all users to view store hours and managers to create accounts.
 - `PendingPrescription.ui`: This display's the prescription management page. Here pharmacy staff can enter in new prescriptions, mark prescriptions as picked up, and search for prescriptions by patient.
-- `Purchase.ui`: This display's the screen that allows pharmacy staff to enter in items a customer will want to purchase. This will also display a recipt for any item that was purchased by the user.
+- `Purchase.ui`: This display's the screen that allows pharmacy staff to enter in items a customer will want to purchase. This will also display a receipt for any item that was purchased by the user.
 - `Reports.ui`: This display's different buttons that the user can interact with to generate different types of reports for different aspects of the system.
 - `storeHours.ui`: This display's the screen that contains the store hours as well as a calendar and the time of day. The manager can change the store information from this UI as well.
 - `template.ui`: This is a template page that the team worked off of. This has no functionality and was purely for team internal use.
 - `UpdateCustomerInfo.ui`: This display's the UI that allows staff to update and add patients to the system.
-  
----
-
-### **logs**
-Contains a master log file to store different actions that happen within the application
-- `transaction.log`: This keeps track of logins, logouts, purchases, and other data. This file is used to track everything so reports can be built based on it.
-
----
-
-### **src**
-The source code for the application, organized by functionality:
-- **Modules**:
-  - `AdminUI.py`, `Dashboard.py`: User interfaces for admins and dashboards.
-  - `Inventory.py`: Inventory management logic.
-  - `LoginRoles.py`: User login and role management.
-  - `Patient.py`: Manages patient-related data and interactions.
-  - `Purchases.py`: Handles purchases.
-  - `Reports.py`: Generates reports.
-- **Utilities**:
-  - `resources_rc.py`: PyQt resources.
 
 ---
 
