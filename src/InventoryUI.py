@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox
 from PyQt5.uic import loadUi
 import os
 from Inventory import Inventory
+from datetime import datetime
 
 class InventoryUI(QMainWindow):
     def __init__(self, widget, username): #Takes in the widget and current username as parameters
@@ -98,30 +99,46 @@ class InventoryUI(QMainWindow):
         
         
     def update_inventory(self):
-        # Updates the inventory with the new values from the table
         selected_row = self.ItemsTable.currentRow()
         if selected_row != -1:
-            item = self.ItemsTable.item(selected_row, 0).text()
-            item_id = self.ItemsTable.item(selected_row, 1).text()  # ID from the second column
-            new_quantity_str = self.ItemsTable.item(selected_row, 2).text()
-            price = self.ItemsTable.item(selected_row, 3).text()  # Price column
-            expiration_date = self.ItemsTable.item(selected_row, 4).text()
-
             try:
-                # Try to convert the quantity to an integer value
-                new_quantity = int(new_quantity_str)
-            except ValueError:
-                QMessageBox.warning(self, "Error", "Invalid quantity entered.")
-                return
+                item = self.ItemsTable.item(selected_row, 0).text().strip()
+                item_id = self.ItemsTable.item(selected_row, 1).text().strip()
+                new_quantity_str = self.ItemsTable.item(selected_row, 2).text().strip()
+                price = self.ItemsTable.item(selected_row, 3).text().strip()
+                expiration_date = self.ItemsTable.item(selected_row, 4).text().strip()
 
-            # Update the inventory with the new values
-            self.inventory.update_stock(item, item_id, new_quantity, expiration_date, price)
-            QMessageBox.information(
-                self, "Success",
-                f"Updated {item} (ID: {item_id}) stock to {new_quantity}, Price: {price}, Expiration Date: {expiration_date}"
-                )
+                # Validate Quantity
+                try:
+                    new_quantity = int(new_quantity_str)
+                    if new_quantity < 0:
+                        raise ValueError("Quantity cannot be negative.")
+                except ValueError:
+                    QMessageBox.warning(self, "Error", f"Invalid quantity: {new_quantity_str}.")
+                    return
+
+                # Validate Price
+                try:
+                    float(price)  # Convert to float to validate
+                except ValueError:
+                    QMessageBox.warning(self, "Error", f"Invalid price: {price}.")
+                    return
+
+                # Validate Expiration Date
+                try:
+                    datetime.strptime(expiration_date, '%Y-%m-%d')
+                except ValueError:
+                    QMessageBox.warning(self, "Error", f"Invalid expiration date: {expiration_date}. Use YYYY-MM-DD.")
+                    return
+
+                # Update inventory
+                self.inventory.update_stock(item, item_id, new_quantity, price, expiration_date)
+                QMessageBox.information(self, "Success", f"Item '{item}' updated successfully.")
+            except Exception as e:
+                QMessageBox.warning(self, "Error", f"An unexpected error occurred: {e}")
         else:
             QMessageBox.warning(self, "Error", "Please select a row to update!")
+
 
 
     def auto_order_stock(self):

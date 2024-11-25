@@ -76,38 +76,58 @@ class Inventory:
         rows = []
         updated = False
         try:
+            # Validate price
+            try:
+                price = float(price)  # Ensure price is a valid number
+                if price < 0:
+                    raise ValueError("Price must be non-negative.")
+            except ValueError:
+                print(f"Invalid price: {price}. Skipping update.")
+                return
+
+            # Validate expiration date
+            try:
+                expiration_date_obj = datetime.strptime(expiration_date, '%Y-%m-%d')
+            except ValueError:
+                print(f"Invalid expiration date: {expiration_date}. Skipping update.")
+                return
+
+            # Read existing data
             with open(self.inventory_file, mode='r') as file:
                 reader = csv.DictReader(file)
                 for row in reader:
-                    # Match the item and ID
                     if row['Item'].strip().lower() == item.strip().lower() and row['ID'].strip() == item_id.strip():
                         row['Quantity'] = str(new_quantity)
-                        row['Price'] = price
-                        row['Expiration Date'] = expiration_date
+                        row['Price'] = f"{price:.2f}"
+                        row['Expiration Date'] = expiration_date_obj.strftime('%Y-%m-%d')
                         row['Date Updated'] = datetime.now().strftime('%Y-%m-%d')
                         updated = True
                     rows.append(row)
 
-            # Add new item if it doesn't exist
+            # Add new item if not found
             if not updated:
                 rows.append({
                     'Item': item,
                     'ID': item_id,
                     'Quantity': str(new_quantity),
-                    'Price': price,
-                    'Expiration Date': expiration_date,
+                    'Price': f"{price:.2f}",
+                    'Expiration Date': expiration_date_obj.strftime('%Y-%m-%d'),
                     'Date Added': datetime.now().strftime('%Y-%m-%d'),
                     'Date Updated': '',
                     'Date Removed': ''
                 })
 
-            # Write the updated data back to the inventory CSV
+            # Write updated data
             with open(self.inventory_file, mode='w', newline='') as file:
-                writer = csv.DictWriter(file, fieldnames=['Item', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed'])
+                writer = csv.DictWriter(file, fieldnames=[
+                    'Item', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed'
+                ])
                 writer.writeheader()
                 writer.writerows(rows)
+
         except FileNotFoundError:
             print("Inventory file not found. Could not update stock.")
+
 
 
     #Function to automatically reorder items if the items are below the threshold 
@@ -203,24 +223,33 @@ class Inventory:
             return False
 
 
-    # Function to check items that are within 30 days to expire or have already expired    
+    # Function to check items that are within 30 days to expire or have already expired
     def check_exp_date(self):
-        expiring_items = [] #empty list 
-        today = datetime.today() #gets the current date
-        threshold_date = today + timedelta(days=30) #threshold for time 30 days
+        expiring_items = []  # List to store items close to expiration
+        today = datetime.today()
+        threshold_date = today + timedelta(days=30)
+
         try:
             with open(self.inventory_file, mode='r') as file:
-                reader = csv.reader(file)
-                next(reader) #skip header 
-                for item, item_id, quantity, exp_date in reader:
-                    exp_date = exp_date.strip()
-                    if exp_date != 'No Expiration Date':
-                        exp_date_obj = datetime.strptime(exp_date, "%Y-%m-%d") #gets the value of the expiration date of the item 
-                        if exp_date_obj <= threshold_date: #checks if the date of the item is less than the threshold 
-                            expiring_items.append((item, item_id, quantity, exp_date))
+                reader = csv.DictReader(file)  # Use DictReader to handle all columns by name
+                for row in reader:
+                    exp_date = row['Expiration Date'].strip()
+                    if exp_date != 'No Expiration Date':  # Check if there's a valid expiration date
+                        exp_date_obj = datetime.strptime(exp_date, "%Y-%m-%d")
+                        if exp_date_obj <= threshold_date:  # Compare with the threshold
+                            expiring_items.append((
+                                row['Item'], 
+                                row['ID'], 
+                                row['Quantity'], 
+                                exp_date
+                            ))
         except FileNotFoundError:
             print("Inventory file not found. No expiring items to report.")
-        return expiring_items #returns list of items found that are less than the range expiration threshold
+        except Exception as e:
+            print(f"An error occurred: {e}")
+        return expiring_items
+    
+
 
 
     # Function to remove an item from inventory based on their ID
