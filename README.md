@@ -108,12 +108,18 @@ The main source code for the backend of the pharmacy management system:
 ---
 
 ### **Tests**
-Contains test scripts and data used for unit testing:
-- **`Inventory_test`**: Unit tests for inventory management.
-- **`Test_databases`**: Test databases for validation.
-- `test_inventory.py`: Tests inventory logic.
-- `test_login_roles.py`: Tests user authentication and roles.
-- `test_purchase.py`: Validates purchase workflows.
+Contains test scripts and data used for unit testing. This is not comprehensive testing. Our main testing method was through the UI and print statements within the code. The following files were used for testing:
+- **\_\_pycache\_\_**:
+  - All files contained in here are compiles bytecode for all of the .py files listed below. This is used to speed up the execution of the application. 
+- `Inventory_test`: A folder containing tests that pertained to the inventory class.
+  - **\_\_pycache\_\_**:
+    - All files contained in here are compiles bytecode for all of the .py files listed below. This is used to speed up the execution of the application. 
+  - `test_inventory.py`: This was the original test for the inventory class. After large code updates this test no longer works as we switched to a new way of testing through the UI.
+- `Test_databases`: A folder containing mock databases that were copies of the production databases.
+  - All files contained in this directory were copies of the original databases. Each file is a CSV file that was used to test data storage and retrieval.
+- `test_inventory.py`: A newer version of the previous inventory test. This has also been depreciated since moving to our new form of testing. The goal of this was to test the inventory helper class.
+- `test_login_roles.py`: This was to test the LoginRoles helper class to ensure it interacted with the database properly.
+- `test_purchase.py`: This was to test the purchases  class to ensure it interacted with the database properly as well as all other functionality worked as expected. This test has also been depreciated since moving onto our newer test strategy.
 
 ---
 
