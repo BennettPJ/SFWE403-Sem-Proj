@@ -147,7 +147,7 @@ PyQt UI files for the graphical interface:
 ## How to Run
 1. Install the required dependencies:
     ```bash
-    pip install PyQt5 fpdf
+    pip install PyQt5 fpdf pandas
    
 2. Clone the repository:
     ```bash
