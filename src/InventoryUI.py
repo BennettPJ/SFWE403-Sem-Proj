@@ -77,7 +77,7 @@ class InventoryUI(QMainWindow):
 
         if confirmation == QMessageBox.Yes:
             # Remove from CSV
-            success = self.inventory.remove_item(item, item_id)
+            success = self.inventory.remove_medication(item_id)
             if success:
                 # Remove row from table
                 self.ItemsTable.removeRow(selected_row)
