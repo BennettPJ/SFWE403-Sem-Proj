@@ -39,13 +39,14 @@ class Inventory:
     
     
     #Read inventory data and return it as a list of dictionaries
-    def read_inventory_data(self):
-        inventory_data = [] #initialize empty list to hold the values of the items 
+    def read_inventory_data(self, include_removed=False):
+        inventory_data = []
         try:
             with open(self.inventory_file, mode='r') as file:
-                reader = csv.DictReader(file) # Create a CSV DictReader for reading rows as dictionaries
+                reader = csv.DictReader(file)
                 for row in reader:
-                    #Append each row with default values if the data value is not found
+                    if not include_removed and row.get('Date Removed'):
+                        continue  # Skip removed items unless specified
                     inventory_data.append({
                         'Item': row.get('Item', 'Unknown'),
                         'ID': row.get('ID', 'Unknown'),
@@ -58,7 +59,7 @@ class Inventory:
                     })
         except FileNotFoundError:
             print(f"Inventory file not found: {self.inventory_file}")
-        return inventory_data #returns the list 
+        return inventory_data
 
 
     # Function displays the current stock from inventory in the table in the UI
@@ -254,40 +255,31 @@ class Inventory:
 
     # Function to remove an item from inventory based on their ID
     def remove_medication(self, item_id):
-        rows = [] #empty list
+        rows = []  # Store all rows
         item_found = False
         try:
             with open(self.inventory_file, mode='r') as file:
-                reader = csv.DictReader(file) # Create a CSV DictReader for reading rows as dictionaries
+                reader = csv.DictReader(file)
                 for row in reader:
-                    if row['ID'] != item_id: #Check for the item that is been removed. If is not the item it keeps it adds it to the list 
-                        rows.append(row)
-                    else:
-                        item_found = True #target remove item found
-            
-            # Writes the inventory CSV without the item removed
-            if item_found: 
-                with open(self.inventory_file, mode='w', newline='') as file:
-                    writer = csv.DictWriter(file, fieldnames=['Item', 'ID', 'Quantity', 'Price', 'Expiration Date', 'Date Added', 'Date Updated', 'Date Removed']) #header
-                    writer.writeheader() #adds the header to the csv
-                    writer.writerows(rows)
+                    if row['ID'] == item_id:  # Find the target item
+                        row['Date Removed'] = datetime.now().strftime('%Y-%m-%d')  # Update "Date Removed"
+                        row['Date Updated'] = datetime.now().strftime('%Y-%m-%d')  # Update "Date Updated"
+                        item_found = True
+                    rows.append(row)  # Keep all rows (including updated one)
+
+            # Write updated rows back to the CSV
+            with open(self.inventory_file, mode='w', newline='') as file:
+                writer = csv.DictWriter(file, fieldnames=[
+                    'Item', 'ID', 'Quantity', 'Price', 'Expiration Date', 
+                    'Date Added', 'Date Updated', 'Date Removed'
+                ])
+                writer.writeheader()
+                writer.writerows(rows)
+
             return item_found
         except FileNotFoundError:
             print("Inventory file not found.")
             return False
-        
-    
-    # Function to check if an item that is been sell or prescribed is expired
-    def is_expired(self, medication):
-        today = datetime.today() #gets current date
-        with open(self.inventory_file, mode='r') as file:
-            reader = csv.DictReader(file) # Create a CSV DictReader for reading rows as dictionaries
-            for row in reader:
-                if row['Item'].strip().lower() == medication.strip().lower(): 
-                    expiration_date = datetime.strptime(row['Expiration Date'], '%Y-%m-%d') #gets the item expiration date 
-                    if expiration_date < today: #checks of the item has expired
-                        return True
-        return False
     
     
     #Function to retrieve all stock entries for a given item 

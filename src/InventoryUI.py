@@ -58,7 +58,6 @@ class InventoryUI(QMainWindow):
 
 
     def remove_selected_item(self):
-        #Removes the selected row from the table and the CSV file
         selected_row = self.ItemsTable.currentRow()
         if selected_row == -1:
             QMessageBox.warning(self, "Error", "Please select a row to remove!")
@@ -77,14 +76,15 @@ class InventoryUI(QMainWindow):
         )
 
         if confirmation == QMessageBox.Yes:
-            # Remove from CSV
+            # Update CSV using `remove_medication`
             success = self.inventory.remove_medication(item_id)
             if success:
-                # Remove row from table
+                # Remove row from GUI table
                 self.ItemsTable.removeRow(selected_row)
-                QMessageBox.information(self, "Success", f"Item '{item}' (ID: {item_id}) has been removed.")
+                QMessageBox.information(self, "Success", f"Item '{item}' (ID: {item_id}) has been marked as removed.")
             else:
                 QMessageBox.warning(self, "Error", "Failed to remove the item from the inventory.")
+
 
 
     def add_empty_row(self):
