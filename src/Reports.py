@@ -433,7 +433,7 @@ class Reports(QMainWindow):
 
             # Generate the PDF
             pdf = FPDF()
-            pdf.set_auto_page_break(auto=True, margin=15)
+            pdf.set_auto_page_break(auto=False, margin=15)
             pdf.add_page()
             pdf.set_font("Arial", size=10)
 
@@ -442,17 +442,20 @@ class Reports(QMainWindow):
             pdf.cell(200, 10, txt="Prescription Report", ln=True, align='C')
             pdf.ln(10)
 
-            # Add table headers
+            # Define column headers and their widths
             headers = ['Patient Name', 'DOB', 'Prescription Number', 'Medication', 'Quantity', 'Status', 'Pharmacist']
-            col_widths = [40, 20, 40, 30, 20, 20, 40]
-            pdf.set_font("Arial", style='B', size=10)
-            for header, width in zip(headers, col_widths):
-                pdf.cell(width, 10, header, border=1, align='C')
-            pdf.ln()
+            col_widths = [40, 20, 40, 30, 20, 20, 25]
+
+            # Add table headers
+            self.add_table_headers(pdf, headers, col_widths)
 
             # Add rows
             pdf.set_font("Arial", size=10)
             for _, row in prescription_data.iterrows():
+                if pdf.get_y() > 260:  # Adjust this value if the content overflows
+                    pdf.add_page()
+                    self.add_table_headers(pdf, headers, col_widths)
+
                 patient_name = f"{row.get('Patient_First_Name', '')} {row.get('Patient_Last_Name', '')}"
                 dob = row['Patient_DOB'] if not pd.isna(row['Patient_DOB']) else ''
                 pdf.cell(col_widths[0], 10, patient_name, border=1)
@@ -471,6 +474,14 @@ class Reports(QMainWindow):
 
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred while generating the prescription report: {e}")
+
+    def add_table_headers(self, pdf, headers, col_widths):
+        """Adds table headers to the PDF."""
+        pdf.set_font("Arial", style='B', size=10)
+        for header, width in zip(headers, col_widths):
+            pdf.cell(width, 10, header, border=1, align='C')
+        pdf.ln()
+
 
 
 
