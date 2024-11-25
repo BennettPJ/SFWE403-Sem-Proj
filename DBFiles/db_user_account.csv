@@ -8,3 +8,44 @@ amber,amber@test.com,123,manager,0,unlocked
 Jennifer,jenny@123.com,456,manager,0,unlocked
 jenny,jenny@123.com,456,pharmacist,0,unlocked
 me,blah,111,pharmacist,0,unlocked
+alice,alice@test.com,alice123,pharmacist,0,unlocked
+bob,bob@test.com,bob456,pharmacist technician,0,unlocked
+charlie,charlie@test.com,charlie789,manager,1,unlocked
+daniel,daniel@test.com,daniel123,technician,0,unlocked
+emily,emily@test.com,emily456,pharmacist,2,unlocked
+frank,frank@test.com,frank789,pharmacist technician,0,locked
+grace,grace@test.com,grace123,manager,0,unlocked
+harry,harry@test.com,harry456,pharmacist,0,unlocked
+isla,isla@test.com,isla789,pharmacist technician,0,unlocked
+jack,jack@test.com,jack123,manager,0,unlocked
+kate,kate@test.com,kate456,technician,0,unlocked
+leo,leo@test.com,leo789,pharmacist technician,0,unlocked
+mia,mia@test.com,mia123,manager,3,unlocked
+nick,nick@test.com,nick456,pharmacist,1,unlocked
+olivia,olivia@test.com,olivia789,pharmacist technician,4,locked
+peter,peter@test.com,peter123,technician,0,unlocked
+quinn,quinn@test.com,quinn456,pharmacist,0,unlocked
+rachel,rachel@test.com,rachel789,manager,0,unlocked
+sophia,sophia@test.com,sophia123,pharmacist,2,unlocked
+tom,tom@test.com,tom456,pharmacist technician,0,unlocked
+victoria,victoria@test.com,victoria789,manager,0,unlocked
+will,will@test.com,will123,technician,0,unlocked
+zoe,zoe@test.com,zoe456,pharmacist,0,unlocked
+alex,alex@test.com,alex123,manager,0,unlocked
+brian,brian@test.com,brian456,pharmacist,0,unlocked
+carla,carla@test.com,carla789,pharmacist technician,1,unlocked
+david,david@test.com,david123,technician,0,unlocked
+ellen,ellen@test.com,ellen456,manager,0,unlocked
+francis,francis@test.com,francis789,pharmacist technician,2,unlocked
+george,george@test.com,george123,pharmacist,3,unlocked
+hannah,hannah@test.com,hannah456,technician,0,unlocked
+ian,ian@test.com,ian789,pharmacist technician,4,locked
+julie,julie@test.com,julie123,manager,0,unlocked
+kevin,kevin@test.com,kevin456,pharmacist,0,unlocked
+linda,linda@test.com,linda789,pharmacist technician,0,unlocked
+mark,mark@test.com,mark123,technician,1,unlocked
+nancy,nancy@test.com,nancy456,pharmacist,0,unlocked
+oscar,oscar@test.com,oscar789,manager,0,unlocked
+paula,paula@test.com,paula123,pharmacist technician,0,unlocked
+quentin,quentin@test.com,quentin456,technician,0,unlocked
+ruth,ruth@test.com,ruth789,pharmacist,0,unlocked

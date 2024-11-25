@@ -59,10 +59,29 @@ class FillPrescriptionUI(QMainWindow):
         self.widget.addWidget(dashboard)
         self.widget.setCurrentIndex(self.widget.indexOf(dashboard))
         self.widget.setFixedSize(1050, 600)
-    
-    
+    def get_user_role(self, username):
+        # Construct the absolute path to the user accounts file
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        user_file = os.path.join(base_path, '..', 'DBFiles', 'db_user_accounts.csv')
+
+        # Check if the file exists
+        if not os.path.exists(user_file):
+            raise FileNotFoundError(f"User file not found at: {user_file}")
+
+        # Read the user role from the file
+        with open(user_file, mode='r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if row['Username'] == username:
+                    return row['Role'].lower()
+        return None
+
     def fillPrescription(self):
         # Allow the pharmacist to fill the prescription if its not expired
+            # Ensure only a pharmacist can fill prescriptions
+        if self.get_user_role(self.username) != 'pharmacist':
+            QMessageBox.critical(self, "Access Denied", "Only pharmacists can fill prescriptions.")
+            return
         try:
             # Get the selected row from the user interface
             selected_row = self.tableWidget.currentRow()

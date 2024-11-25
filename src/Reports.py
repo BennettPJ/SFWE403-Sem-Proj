@@ -412,9 +412,6 @@ class Reports(QMainWindow):
             
             
     def show_prescription_report(self):
-        # Generate a full PDF report for all prescription activity logs with columns adjusted to fit the page width.
-        
-        # Load the prescription data
         prescription_file = os.path.join(os.path.dirname(__file__), '..', 'DBFiles', 'db_prescriptions.csv')
 
         if not os.path.exists(prescription_file):
@@ -422,15 +419,19 @@ class Reports(QMainWindow):
             return
 
         try:
-            # Read prescription data
             prescription_data = pd.read_csv(prescription_file)
 
-            # Ensure the 'Patient_DOB' is parsed as datetime for formatting
-            prescription_data['Patient_DOB'] = pd.to_datetime(
-                prescription_data['Patient_DOB'], format='%m/%d/%Y', errors='coerce'
-            )
+            if 'Pharmacist' not in prescription_data.columns:
+                prescription_data['Pharmacist'] = ''  # Add column if missing
 
-            # Initialize PDF
+            # Clean and preprocess the data
+            prescription_data['Patient_DOB'] = prescription_data['Patient_DOB'].fillna('').apply(
+                lambda x: pd.to_datetime(x, errors='coerce').strftime('%m-%d-%Y') if pd.notna(x) and not isinstance(x, str) else x
+            )
+            prescription_data['Quantity'] = prescription_data['Quantity'].fillna(0).astype(int)
+            prescription_data['Pharmacist'] = prescription_data['Pharmacist'].fillna('Unknown')
+
+            # Generate the PDF
             pdf = FPDF()
             pdf.set_auto_page_break(auto=True, margin=15)
             pdf.add_page()
@@ -438,45 +439,39 @@ class Reports(QMainWindow):
 
             # Add title
             pdf.set_font("Arial", style='B', size=14)
-            pdf.cell(200, 10, txt="Full Prescription Activity Log Report", ln=True, align='C')
+            pdf.cell(200, 10, txt="Prescription Report", ln=True, align='C')
             pdf.ln(10)
 
-            # Define column headers and calculate dynamic widths
-            headers = [
-                'Patient Name', 'DOB', 'Prescription Number',
-                'Medication', 'Quantity', 'Status'
-            ]
-            page_width = 190  
-            col_relative_widths = [2.5, 1.5, 2.5, 2, 1, 2]  
-            total_relative_width = sum(col_relative_widths)
-            col_widths = [page_width * (rel_width / total_relative_width) for rel_width in col_relative_widths]
-
             # Add table headers
+            headers = ['Patient Name', 'DOB', 'Prescription Number', 'Medication', 'Quantity', 'Status', 'Pharmacist']
+            col_widths = [40, 20, 40, 30, 20, 20, 40]
             pdf.set_font("Arial", style='B', size=10)
-            for i, header in enumerate(headers):
-                pdf.cell(col_widths[i], 10, header, border=1, align='C')
+            for header, width in zip(headers, col_widths):
+                pdf.cell(width, 10, header, border=1, align='C')
             pdf.ln()
 
-            # Add table rows
+            # Add rows
             pdf.set_font("Arial", size=10)
             for _, row in prescription_data.iterrows():
-                pdf.cell(col_widths[0], 10, f"{row['Patient_First_Name']} {row['Patient_Last_Name']}", border=1, align='C')
-                pdf.cell(col_widths[1], 10, row['Patient_DOB'].strftime('%m-%d-%Y') if pd.notna(row['Patient_DOB']) else '', border=1, align='C')
+                patient_name = f"{row.get('Patient_First_Name', '')} {row.get('Patient_Last_Name', '')}"
+                dob = row['Patient_DOB'] if not pd.isna(row['Patient_DOB']) else ''
+                pdf.cell(col_widths[0], 10, patient_name, border=1)
+                pdf.cell(col_widths[1], 10, dob, border=1, align='C')
                 pdf.cell(col_widths[2], 10, str(row['Prescription_Number']), border=1, align='C')
-                pdf.cell(col_widths[3], 10, str(row['Medication']), border=1, align='C')
+                pdf.cell(col_widths[3], 10, row['Medication'], border=1, align='C')
                 pdf.cell(col_widths[4], 10, str(row['Quantity']), border=1, align='C')
-                pdf.cell(col_widths[5], 10, str(row['Status']), border=1, align='C')
+                pdf.cell(col_widths[5], 10, row['Status'], border=1, align='C')
+                pdf.cell(col_widths[6], 10, row['Pharmacist'], border=1, align='C')
                 pdf.ln()
 
-            # Save the PDF to a temporary file
-            temp_pdf_path = os.path.join(tempfile.gettempdir(), "Full_Prescription_Report.pdf")
+            # Save and open the PDF
+            temp_pdf_path = os.path.join(tempfile.gettempdir(), "Prescription_Report.pdf")
             pdf.output(temp_pdf_path)
-
-            # Open the PDF in the default viewer
             webbrowser.open(temp_pdf_path)
 
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"An error occurred while generating the prescription report:\n{e}")
+            QMessageBox.critical(self, "Error", f"An error occurred while generating the prescription report: {e}")
+
 
 
     def get_date_range_from_user(self):

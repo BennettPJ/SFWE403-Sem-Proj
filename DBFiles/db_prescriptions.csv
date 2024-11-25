@@ -1,7 +1,7 @@
-Patient_First_Name,Patient_Last_Name,Patient_DOB,Prescription_Number,Medication,Quantity,Status
-Bennett,Jackson,8/14/2003,1112323111,test,1212,Filled
-Bennett,Jackson,8/14/2003,111111,Lisinopril,10,Picked Up
-Bennett,Jackson,8/14/2003,111111211,Azithromycin,15,Filled
-Bennett,Jackson,8/14/2003,122,test,1212,Pending
-Amber,Parker,03/15/1987,111123,Test2,2,Pending
-amber,parker,03/15/1987,333333,Gabapentin,3,Filled
+Patient_First_Name,Patient_Last_Name,Patient_DOB,Prescription_Number,Medication,Quantity,Status,Pharmacist
+Bennett,Jackson,2003-08-14,1112323111,test,1212,Filled,jenny
+Bennett,Jackson,2003-08-14,111111211,Azithromycin,15,Filled,amber
+Bennett,Jackson,2003-08-14,122,Prozac,1212,Pending,
+Amber,Parker,1987-03-15,111123,Prozac,2,Pending,
+amber,parker,1987-03-15,333333,Gabapentin,3,Filled,amber
+Tupac,S,1987-11-20,2346896,Prozac,2,Filled,amber
