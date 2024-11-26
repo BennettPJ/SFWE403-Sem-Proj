@@ -266,7 +266,7 @@ class Purchases(QMainWindow):
                 return
 
         # If the dashboard is not found, create a new instance
-        dashboard = Dashboard(self.widget)
+        dashboard = Dashboard(self.widget, self.username)
         self.widget.addWidget(dashboard)
         self.widget.setCurrentIndex(self.widget.indexOf(dashboard))
 
