@@ -81,6 +81,10 @@ class FillPrescriptionUI(QMainWindow):
 
     def fillPrescription(self):
         # Allow the pharmacist to fill the prescription if its not expired
+        # Ensure only a pharmacist can fill prescriptions
+        if self.get_user_role(self.username) != 'pharmacist':
+            QMessageBox.critical(self, "Access Denied", "Only pharmacists can fill prescriptions.")
+            return
         try:
             # Get the selected row from the user interface
             selected_row = self.tableWidget.currentRow()
