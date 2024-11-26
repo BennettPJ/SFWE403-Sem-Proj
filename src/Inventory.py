@@ -169,8 +169,9 @@ class Inventory:
             with open(self.inventory_file, mode='r') as file:
                 reader = csv.DictReader(file) # Create a CSV DictReader for reading rows as dictionaries
                 for row in reader:
-                    if int(row['Quantity']) < self.low_stock_threshold:
-                        low_stock_items.append((row['Item'], row['ID'], row['Quantity']))
+                    if row['Date Removed'] == '':
+                        if int(row['Quantity']) < self.low_stock_threshold:
+                            low_stock_items.append((row['Item'], row['ID'], row['Quantity']))
         except FileNotFoundError:
             print("Inventory file not found.")
         return low_stock_items #returns list of items found with low stock
@@ -234,16 +235,17 @@ class Inventory:
             with open(self.inventory_file, mode='r') as file:
                 reader = csv.DictReader(file)  # Use DictReader to handle all columns by name
                 for row in reader:
-                    exp_date = row['Expiration Date'].strip()
-                    if exp_date != 'No Expiration Date':  # Check if there's a valid expiration date
-                        exp_date_obj = datetime.strptime(exp_date, "%Y-%m-%d")
-                        if exp_date_obj <= threshold_date:  # Compare with the threshold
-                            expiring_items.append((
-                                row['Item'], 
-                                row['ID'], 
-                                row['Quantity'], 
-                                exp_date
-                            ))
+                    if row['Date Removed'].strip() == '':
+                        exp_date = row['Expiration Date'].strip()
+                        if exp_date != 'No Expiration Date':  # Check if there's a valid expiration date
+                            exp_date_obj = datetime.strptime(exp_date, "%Y-%m-%d")
+                            if exp_date_obj <= threshold_date:  # Compare with the threshold
+                                expiring_items.append((
+                                    row['Item'], 
+                                    row['ID'], 
+                                    row['Quantity'], 
+                                    exp_date
+                                ))
         except FileNotFoundError:
             print("Inventory file not found. No expiring items to report.")
         except Exception as e:
