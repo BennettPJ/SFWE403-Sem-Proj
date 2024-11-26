@@ -1,16 +1,19 @@
 import csv
 import os
-
+from datetime import datetime
 class Prescriptions:
-    def __init__(self, prescription_file='../DBFiles/db_prescriptions.csv'): # Default file path
+    def __init__(self, prescription_file='../DBFiles/db_prescriptions.csv'): 
         base_path = os.path.dirname(os.path.abspath(__file__))
         self.prescription_file = os.path.join(base_path, prescription_file)
 
-        # Ensure the CSV file exists
+        # Ensure the CSV file exists with all required headers
         if not os.path.exists(self.prescription_file):
             with open(self.prescription_file, mode='w', newline='') as file:
                 writer = csv.writer(file)
-                writer.writerow(['Patient_First_Name', 'Patient_Last_Name', 'Patient_DOB', 'Prescription_Number', 'Medication', 'Quantity', 'Status'])
+                writer.writerow(['Patient_First_Name', 'Patient_Last_Name', 'Patient_DOB', 
+                                'Prescription_Number', 'Medication', 'Quantity', 
+                                'Status', 'Pharmacist'])
+
 
 
     def add_prescription(self, first_name, last_name, dob, prescription_number, medication, quantity):
@@ -56,23 +59,30 @@ class Prescriptions:
         return updated
     
     
-    def update_status(self, prescription_number, new_status):
-        # Update the status of a prescription to a new status
+    def update_status(self, prescription_number, new_status, pharmacist=None):
+        # Update the status and optionally the pharmacist of a prescription
         prescriptions = self.read_prescriptions()
-        updated = False # Flag to indicate if the prescription was found and updated
+        updated = False  # Flag to indicate if the prescription was found and updated
 
-        # Update the status of the selected prescription
+        # Update the status and pharmacist for the selected prescription
         for p in prescriptions:
             if p['Prescription_Number'] == prescription_number:
                 p['Status'] = new_status
+                if pharmacist:  # Only update the pharmacist if provided
+                    p['Pharmacist'] = pharmacist
                 updated = True
                 break
 
-        # Write back to the CSV
+        # Write back to the CSV if updated
         if updated:
             with open(self.prescription_file, mode='w', newline='') as file:
-                writer = csv.DictWriter(file, fieldnames=['Patient_First_Name', 'Patient_Last_Name', 'Patient_DOB',
-                                                        'Prescription_Number', 'Medication', 'Quantity', 'Status'])
+                writer = csv.DictWriter(
+                    file,
+                    fieldnames=[
+                        'Patient_First_Name', 'Patient_Last_Name', 'Patient_DOB',
+                        'Prescription_Number', 'Medication', 'Quantity', 'Status', 'Pharmacist'
+                    ]
+                )
                 writer.writeheader()
                 writer.writerows(prescriptions)
 

@@ -7,7 +7,7 @@ bill,test123123@gmail.com,ppass,pharmacist technician,0,unlocked
 amber,amber@test.com,123,manager,0,unlocked
 Jennifer,jenny@123.com,456,manager,0,unlocked
 jenny,jenny@123.com,456,pharmacist,0,unlocked
-me,blah,111,pharmacist,0,unlocked
+me,blah,111,pharmacist,1,unlocked
 alice,alice@test.com,alice123,pharmacist,0,unlocked
 bob,bob@test.com,bob456,pharmacist technician,0,unlocked
 charlie,charlie@test.com,charlie789,manager,1,unlocked

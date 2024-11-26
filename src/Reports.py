@@ -419,17 +419,26 @@ class Reports(QMainWindow):
             return
 
         try:
+            # Load the prescription data
             prescription_data = pd.read_csv(prescription_file)
 
+            # Ensure necessary columns exist
             if 'Pharmacist' not in prescription_data.columns:
                 prescription_data['Pharmacist'] = ''  # Add column if missing
 
             # Clean and preprocess the data
-            prescription_data['Patient_DOB'] = prescription_data['Patient_DOB'].fillna('').apply(
-                lambda x: pd.to_datetime(x, errors='coerce').strftime('%m-%d-%Y') if pd.notna(x) and not isinstance(x, str) else x
+            for col in prescription_data.columns:
+                if prescription_data[col].dtype == 'float64':
+                    # Convert float columns to integers where applicable
+                    prescription_data[col] = prescription_data[col].fillna(0).astype(int)
+                elif prescription_data[col].dtype == 'object':
+                    # Fill missing string values with empty strings
+                    prescription_data[col] = prescription_data[col].fillna('')
+            
+            # Specifically handle the 'Patient_DOB' column
+            prescription_data['Patient_DOB'] = prescription_data['Patient_DOB'].apply(
+                lambda x: pd.to_datetime(str(x), errors='coerce').strftime('%m-%d-%Y') if pd.notna(x) else ''
             )
-            prescription_data['Quantity'] = prescription_data['Quantity'].fillna(0).astype(int)
-            prescription_data['Pharmacist'] = prescription_data['Pharmacist'].fillna('Unknown')
 
             # Generate the PDF
             pdf = FPDF()
@@ -474,6 +483,8 @@ class Reports(QMainWindow):
 
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred while generating the prescription report: {e}")
+
+
 
     def add_table_headers(self, pdf, headers, col_widths):
         """Adds table headers to the PDF."""
