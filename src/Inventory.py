@@ -280,6 +280,18 @@ class Inventory:
         except FileNotFoundError:
             print("Inventory file not found.")
             return False
+        
+        
+    def is_expired(self, medication):
+        today = datetime.today() #gets current date
+        with open(self.inventory_file, mode='r') as file:
+            reader = csv.DictReader(file) # Create a CSV DictReader for reading rows as dictionaries
+            for row in reader:
+                if row['Item'].strip().lower() == medication.strip().lower(): 
+                    expiration_date = datetime.strptime(row['Expiration Date'], '%Y-%m-%d') #gets the item expiration date 
+                    if expiration_date < today: #checks of the item has expired
+                        return True
+        return False
     
     
     #Function to retrieve all stock entries for a given item 
