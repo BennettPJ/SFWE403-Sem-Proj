@@ -71,13 +71,16 @@ class LoginRoles:
     def create_account(self, role: str, username: str, password: str, email: str):
         # Creates a new account if the username does not already exist 
         if self.account_exists(username):
-            return False
+            return False, "Username is not unique. Please choose a different username."
+        
+        if self.password_exists(password):
+            return False, "Password is not unique. Please choose a different password."
 
         # Add the new user to the CSV file
         with open(self.roles_file, mode='a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([username, email, password, role, '0', 'unlocked'])
-        return True
+        return True, f"Account created successfully"
 
 
     def remove_account(self, username: str):
@@ -109,6 +112,19 @@ class LoginRoles:
     def account_exists(self, username: str):
         # Checks if an account with the given username already exists
         return self.get_user_data(username) is not None
+    
+    
+    def password_exists(self, password: str):
+        # Checks if a password already exists in the CSV file returns True if it does and false if it does not
+        try:
+            with open(self.roles_file, mode='r', newline='') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    if row and row['Password'] == password:
+                        return True
+        except FileNotFoundError:
+            print("Roles file not found.")
+        return False
 
 
     def get_user_data(self, username: str):

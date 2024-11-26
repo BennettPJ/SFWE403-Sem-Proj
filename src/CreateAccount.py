@@ -36,22 +36,27 @@ class CreateAccountUI(QMainWindow):
         repassword = self.reEnterPass.text()  # Get the re-entered password
         role = self.rolesBox.currentText() # Get the selected role from the dropdown
         
+        msg = QMessageBox()
+        
         # Check if the passwords match
         if password != repassword:
             # Display a warning popup if passwords do not match
-            msg = QMessageBox()
             msg.setWindowTitle("Password Mismatch")
             msg.setText("Passwords do not match. Please re-enter your password.")
             msg.exec_()
         else:
             # Call the create_account function from LoginRoles to create the new account
-            self.roles.create_account(role, username, password, email)
+            success, message = self.roles.create_account(role, username, password, email)
             # Display a popup for successful creation of account
-            msg = QMessageBox()
-            msg.setWindowTitle("Account Created")
-            msg.setText("Your account has been created successfully!")
-            msg.exec_()
-            self.returnToLogin() # Return to the login screen after successful account creation
+            if success:
+                msg.setWindowTitle("Account Created")
+                msg.setText(message)
+                msg.exec_()
+                self.returnToLogin()  # Return to the login screen
+            else:
+                msg.setWindowTitle("Account Creation Failed")
+                msg.setText(message)
+                msg.exec_()
 
     # Function to navigate back to the login screen
     def returnToLogin(self):
