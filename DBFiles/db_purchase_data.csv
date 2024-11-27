@@ -19,3 +19,12 @@ Date,First Name,Last Name,Item Name,ID,Quantity,Price,Total Cost,Grand Total,Pay
 2024-11-14,Ruben,T,Crestor,47,5,22.49,112.45,112.45,Credit Card,no
 2024-11-14,Brittnay,S,Prozac,36,2,22.99,45.98,45.98,Debit Card,no
 2024-11-25,Amber,Parker,Snickers,5,1,1.50,1.50,1.5,Debit Card,no
+2024-11-26,Ruben,Galdean,Tylenol,2,1,9.49,9.49,9.49,Cash,no
+2024-11-26,Ruben,Galdean,Snickers,5,1,1.50,1.50,26.37,Cash,no
+2024-11-26,Ruben,Galdean,Amoxicillin,3,1,15.99,15.99,26.37,Cash,no
+2024-11-26,Ruben,Galdean,Naproxen,31,1,6.99,6.99,26.37,Cash,no
+2024-11-26,Ruben,Galdean,Gatorade,11,1,1.89,1.89,26.37,Cash,no
+2024-11-26,Ruben,Galdean,Snickers,5,1,1.50,1.50,26.37,Cash,no
+2024-11-26,Ruben,Galdean,Naproxen,31,1,6.99,6.99,26.37,Cash,yes
+2024-11-26,Ruben,Galdean,Amoxicillin,3,1,15.99,15.99,26.37,Cash,yes
+2024-11-26,Ruben,Galdean,Gatorade,11,1,1.89,1.89,26.37,Cash,no

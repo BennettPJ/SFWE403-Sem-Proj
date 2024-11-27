@@ -52,7 +52,7 @@ class Prescriptions:
         # Write the updated prescriptions back to the CSV file
         with open(self.prescription_file, mode='w', newline='') as file:
             writer = csv.DictWriter(file, fieldnames=['Patient_First_Name', 'Patient_Last_Name', 'Patient_DOB',
-                                                      'Prescription_Number', 'Medication', 'Quantity', 'Status'])
+                                                      'Prescription_Number', 'Medication', 'Quantity', 'Status', 'Pharmacist'])
             writer.writeheader()
             writer.writerows(prescriptions)
 

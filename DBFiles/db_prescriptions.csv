@@ -1,7 +1,2 @@
 Patient_First_Name,Patient_Last_Name,Patient_DOB,Prescription_Number,Medication,Quantity,Status,Pharmacist
-Bennett,Jackson,08/14/2003,1222323,Lisinopril,30,Filled,nick
-Bennett,Jackson,08/14/2003,sdasdasd,lisinopril,30,Filled,harry
-Jenny,Rivera,02/14/1992,787878,Prozac,3,Filled,me
-Jenny,FromTheBlock,01/04/2007,878890,Prozac,2,Filled,jenny
-Jenny,Hernandez,11/11/2007,9879879,Prozac,2,Filled,jenny
-Luis,Leon,11/15/1988,33563,Prozac,1,Filled,jenny
+Ruben,Galdean,07/03/2002,1,Naproxen,4,Picked Up,Miguel

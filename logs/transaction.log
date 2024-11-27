@@ -367,3 +367,27 @@
 2024-11-26 10:55:54,388 - Login successful for user: bennett
 2024-11-26 10:58:00,102 - Login successful for user: bennett
 2024-11-26 10:59:07,713 - Login successful for user: bennett
+2024-11-26 21:11:25,710 - Login successful for user: amber
+2024-11-26 21:12:45,764 - Login successful for user: amber
+2024-11-26 21:38:51,213 - Login successful for user: bennett
+2024-11-26 21:46:43,772 - Login successful for user: bennett
+2024-11-26 21:48:03,982 - Login successful for user: bennett
+2024-11-26 21:48:50,003 - Login successful for user: bennett
+2024-11-26 21:49:49,504 - Failed login for user: Miguel
+2024-11-26 21:49:52,540 - Failed login for user: Miguel
+2024-11-26 21:49:55,270 - Failed login for user: Miguel
+2024-11-26 21:49:57,841 - Failed login for user: Miguel
+2024-11-26 21:50:00,512 - Failed login for user: Miguel
+2024-11-26 21:50:05,028 - Attempted login to locked account: Miguel
+2024-11-26 21:50:16,533 - Login successful for user: bennett
+2024-11-26 21:50:45,526 - Failed login for user: Miguel
+2024-11-26 21:50:57,670 - Login successful for user: Miguel
+2024-11-26 21:53:05 - Prescription filled: Prescription Number: 1, Medication: Naproxen, Quantity: 2, Pharmacist: Miguel
+2024-11-26 22:01:09,819 - Login successful for user: bennett
+2024-11-26 22:05:31 - USER: bennett - ACTION: PURCHASE
+2024-11-26 22:07:50,435 - Login successful for user: bennett
+2024-11-26 22:08:10,401 - Login successful for user: bennett
+2024-11-26 22:10:47,089 - Login successful for user: Miguel
+2024-11-26 22:17:19 - USER: bennett - ACTION: PURCHASE
+2024-11-26 22:18:23 - USER: bennett - ACTION: PURCHASE
+2024-11-26 22:18:39,337 - Login successful for user: rubenG
